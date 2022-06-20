@@ -53,9 +53,10 @@ public class SignupActivity extends AppCompatActivity {
                     user.setUsername(un);
                     user.setPassword(password);
                     user.put("biography", bio);
+                    //user.put("profilePicture", R.drawable.icon);
                     user.put("name", name);
-                    List<String> likedPosts = new ArrayList<>();
-                    user.put("likedPosts", likedPosts);
+                    //List<String> likedPosts = new ArrayList<>();
+                    //user.put("likedPosts", likedPosts);
 
                     user.signUpInBackground(new SignUpCallback() {
                         @Override

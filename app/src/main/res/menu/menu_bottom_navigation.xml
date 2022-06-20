@@ -4,16 +4,25 @@
     <item
         android:id="@+id/action_home"
         android:enabled="true"
+        android:icon="@drawable/img_4"
         android:title=""
-         />
+        />
+    <item
+        android:id="@+id/action_location"
+        android:enabled="true"
+        android:icon="@drawable/img_5"
+        android:title=""
+        />
     <item
         android:id="@+id/action_post"
         android:enabled="true"
+        android:icon="@drawable/instagram_new_post_outline_24"
         android:title=""
-         />
+        />
     <item
         android:id="@+id/action_prof"
         android:enabled="true"
+        android:icon="@drawable/instagram_user_filled_24"
         android:title=""
         />
 </menu>

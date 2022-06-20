@@ -2,12 +2,15 @@ package com.example.travellens;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.travellens.fragments.PostsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class FeedMainActivity extends AppCompatActivity {
@@ -33,10 +36,15 @@ public class FeedMainActivity extends AppCompatActivity {
 
                         //fragment = new ComposeFragment();
                         break;
+
+                    //case R.id.action_location:
+
+                        //fragment = new ComposeFragment();
+                       // break;
                     case R.id.action_home:
                         //Intent in = new Intent(MainActivity.this, FeedActivity.class);
                         //startActivity(in);
-                        //fragment = new PostsFragment();
+                        fragment = new PostsFragment();
                         // do something here
                         break;
                     case R.id.action_prof:
@@ -52,4 +60,6 @@ public class FeedMainActivity extends AppCompatActivity {
         });
         bottomNavigationView.setSelectedItemId(R.id.action_home);
     }
+
+
 }
