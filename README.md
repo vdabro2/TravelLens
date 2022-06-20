@@ -73,7 +73,7 @@ This idea is geared towards unexpirienced travelers who want to find new places 
 * Timeline post -> Detailed view
 
 ## Wireframes
-<img src="./Screen Shot 2022-06-14 at 11.46.20 AM.png" width=1000>
+<img src="./img.png" width=1000>
 
 ## Schema
 ### Models
