@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.travellens.fragments.ComposeFragment;
+import com.example.travellens.fragments.ProfileFragment;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
@@ -59,8 +61,6 @@ public class FeedMainActivity extends AppCompatActivity {
         final FragmentManager fragmentManager = getSupportFragmentManager();
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
-       // svSearchLocation = findViewById(R.id.action_search);
-
         bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -68,19 +68,17 @@ public class FeedMainActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.action_post:
 
-                        //fragment = new ComposeFragment();
+                        fragment = new ComposeFragment();
                         break;
 
                     case R.id.action_home:
-                        //Intent in = new Intent(MainActivity.this, FeedActivity.class);
-                        //startActivity(in);
                         fragment = new PostsFragment();
                         // do something here
                         break;
                     case R.id.action_prof:
                         // do something here
 
-                        //fragment = new ProfileFragment();
+                        fragment = new ProfileFragment();
                         break;
                     default: break;
                 }
@@ -107,6 +105,10 @@ public class FeedMainActivity extends AppCompatActivity {
             public void onPlaceSelected(Place place) {
                 // TODO: Get info about the selected place.
                 Log.i("TAG", "Place: " + place.getName() + ", " + place.getId()+ ", " + Objects.requireNonNull(place.getLatLng()).latitude+ ", " + place.getLatLng().longitude);
+                PostsFragment posts_with_loc = new PostsFragment(place);
+                AppCompatActivity activity = (AppCompatActivity) FeedMainActivity.this;
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, posts_with_loc).addToBackStack(null).commit();
+
             }
 
             @Override

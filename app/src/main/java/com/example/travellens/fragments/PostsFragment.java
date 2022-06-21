@@ -61,6 +61,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.model.Place;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -74,39 +75,26 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class PostsFragment extends Fragment {
-    //private static final int REQUEST_FINE_LOCATION = ;//implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
-    ImageView searchImage;
     RecyclerView rvPosts;
     private SwipeRefreshLayout swipeContainer;
     protected PostsAdapter adapter;
     protected List<Post> allPosts;
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    Place placeToQueryBy;
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
 
     // MAP
     Location mCurrentLocation;
-    private long UPDATE_INTERVAL = 60000;  /* 60 secs */
-    private long FASTEST_INTERVAL = 5000; /* 5 secs */
     private final static String KEY_LOCATION = "location";
-    GoogleMap mGoogleMap;
-    SupportMapFragment mapFrag;
-    LocationRequest mLocationRequest;
-    GoogleApiClient mGoogleApiClient;
 
-    private SupportMapFragment mapFragment;
-    private GoogleMap map;
+
+     double currLatitude;
+     double currLongitude;
+
     private LocationRequest locationRequest;
 
-    /*
-     * Define a request code to send to Google Play services This code is
-     * returned in Activity.onActivityResult
-     */
-    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-
-    Marker mCurrLocationMarker;
 
 
     // TODO: Rename and change types of parameters
@@ -115,6 +103,13 @@ public class PostsFragment extends Fragment {
     private GoogleApiClient googleApiClient;
     public PostsFragment() {
         // Required empty public constructor
+        placeToQueryBy = null;
+
+    }
+
+    public PostsFragment(Place place) {
+        // Required empty public constructor
+        placeToQueryBy = place;
     }
 
     /**
@@ -184,7 +179,24 @@ public class PostsFragment extends Fragment {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+        if (placeToQueryBy == null) {
+            getCurrentLocation(savedInstanceState);
+
+        } else {
+            currLatitude = placeToQueryBy.getLatLng().latitude;
+            currLongitude = placeToQueryBy.getLatLng().longitude;
+            queryPosts(currLatitude, currLongitude);
+        }
         // query posts from Parstagra
+
+
+
+        //queryPosts();
+
+    }
+
+    private void getCurrentLocation(Bundle savedInstanceState) {
+
         if (savedInstanceState != null && savedInstanceState.keySet().contains(KEY_LOCATION)) {
             // Since KEY_LOCATION was found in the Bundle, we can be sure that mCurrentLocation
             // is not null.
@@ -194,9 +206,7 @@ public class PostsFragment extends Fragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
-
                 if (isGPSEnabled()) {
-
                     LocationServices.getFusedLocationProviderClient(getActivity())
                             .requestLocationUpdates(locationRequest, new LocationCallback() {
                                 @Override
@@ -207,16 +217,17 @@ public class PostsFragment extends Fragment {
                                             .removeLocationUpdates(this);
 
                                     if (locationResult != null && locationResult.getLocations().size() >0){
-
                                         int index = locationResult.getLocations().size() - 1;
                                         double latitude = locationResult.getLocations().get(index).getLatitude();
+                                        currLatitude = latitude;
                                         double longitude = locationResult.getLocations().get(index).getLongitude();
-                                        //AddressText.setText("Latitude: "+ latitude + "\n" + "Longitude: "+ longitude);
-                                        Log.e(" LOCATION :" , String.valueOf(latitude) + "    " +String.valueOf(longitude));
+                                        currLongitude = longitude;
+                                        queryPosts(latitude, longitude);
+                                        //Log.e(" LOCATION 2:" , String.valueOf(currLatitude) + "    " +String.valueOf(longitude));
                                     }
                                 }
                             }, Looper.getMainLooper());
-
+                   // Log.e(" LOCATION :" , String.valueOf(latLng.latitude) + "    " +String.valueOf(latLng.longitude));
                 } else {
                     turnOnGPS();
                 }
@@ -225,28 +236,83 @@ public class PostsFragment extends Fragment {
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             }
         }
-        //queryPosts();
 
     }
+
+    private void queryPosts(double latitude, double longitude) {
+        // specify what type of data we want to query - Post.class
+        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
+        // include data referred by user key
+        query.include(Post.KEY_USER);
+        //query.whereEqualTo(Post.KEY_LATITUDE, latitude);
+        //query.whereEqualTo(Post.KEY_LONGITUDE, longitude);
+
+        // order posts by creation date (newest first)
+        query.addDescendingOrder("createdAt");
+        // start an asynchronous call for posts
+        query.findInBackground(new FindCallback<Post>() {
+            @Override
+            public void done(List<Post> posts, ParseException e) {
+                // check for errors
+                if (e != null) {
+                    Log.e("FEED", "Issue with getting posts", e);
+                    return;
+                }
+                List<Post> postsFiltered = new ArrayList<>();
+                Log.e(" LOCATION :" , String.valueOf(latitude) + "    " +String.valueOf(longitude));
+                // for debugging purposes let's print every post description to logcat
+                for (Post post : posts) {
+                    Log.i("FEED", "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
+                    double lonOfPost = post.getDouble(Post.KEY_LONGITUDE);
+                    double latOfPost = post.getDouble(Post.KEY_LATITUDE);
+                    double distance = distance(latOfPost, lonOfPost, latitude, longitude, "M");
+                    Log.e(" LOCATION :" , String.valueOf(lonOfPost) + "    " +String.valueOf(latOfPost));
+                    // caculate how far
+                    // if within 50 miles
+                    // include in postsfiltered
+                    if (distance <= 50) {
+                        postsFiltered.add(post);
+                    }
+                }
+
+                // save received posts to list and notify adapter of new data
+                allPosts.addAll(postsFiltered);
+                adapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    private static double distance(double lat1, double lon1, double lat2, double lon2, String unit) {
+        if ((lat1 == lat2) && (lon1 == lon2)) {
+            return 0;
+        }
+        else {
+            double theta = lon1 - lon2;
+            double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));
+            dist = Math.acos(dist);
+            dist = Math.toDegrees(dist);
+            dist = dist * 60 * 1.1515;
+            if (unit.equals("K")) {
+                dist = dist * 1.609344;
+            } else if (unit.equals("N")) {
+                dist = dist * 0.8684;
+            }
+            return (dist);
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
         if (requestCode == 1){
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
 
                 if (isGPSEnabled()) {
-
-                    //getCurrentLocation();
-
                 }else {
-
                     turnOnGPS();
                 }
             }
         }
-
-
     }
 
 
@@ -262,40 +328,9 @@ public class PostsFragment extends Fragment {
         return isEnabled;
 
     }
-    protected void queryPosts() {
-        // specify what type of data we want to query - Post.class
-        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
-        // include data referred by user key
-        query.include(Post.KEY_USER);
-        // limit query to latest 20 items
-        //query.setLimit(20);
-        // order posts by creation date (newest first)
-        query.addDescendingOrder("createdAt");
-        // start an asynchronous call for posts
-        query.findInBackground(new FindCallback<Post>() {
-            @Override
-            public void done(List<Post> posts, ParseException e) {
-                // check for errors
-                if (e != null) {
-                    Log.e("FEED", "Issue with getting posts", e);
-                    return;
-                }
 
-                // for debugging purposes let's print every post description to logcat
-                for (Post post : posts) {
-                    Log.i("FEED", "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
-                }
-
-                // save received posts to list and notify adapter of new data
-                allPosts.addAll(posts);
-                adapter.notifyDataSetChanged();
-            }
-        });
-    }
 
     private void turnOnGPS() {
-
-
 
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(locationRequest);

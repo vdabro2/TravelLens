@@ -14,6 +14,8 @@ import java.util.Date;
 public class Post extends ParseObject implements Serializable {
     public static final String KEY_DESCRIPTION = "description";
     public static final String KEY_IMAGE = "image";
+    public static final String KEY_LATITUDE = "latitude";
+    public static final String KEY_LONGITUDE = "longitude";
     public static final String KEY_USER = "user";
 
     public String getDescription() {

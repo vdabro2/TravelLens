@@ -9,9 +9,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.example.travellens.FeedMainActivity;
 import com.example.travellens.Post;
 import com.example.travellens.R;
 import com.example.travellens.Post;
@@ -117,7 +119,23 @@ public class DetailFragment extends Fragment {
             Glide.with(getContext()).load(profilepic.getUrl()).circleCrop().into(ivProfilePicture);
         }
         tvUserInDes.setText(thePost.getUser().getUsername());
+        ivProfilePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProfileFragment profileFragment = new ProfileFragment(thePost.getUser());
+                AppCompatActivity activity = (AppCompatActivity)getActivity();
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, profileFragment).addToBackStack(null).commit();
+            }
+        });
 
+        tvUsername.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProfileFragment profileFragment = new ProfileFragment(thePost.getUser());
+                AppCompatActivity activity = (AppCompatActivity)getActivity();
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, profileFragment).addToBackStack(null).commit();
+            }
+        });
     }
 
 }
