@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">TravelLens</string>
+    <string name="google_maps_api_key">AIzaSyAYLlh0t5fI_O3UKPRX_XrY7TYSybm9K-g</string>
+
 </resources>
