@@ -4,15 +4,10 @@
     <item
         android:id="@+id/action_home"
         android:enabled="true"
-        android:icon="@drawable/img_4"
-        android:title=""
-        />
-    <item
-        android:id="@+id/action_location"
-        android:enabled="true"
         android:icon="@drawable/img_5"
         android:title=""
         />
+
     <item
         android:id="@+id/action_post"
         android:enabled="true"

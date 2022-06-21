@@ -111,8 +111,7 @@ public class ComposeFragment extends Fragment {
     // Any view setup should occur here.  E.g., view lookups and attaching view listeners.
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        // Setup any handles to view objects here
-        // EditText etFoo = (EditText) view.findViewById(R.id.etFoo);
+
          progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 
         bSubmit = view.findViewById(R.id.bSubmit);

@@ -45,7 +45,8 @@ This idea is geared towards unexpirienced travelers who want to find new places 
 * Settings page
 * Personal info of other users page! AKA profile page for other people.
 * More:
-* Replying to other users feature/ chat feature.
+* Replying to other users feature
+* Chat feature
 * Explore page where the user gets many different, random locations if they dont know where to travel to next.
 * Find a travel buddy explore page. Uses your location to match you to another traveler looking to explore in the place you are in.
 

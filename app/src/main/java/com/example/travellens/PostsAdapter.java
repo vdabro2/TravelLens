@@ -68,16 +68,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        /*
-        private TextView tvUsername;
-        private TextView tvLikes;*/
+
         private ImageView ivImage;
-        /*
-        private TextView tvDescription;
-        private TextView tvTime;
-        private ImageView ivProfilePicture;
-        private TextView tvUserInDes;
-        private ImageView ivLikes;*/
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             //tvUsername = itemView.findViewById(R.id.tvUsername);
@@ -91,29 +84,15 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         }
 
         public void bind(Post post) throws JSONException {
-            // Bind the post data to the view elements
-            //tvDescription.setText(post.getDescription());
-            //tvUsername.setText(post.getUser().getUsername());
             ParseFile image = post.getParseFile();
             if (image != null) {
                 Glide.with(context).load(image.getUrl()).into(ivImage);
             }
 
-            //tvTime.setText(Post.calculateTimeAgo(post.getCreatedAt()));
-
-            //ParseFile profilepic = post.getUser().getParseFile("profilePicture");
-            //if (profilepic != null) {
-            //    Glide.with(context).load(profilepic.getUrl()).circleCrop().into(ivProfilePicture);
-            //}
-            //tvUserInDes.setText(post.getUser().getUsername());
-
-            //liking(post);
             ivImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //Intent i = new Intent(context, DetailsActivity.class);
-                    //i.putExtra("post", (Serializable) post);
-                    //context.startActivity(i);
+
 
                     DetailFragment profileFragment = new DetailFragment(post);
                     AppCompatActivity activity = (AppCompatActivity) v.getContext();
@@ -122,37 +101,29 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
                 }
             });
-/*
-            ivProfilePicture.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ProfileFragment profileFragment = new ProfileFragment(post.getUser());
-                    AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer,
-                            profileFragment).addToBackStack(null).commit();
-                }
-            });
-            tvUsername.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ProfileFragment profileFragment = new ProfileFragment(post.getUser());
-                    AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, profileFragment).addToBackStack(null).commit();
-                }
-            });
-            tvUserInDes.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ProfileFragment profileFragment = new ProfileFragment(post.getUser());
-                    AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, profileFragment).addToBackStack(null).commit();
-                }
-            });
-*/
         }
 
 
 
 
+    }
+
+    private static double distance(double lat1, double lon1, double lat2, double lon2, String unit) {
+        if ((lat1 == lat2) && (lon1 == lon2)) {
+            return 0;
+        }
+        else {
+            double theta = lon1 - lon2;
+            double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));
+            dist = Math.acos(dist);
+            dist = Math.toDegrees(dist);
+            dist = dist * 60 * 1.1515;
+            if (unit.equals("K")) {
+                dist = dist * 1.609344;
+            } else if (unit.equals("N")) {
+                dist = dist * 0.8684;
+            }
+            return (dist);
+        }
     }
 }

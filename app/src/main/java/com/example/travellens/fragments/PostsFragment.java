@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -74,7 +75,7 @@ import java.util.List;
  */
 public class PostsFragment extends Fragment {
     //private static final int REQUEST_FINE_LOCATION = ;//implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
-
+    ImageView searchImage;
     RecyclerView rvPosts;
     private SwipeRefreshLayout swipeContainer;
     protected PostsAdapter adapter;
@@ -153,6 +154,7 @@ public class PostsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        //searchImage = view.findViewById(R.id.ivSearch);
         rvPosts = view.findViewById(R.id.rvPosts);
         allPosts = new ArrayList<>();
         adapter = new PostsAdapter(getContext(), allPosts);
@@ -176,6 +178,7 @@ public class PostsFragment extends Fragment {
                 swipeContainer.setRefreshing(false);
             }
         });
+
         // Configure the refreshing colors
         swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
@@ -208,7 +211,6 @@ public class PostsFragment extends Fragment {
                                         int index = locationResult.getLocations().size() - 1;
                                         double latitude = locationResult.getLocations().get(index).getLatitude();
                                         double longitude = locationResult.getLocations().get(index).getLongitude();
-
                                         //AddressText.setText("Latitude: "+ latitude + "\n" + "Longitude: "+ longitude);
                                         Log.e(" LOCATION :" , String.valueOf(latitude) + "    " +String.valueOf(longitude));
                                     }
