@@ -84,12 +84,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             ivImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-
                     DetailFragment profileFragment = new DetailFragment(post);
                     AppCompatActivity activity = (AppCompatActivity) v.getContext();
                     activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer,
-                            profileFragment, "detail").addToBackStack(null).commit();
+                            profileFragment).addToBackStack(null).commit();
 
                 }
             });

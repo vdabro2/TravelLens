@@ -86,68 +86,28 @@ import java.util.Objects;
  * create an instance of this fragment.
  */
 public class PostsFragment extends Fragment {
-    RecyclerView rvPosts;
-    private SwipeRefreshLayout swipeContainer;
+    double currLatitude;
+    double currLongitude;
+    private String mParam1;
+    private String mParam2;
+    private List<Post> allPosts;
+    private RecyclerView rvPosts;
+    private Place placeToQueryBy;
     protected PostsAdapter adapter;
-    protected List<Post> allPosts;
-    Place placeToQueryBy;
-
+    private Location mCurrentLocation;
+    private LocationRequest locationRequest;
+    private SwipeRefreshLayout swipeContainer;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-
-    // MAP
-    Location mCurrentLocation;
     private final static String KEY_LOCATION = "location";
 
 
-     double currLatitude;
-     double currLongitude;
-
-    private LocationRequest locationRequest;
-
-
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-    private GoogleApiClient googleApiClient;
     public PostsFragment() {
-        // Required empty public constructor
-
         placeToQueryBy = null;
 
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        //return super.onOptionsItemSelected(item);
-        Log.i("TAG", "SELECT IN POSTS FRAGMENT");
 
-        if (item.getItemId() == R.id.autocomplete_fragment) {
-            Log.i("TAG", "SELECT IN POSTS FRAGMENT");
-            /*
-
-            // Create a new Places client instance.
-            PlacesClient placesClient = Places.createClient(getContext());
-            AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
-                    getActivity().getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
-            autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
-            autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-                @Override
-                public void onPlaceSelected(Place place) {
-                    Log.i("TAG", "SELECT IN POSTS FRAGMENT");
-                }
-
-                @Override
-                public void onError(Status status) {
-                    Log.i("TAG", "An error occurred: " + status);
-                }
-            });
-            return true;*/
-        }
-        return false;
-    }
 
     public PostsFragment(Place place) {
         // Required empty public constructor
@@ -199,8 +159,6 @@ public class PostsFragment extends Fragment {
         rvPosts.setAdapter(adapter);
         // set the layout manager on the recycler view
         rvPosts.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        //StaggeredGridLayoutManager.LayoutParams layoutParams = (StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams();
-        //layoutParams.setFullSpan(true);
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(5000);

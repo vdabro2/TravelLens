@@ -15,9 +15,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
@@ -32,10 +34,8 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -44,21 +44,21 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 
 public class ComposeFragment extends Fragment {
-    File photoFile;
-    Button bSubmit;
-    ImageView ivPic;
-    Place placeInPost;
+    private File photoFile;
+    private Button bSubmit;
+    private ImageView ivPic;
+    private Place placeInPost;
+    private RatingBar rbRating;
     private String mParam1;
     private String mParam2;
-    EditText etDescription;
-    ProgressBar progressBar;
-    boolean fromGal = false;
-    ParseFile photoFileFromGal;
-    FloatingActionButton bCamera;
-    FloatingActionButton bGallery;
+    private EditText etDescription;
+    private ProgressBar progressBar;
+    private boolean fromGal = false;
+    private ParseFile photoFileFromGal;
+    private FloatingActionButton bCamera;
+    private FloatingActionButton bGallery;
     public String photoFileName = "photo.jpg";
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -100,30 +100,41 @@ public class ComposeFragment extends Fragment {
         bCamera = view.findViewById(R.id.bCamera);
         bGallery = view.findViewById(R.id.bGallery);
         etDescription = view.findViewById(R.id.etDescription);
+        rbRating = view.findViewById(R.id.rbRatingCompose);
         // this bar is shown while post is posting to database
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+
+        // checking conditions before sharing post
         placeInPost = null;
         bSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String des = etDescription.getText().toString();
                 if (des.isEmpty()) {
-                    Toast.makeText(getContext(), "Cant be empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Description can't be empty", Toast.LENGTH_SHORT).show();
                 }
                 if (photoFile == null || ivPic.getDrawable() == null) {
                     Toast.makeText(getContext(), "Theres no photo", Toast.LENGTH_SHORT).show();
-                    return;
                 }
                 if (placeInPost == null) {
                     Toast.makeText(getContext(), "Location can't be empty", Toast.LENGTH_SHORT).show();
                 }
+                if (rbRating.getRating() <= 0) {
+                    Toast.makeText(getContext(), "Add a rating", Toast.LENGTH_SHORT).show();
+                }
+                // creates post based on the rating, post, user, and description
                 ParseUser user  = ParseUser.getCurrentUser();
                 savePost(des, user);
-                Intent i = new Intent(getContext(), FeedMainActivity.class); // TODO maybe send to the posts location PostsFrag(postlocation)
-                startActivity(i);
+
+                // after post is created, go to that locations feed
+                PostsFragment postsFragment = new PostsFragment(placeInPost);
+                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer,
+                        postsFragment).addToBackStack(null).commit();
             }
         });
 
+        // launches camera on click
         bCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,6 +142,7 @@ public class ComposeFragment extends Fragment {
             }
         });
 
+        // launches gallery on click
         bGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -145,7 +157,10 @@ public class ComposeFragment extends Fragment {
             }
         });
 
+        // allows this fragments menu to behave differently than in main
         setHasOptionsMenu(true);
+
+        // initializes the client
         if (!Places.isInitialized()) {
             // initialize the api with key
             Places.initialize(getContext(), getString(R.string.google_maps_api_key));
@@ -153,15 +168,16 @@ public class ComposeFragment extends Fragment {
         PlacesClient placesClient = Places.createClient(getContext());
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 getActivity().getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+
+        // creates the autocomplete fragment so the user can set a location for their post
         autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                Log.i("TAG", "SELECT IN COMPOSE FRAGMENT");
+                // todo make a textview to display lcoaiton
                 // save this place to the post info
                 placeInPost = place;
             }
-
             @Override
             public void onError(Status status) {
                 Log.i("TAG", "An error occurred: " + status);
@@ -256,6 +272,7 @@ public class ComposeFragment extends Fragment {
             post.setImage(new ParseFile(photoFile));
         }
         post.put(Post.KEY_LATITUDE, placeInPost.getLatLng().latitude);
+        post.put("rating", rbRating.getRating());
         post.put(Post.KEY_LONGITUDE, placeInPost.getLatLng().longitude);
         post.put("placeId", placeInPost.getId());
         // ask for rating
@@ -265,7 +282,6 @@ public class ComposeFragment extends Fragment {
             @Override
             public void done(ParseException e) {
                 if (e != null){
-                    Log.e("EROOOR", e.toString());
                     return;
                 }
                 progressBar.setVisibility(View.GONE);

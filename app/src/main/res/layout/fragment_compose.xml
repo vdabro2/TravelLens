@@ -10,7 +10,7 @@
     <!-- TODO: Update blank fragment layout -->
 
     <RatingBar
-        android:id="@+id/rbRating2"
+        android:id="@+id/rbRatingCompose"
         android:layout_width="211dp"
         android:layout_height="52dp"
         android:numStars="5"
