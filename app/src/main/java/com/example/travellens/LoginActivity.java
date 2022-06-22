@@ -16,21 +16,24 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 
 public class LoginActivity extends AppCompatActivity {
-    EditText etPass;
-    EditText etUsername;
-    Button bLogin;
-    TextView signup;
+    private Button bLogin;
+    private TextView signup;
+    private EditText etPass;
+    private EditText etUsername;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         etPass = findViewById(R.id.etPass);
-        etUsername = findViewById(R.id.etUsername);
         bLogin = findViewById(R.id.bLogin);
         signup = findViewById(R.id.tvSignUp);
+        etUsername = findViewById(R.id.etUsername);
+
         if (ParseUser.getCurrentUser() != null) {
+            // no need for re-authentication if user is already logged in
             goMainActivity();
         }
+        // login user if they clicked login
         bLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -39,6 +42,8 @@ public class LoginActivity extends AppCompatActivity {
                 loginUser(user, pass);
             }
         });
+
+        // go to signup if user clicks sign up
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,10 +59,8 @@ public class LoginActivity extends AppCompatActivity {
             public void done(ParseUser user, ParseException e) {
                 if (e!= null) {
                     Log.e("LOGIN", e.toString());
-
                     return;
                 }
-                //Toast.makeText(LoginActivity.this, "SUCCESS", Toast.LENGTH_SHORT);
                 goMainActivity();
                 Toast.makeText(LoginActivity.this, "SUCCESS", Toast.LENGTH_SHORT);
             }
@@ -66,9 +69,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void goMainActivity() {
         Intent i = new Intent(this, FeedMainActivity.class);
-
         startActivity(i);
-        //Log.i("LOGIN SUCC")
         finish();
     }
 }

@@ -178,7 +178,6 @@ public class PostsFragment extends Fragment {
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                Log.i("TAG", "SELECT IN POSTS FRAGMENT");
                 Log.i("TAG", "Place: " + place.getName() + ", " + place.getId()+ ", " + Objects.requireNonNull(place.getLatLng()).latitude+ ", " + place.getLatLng().longitude);
                 PostsFragment posts_with_loc = new PostsFragment(place);
                 AppCompatActivity activity = (AppCompatActivity) getActivity();
@@ -255,11 +254,9 @@ public class PostsFragment extends Fragment {
                                         double longitude = locationResult.getLocations().get(index).getLongitude();
                                         currLongitude = longitude;
                                         queryPosts(latitude, longitude);
-                                        //Log.e(" LOCATION 2:" , String.valueOf(currLatitude) + "    " +String.valueOf(longitude));
                                     }
                                 }
                             }, Looper.getMainLooper());
-                   // Log.e(" LOCATION :" , String.valueOf(latLng.latitude) + "    " +String.valueOf(latLng.longitude));
                 } else {
                     turnOnGPS();
                 }

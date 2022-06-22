@@ -31,6 +31,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
     public int getItemCount() {
         return posts.size();
     }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -65,14 +66,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            //tvUsername = itemView.findViewById(R.id.tvUsername);
             ivImage = itemView.findViewById(R.id.ivStag);
-            //tvDescription = itemView.findViewById(R.id.tvDescription);
-            //tvTime = itemView.findViewById(R.id.tvTime);
-            //tvUserInDes = itemView.findViewById(R.id.tvUserInDes);
-            ///ivProfilePicture = itemView.findViewById(R.id.ivProfilePicture);
-            //tvLikes = itemView.findViewById(R.id.tvLikes);
-           // ivLikes = itemView.findViewById(R.id.ivLikes);
         }
 
         public void bind(Post post) throws JSONException {
