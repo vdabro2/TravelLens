@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/ivYourPic"
+        android:id="@+id/ivGridPost"
         android:layout_width="140dp"
         android:layout_height="140dp"
         android:layout_marginStart="2dp"

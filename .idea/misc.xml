@@ -14,10 +14,11 @@
         <entry key="app/src/main/res/layout/fragment_compose.xml" value="0.4302536231884058" />
         <entry key="app/src/main/res/layout/fragment_detail.xml" value="0.4302536231884058" />
         <entry key="app/src/main/res/layout/fragment_edit_profile.xml" value="0.4302536231884058" />
-        <entry key="app/src/main/res/layout/fragment_posts.xml" value="0.4302536231884058" />
+        <entry key="app/src/main/res/layout/fragment_posts.xml" value="0.22194061279296878" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.4302536231884058" />
         <entry key="app/src/main/res/layout/item_post.xml" value="0.4302536231884058" />
         <entry key="app/src/main/res/layout/item_profile_post.xml" value="0.4302536231884058" />
+        <entry key="app/src/main/res/layout/item_staggered_post.xml" value="0.16822916666666668" />
         <entry key="app/src/main/res/menu/menu_bottom_navigation.xml" value="0.8026041666666667" />
         <entry key="app/src/main/res/menu/menu_tool.xml" value="0.5947916666666667" />
       </map>

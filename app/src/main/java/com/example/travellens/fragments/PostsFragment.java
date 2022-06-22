@@ -17,13 +17,16 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -32,6 +35,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.travellens.FeedMainActivity;
 import com.example.travellens.Post;
 import com.example.travellens.PostsAdapter;
 import com.example.travellens.R;
@@ -41,6 +45,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationListener;
@@ -61,13 +66,19 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -103,8 +114,39 @@ public class PostsFragment extends Fragment {
     private GoogleApiClient googleApiClient;
     public PostsFragment() {
         // Required empty public constructor
+
         placeToQueryBy = null;
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        //return super.onOptionsItemSelected(item);
+        Log.i("TAG", "SELECT IN POSTS FRAGMENT");
+
+        if (item.getItemId() == R.id.autocomplete_fragment) {
+            Log.i("TAG", "SELECT IN POSTS FRAGMENT");
+            /*
+
+            // Create a new Places client instance.
+            PlacesClient placesClient = Places.createClient(getContext());
+            AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+                    getActivity().getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+            autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
+            autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+                @Override
+                public void onPlaceSelected(Place place) {
+                    Log.i("TAG", "SELECT IN POSTS FRAGMENT");
+                }
+
+                @Override
+                public void onError(Status status) {
+                    Log.i("TAG", "An error occurred: " + status);
+                }
+            });
+            return true;*/
+        }
+        return false;
     }
 
     public PostsFragment(Place place) {
@@ -150,16 +192,47 @@ public class PostsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //searchImage = view.findViewById(R.id.ivSearch);
+
         rvPosts = view.findViewById(R.id.rvPosts);
         allPosts = new ArrayList<>();
         adapter = new PostsAdapter(getContext(), allPosts);
         rvPosts.setAdapter(adapter);
         // set the layout manager on the recycler view
-        rvPosts.setLayoutManager(new StaggeredGridLayoutManager(3, LinearLayoutManager.VERTICAL));
+        rvPosts.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        //StaggeredGridLayoutManager.LayoutParams layoutParams = (StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams();
+        //layoutParams.setFullSpan(true);
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(5000);
         locationRequest.setFastestInterval(2000);
+
+        setHasOptionsMenu(true);
+
+        if (!Places.isInitialized()) {
+            // initialize the api with key
+            Places.initialize(getContext(), getString(R.string.google_maps_api_key));
+        }
+        // Create a new Places client instance.
+        PlacesClient placesClient = Places.createClient(getContext());
+        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+                getActivity().getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                Log.i("TAG", "SELECT IN POSTS FRAGMENT");
+                Log.i("TAG", "Place: " + place.getName() + ", " + place.getId()+ ", " + Objects.requireNonNull(place.getLatLng()).latitude+ ", " + place.getLatLng().longitude);
+                PostsFragment posts_with_loc = new PostsFragment(place);
+                AppCompatActivity activity = (AppCompatActivity) getActivity();
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, posts_with_loc).addToBackStack(null).commit();
+            }
+
+            @Override
+            public void onError(Status status) {
+                Log.i("TAG", "An error occurred: " + status);
+            }
+        });
+        //return true;
 
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
@@ -207,6 +280,7 @@ public class PostsFragment extends Fragment {
             if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
                 if (isGPSEnabled()) {
+                    // The fused location provider is a location API in Google Play services
                     LocationServices.getFusedLocationProviderClient(getActivity())
                             .requestLocationUpdates(locationRequest, new LocationCallback() {
                                 @Override
@@ -308,7 +382,7 @@ public class PostsFragment extends Fragment {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
 
                 if (isGPSEnabled()) {
-                }else {
+                } else {
                     turnOnGPS();
                 }
             }
@@ -319,19 +393,15 @@ public class PostsFragment extends Fragment {
     private boolean isGPSEnabled() {
         LocationManager locationManager = null;
         boolean isEnabled = false;
-
         if (locationManager == null) {
             locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         }
-
         isEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         return isEnabled;
-
     }
 
 
     private void turnOnGPS() {
-
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(locationRequest);
         builder.setAlwaysShow(true);
@@ -342,16 +412,12 @@ public class PostsFragment extends Fragment {
         result.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
             @Override
             public void onComplete(@NonNull Task<LocationSettingsResponse> task) {
-
                 try {
                     LocationSettingsResponse response = task.getResult(ApiException.class);
                     Toast.makeText(getContext(), "GPS is already tured on", Toast.LENGTH_SHORT).show();
-
                 } catch (ApiException e) {
-
                     switch (e.getStatusCode()) {
                         case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-
                             try {
                                 ResolvableApiException resolvableApiException = (ResolvableApiException) e;
                                 resolvableApiException.startResolutionForResult(getActivity(), 2);
@@ -359,7 +425,6 @@ public class PostsFragment extends Fragment {
                                 ex.printStackTrace();
                             }
                             break;
-
                         case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
                             //Device does not have location
                             break;

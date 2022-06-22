@@ -38,34 +38,20 @@ import java.io.IOException;
  * create an instance of this fragment.
  */
 public class EditProfileFragment extends Fragment {
+
     ImageView ivPP;
     TextView tvChange;
-    public final static int REQUEST_CODE_GALLERY = 43;
     TextView tvLogout;
-    public String photoFileName = "photo.jpg";
-    ParseFile photoFile;
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
+    public final static int REQUEST_CODE_GALLERY = 43;
 
     public EditProfileFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment EditProfileFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static EditProfileFragment newInstance(String param1, String param2) {
         EditProfileFragment fragment = new EditProfileFragment();
         Bundle args = new Bundle();
@@ -94,28 +80,32 @@ public class EditProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        // initiate
         tvChange = view.findViewById(R.id.tvChangePP);
         tvLogout = view.findViewById(R.id.tvLogOut);
         ivPP = view.findViewById(R.id.ivChangePP);
+
         ParseFile profilepic = ParseUser.getCurrentUser().getParseFile("profilePicture");
         if (profilepic != null) {
             Glide.with(getContext()).load(profilepic.getUrl()).circleCrop()
                     .into(ivPP);
         }
-
+        // on logout click
         tvLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // log out parse user
                 ParseUser.logOutInBackground();
                 ParseUser currentUser = ParseUser.getCurrentUser();
                 Intent i = new Intent(getContext(), LoginActivity.class);
                 startActivity(i);
             }
         });
-
+        // on change profile picture
         tvChange.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // request getting content from photo gallery
                 Intent intent = new Intent();
                 intent.setType("image/'");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -163,7 +153,6 @@ public class EditProfileFragment extends Fragment {
     }
 
     private void updateUser(ParseFile photoFile, ParseUser user) {
-        //user.setFile()
         user.put("profilePicture", photoFile);
         user.saveInBackground(new SaveCallback() {
             @Override
@@ -172,8 +161,6 @@ public class EditProfileFragment extends Fragment {
                     Log.e(" EROOOR ", e.toString());
                     return;
                 }
-
-                //ivPP.setImageURI();
             }
         });
     }

@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.travellens.fragments.DetailFragment;
-import com.example.travellens.fragments.DetailFragment;
 import com.parse.ParseFile;
 
 import java.util.List;
@@ -61,7 +60,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         private ImageView ivYourPic;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            ivYourPic = itemView.findViewById(R.id.ivYourPic);
+            ivYourPic = itemView.findViewById(R.id.ivGridPost);
         }
 
         public void bind(Post post) {
@@ -76,7 +75,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
                     DetailFragment profileFragment = new DetailFragment(post);
                     AppCompatActivity activity = (AppCompatActivity) v.getContext();
                     activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer,
-                            profileFragment).addToBackStack(null).commit();
+                            profileFragment, "detail").addToBackStack(null).commit();
                 }
             });
         }
