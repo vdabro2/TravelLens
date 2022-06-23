@@ -12,13 +12,17 @@ import java.util.Date;
 
 @ParseClassName("Post")
 public class Post extends ParseObject implements Serializable {
-    public static final String KEY_DESCRIPTION = "description";
-    public static final String KEY_IMAGE = "image";
     public static final String KEY_USER = "user";
+    public static final String KEY_IMAGE = "image";
+    public static final String KEY_LATITUDE = "latitude";
+    public static final String KEY_LONGITUDE = "longitude";
+    public static final String KEY_DESCRIPTION = "description";
+
 
     public String getDescription() {
         return getString(KEY_DESCRIPTION);
     }
+
     public void setDescription(String de) {
          put(KEY_DESCRIPTION, de);
     }
@@ -26,15 +30,15 @@ public class Post extends ParseObject implements Serializable {
     public ParseFile getParseFile() {
         return getParseFile(KEY_IMAGE);
     }
+
     public void setImage(ParseFile de) {
         put(KEY_IMAGE, de);
     }
 
-
-
     public ParseUser getUser() {
         return getParseUser(KEY_USER);
     }
+
     public void setUser(ParseUser de) {
         put(KEY_USER, de);
     }

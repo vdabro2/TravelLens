@@ -13,6 +13,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // this class creates the launch animation
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override

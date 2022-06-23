@@ -17,12 +17,16 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -31,6 +35,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.travellens.FeedMainActivity;
 import com.example.travellens.Post;
 import com.example.travellens.PostsAdapter;
 import com.example.travellens.R;
@@ -40,6 +45,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationListener;
@@ -60,12 +66,19 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -73,47 +86,32 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class PostsFragment extends Fragment {
-    //private static final int REQUEST_FINE_LOCATION = ;//implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
-
-    RecyclerView rvPosts;
-    private SwipeRefreshLayout swipeContainer;
-    protected PostsAdapter adapter;
-    protected List<Post> allPosts;
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-
-    // MAP
-    Location mCurrentLocation;
-    private long UPDATE_INTERVAL = 60000;  /* 60 secs */
-    private long FASTEST_INTERVAL = 5000; /* 5 secs */
-    private final static String KEY_LOCATION = "location";
-    GoogleMap mGoogleMap;
-    SupportMapFragment mapFrag;
-    LocationRequest mLocationRequest;
-    GoogleApiClient mGoogleApiClient;
-
-    private SupportMapFragment mapFragment;
-    private GoogleMap map;
-    private LocationRequest locationRequest;
-
-    /*
-     * Define a request code to send to Google Play services This code is
-     * returned in Activity.onActivityResult
-     */
-    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-
-    Marker mCurrLocationMarker;
-
-
-    // TODO: Rename and change types of parameters
+    double currLatitude;
+    double currLongitude;
     private String mParam1;
     private String mParam2;
-    private GoogleApiClient googleApiClient;
+    private List<Post> allPosts;
+    private RecyclerView rvPosts;
+    private Place placeToQueryBy;
+    protected PostsAdapter adapter;
+    private Location mCurrentLocation;
+    private LocationRequest locationRequest;
+    private SwipeRefreshLayout swipeContainer;
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
+    private final static String KEY_LOCATION = "location";
+
+
     public PostsFragment() {
+        placeToQueryBy = null;
+
+    }
+
+
+
+    public PostsFragment(Place place) {
         // Required empty public constructor
+        placeToQueryBy = place;
     }
 
     /**
@@ -153,16 +151,45 @@ public class PostsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        //searchImage = view.findViewById(R.id.ivSearch);
+
         rvPosts = view.findViewById(R.id.rvPosts);
         allPosts = new ArrayList<>();
         adapter = new PostsAdapter(getContext(), allPosts);
         rvPosts.setAdapter(adapter);
         // set the layout manager on the recycler view
-        rvPosts.setLayoutManager(new StaggeredGridLayoutManager(3, LinearLayoutManager.VERTICAL));
+        rvPosts.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(5000);
         locationRequest.setFastestInterval(2000);
+
+        setHasOptionsMenu(true);
+
+        if (!Places.isInitialized()) {
+            // initialize the api with key
+            Places.initialize(getContext(), getString(R.string.google_maps_api_key));
+        }
+        // Create a new Places client instance.
+        PlacesClient placesClient = Places.createClient(getContext());
+        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+                getActivity().getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                Log.i("TAG", "Place: " + place.getName() + ", " + place.getId()+ ", " + Objects.requireNonNull(place.getLatLng()).latitude+ ", " + place.getLatLng().longitude);
+                PostsFragment posts_with_loc = new PostsFragment(place);
+                AppCompatActivity activity = (AppCompatActivity) getActivity();
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, posts_with_loc).addToBackStack(null).commit();
+            }
+
+            @Override
+            public void onError(Status status) {
+                Log.i("TAG", "An error occurred: " + status);
+            }
+        });
+        //return true;
 
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
@@ -176,12 +203,30 @@ public class PostsFragment extends Fragment {
                 swipeContainer.setRefreshing(false);
             }
         });
+
         // Configure the refreshing colors
         swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+        if (placeToQueryBy == null) {
+            getCurrentLocation(savedInstanceState);
+
+        } else {
+            currLatitude = placeToQueryBy.getLatLng().latitude;
+            currLongitude = placeToQueryBy.getLatLng().longitude;
+            queryPosts(currLatitude, currLongitude);
+        }
         // query posts from Parstagra
+
+
+
+        //queryPosts();
+
+    }
+
+    private void getCurrentLocation(Bundle savedInstanceState) {
+
         if (savedInstanceState != null && savedInstanceState.keySet().contains(KEY_LOCATION)) {
             // Since KEY_LOCATION was found in the Bundle, we can be sure that mCurrentLocation
             // is not null.
@@ -191,9 +236,8 @@ public class PostsFragment extends Fragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
-
                 if (isGPSEnabled()) {
-
+                    // The fused location provider is a location API in Google Play services
                     LocationServices.getFusedLocationProviderClient(getActivity())
                             .requestLocationUpdates(locationRequest, new LocationCallback() {
                                 @Override
@@ -204,17 +248,15 @@ public class PostsFragment extends Fragment {
                                             .removeLocationUpdates(this);
 
                                     if (locationResult != null && locationResult.getLocations().size() >0){
-
                                         int index = locationResult.getLocations().size() - 1;
                                         double latitude = locationResult.getLocations().get(index).getLatitude();
+                                        currLatitude = latitude;
                                         double longitude = locationResult.getLocations().get(index).getLongitude();
-
-                                        //AddressText.setText("Latitude: "+ latitude + "\n" + "Longitude: "+ longitude);
-                                        Log.e(" LOCATION :" , String.valueOf(latitude) + "    " +String.valueOf(longitude));
+                                        currLongitude = longitude;
+                                        queryPosts(latitude, longitude);
                                     }
                                 }
                             }, Looper.getMainLooper());
-
                 } else {
                     turnOnGPS();
                 }
@@ -223,50 +265,17 @@ public class PostsFragment extends Fragment {
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             }
         }
-        //queryPosts();
-
-    }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == 1){
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
-
-                if (isGPSEnabled()) {
-
-                    //getCurrentLocation();
-
-                }else {
-
-                    turnOnGPS();
-                }
-            }
-        }
-
 
     }
 
-
-    private boolean isGPSEnabled() {
-        LocationManager locationManager = null;
-        boolean isEnabled = false;
-
-        if (locationManager == null) {
-            locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-        }
-
-        isEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        return isEnabled;
-
-    }
-    protected void queryPosts() {
+    private void queryPosts(double latitude, double longitude) {
         // specify what type of data we want to query - Post.class
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         // include data referred by user key
         query.include(Post.KEY_USER);
-        // limit query to latest 20 items
-        //query.setLimit(20);
+        //query.whereEqualTo(Post.KEY_LATITUDE, latitude);
+        //query.whereEqualTo(Post.KEY_LONGITUDE, longitude);
+
         // order posts by creation date (newest first)
         query.addDescendingOrder("createdAt");
         // start an asynchronous call for posts
@@ -278,23 +287,76 @@ public class PostsFragment extends Fragment {
                     Log.e("FEED", "Issue with getting posts", e);
                     return;
                 }
-
+                List<Post> postsFiltered = new ArrayList<>();
+                Log.e(" LOCATION :" , String.valueOf(latitude) + "    " +String.valueOf(longitude));
                 // for debugging purposes let's print every post description to logcat
                 for (Post post : posts) {
                     Log.i("FEED", "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
+                    double lonOfPost = post.getDouble(Post.KEY_LONGITUDE);
+                    double latOfPost = post.getDouble(Post.KEY_LATITUDE);
+                    double distance = distance(latOfPost, lonOfPost, latitude, longitude, "M");
+                    Log.e(" LOCATION :" , String.valueOf(lonOfPost) + "    " +String.valueOf(latOfPost));
+                    // caculate how far
+                    // if within 50 miles
+                    // include in postsfiltered
+                    if (distance <= 50) {
+                        postsFiltered.add(post);
+                    }
                 }
 
                 // save received posts to list and notify adapter of new data
-                allPosts.addAll(posts);
+                allPosts.addAll(postsFiltered);
                 adapter.notifyDataSetChanged();
             }
         });
     }
 
+    private static double distance(double lat1, double lon1, double lat2, double lon2, String unit) {
+        if ((lat1 == lat2) && (lon1 == lon2)) {
+            return 0;
+        }
+        else {
+            double theta = lon1 - lon2;
+            double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));
+            dist = Math.acos(dist);
+            dist = Math.toDegrees(dist);
+            dist = dist * 60 * 1.1515;
+            if (unit.equals("K")) {
+                dist = dist * 1.609344;
+            } else if (unit.equals("N")) {
+                dist = dist * 0.8684;
+            }
+            return (dist);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1){
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
+
+                if (isGPSEnabled()) {
+                } else {
+                    turnOnGPS();
+                }
+            }
+        }
+    }
+
+
+    private boolean isGPSEnabled() {
+        LocationManager locationManager = null;
+        boolean isEnabled = false;
+        if (locationManager == null) {
+            locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        }
+        isEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        return isEnabled;
+    }
+
+
     private void turnOnGPS() {
-
-
-
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(locationRequest);
         builder.setAlwaysShow(true);
@@ -305,16 +367,12 @@ public class PostsFragment extends Fragment {
         result.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
             @Override
             public void onComplete(@NonNull Task<LocationSettingsResponse> task) {
-
                 try {
                     LocationSettingsResponse response = task.getResult(ApiException.class);
                     Toast.makeText(getContext(), "GPS is already tured on", Toast.LENGTH_SHORT).show();
-
                 } catch (ApiException e) {
-
                     switch (e.getStatusCode()) {
                         case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-
                             try {
                                 ResolvableApiException resolvableApiException = (ResolvableApiException) e;
                                 resolvableApiException.startResolutionForResult(getActivity(), 2);
@@ -322,7 +380,6 @@ public class PostsFragment extends Fragment {
                                 ex.printStackTrace();
                             }
                             break;
-
                         case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
                             //Device does not have location
                             break;

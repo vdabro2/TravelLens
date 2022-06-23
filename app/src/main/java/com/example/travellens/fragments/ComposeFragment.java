@@ -15,9 +15,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
@@ -25,11 +27,15 @@ import com.bumptech.glide.Glide;
 import com.example.travellens.FeedMainActivity;
 import com.example.travellens.Post;
 import com.example.travellens.R;
+import com.google.android.gms.common.api.Status;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -37,51 +43,31 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
+import java.util.Arrays;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ComposeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ComposeFragment extends Fragment {
-
-
-    FloatingActionButton bCamera;
-    public final static int REQUEST_CODE_GALLERY = 43;
-    FloatingActionButton bGallery;
-    Button bSubmit;
-    EditText etDescription;
-    ImageView ivPic;
-    public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
-    public String photoFileName = "photo.jpg";
-    File photoFile;
-    ProgressBar progressBar;
-    boolean fromGal = false;
-    ParseFile photoFileFromGal;
-    File profilePhoto;
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
+    private File photoFile;
+    private Button bSubmit;
+    private ImageView ivPic;
+    private Place placeInPost;
+    private RatingBar rbRating;
     private String mParam1;
     private String mParam2;
+    private EditText etDescription;
+    private ProgressBar progressBar;
+    private boolean fromGal = false;
+    private ParseFile photoFileFromGal;
+    private FloatingActionButton bCamera;
+    private FloatingActionButton bGallery;
+    public String photoFileName = "photo.jpg";
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
+    public final static int REQUEST_CODE_GALLERY = 43;
+    public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
 
-    public ComposeFragment() {
-        // Required empty public constructor
-    }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ComposeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
+    public ComposeFragment() {}
+
     public static ComposeFragment newInstance(String param1, String param2) {
         ComposeFragment fragment = new ComposeFragment();
         Bundle args = new Bundle();
@@ -103,46 +89,60 @@ public class ComposeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_compose, container, false);
     }
 
-    // This event is triggered soon after onCreateView().
-    // Any view setup should occur here.  E.g., view lookups and attaching view listeners.
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        // Setup any handles to view objects here
-        // EditText etFoo = (EditText) view.findViewById(R.id.etFoo);
-         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-
-        bSubmit = view.findViewById(R.id.bSubmit);
-        etDescription = view.findViewById(R.id.etDescription);
+        // all var declarations
         ivPic = view.findViewById(R.id.ivPic);
+        bSubmit = view.findViewById(R.id.bSubmit);
         bCamera = view.findViewById(R.id.bCamera);
         bGallery = view.findViewById(R.id.bGallery);
-        //queryPosts();
+        etDescription = view.findViewById(R.id.etDescription);
+        rbRating = view.findViewById(R.id.rbRatingCompose);
+        // this bar is shown while post is posting to database
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+
+        // checking conditions before sharing post
+        placeInPost = null;
         bSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String des = etDescription.getText().toString();
                 if (des.isEmpty()) {
-                    Toast.makeText(getContext(), "Cant be empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Description can't be empty", Toast.LENGTH_SHORT).show();
                 }
                 if (photoFile == null || ivPic.getDrawable() == null) {
                     Toast.makeText(getContext(), "Theres no photo", Toast.LENGTH_SHORT).show();
-                    return;}
+                }
+                if (placeInPost == null) {
+                    Toast.makeText(getContext(), "Location can't be empty", Toast.LENGTH_SHORT).show();
+                }
+                if (rbRating.getRating() <= 0) {
+                    Toast.makeText(getContext(), "Add a rating", Toast.LENGTH_SHORT).show();
+                }
+                // creates post based on the rating, post, user, and description
                 ParseUser user  = ParseUser.getCurrentUser();
                 savePost(des, user);
-                Intent i = new Intent(getContext(), FeedMainActivity.class);
-                startActivity(i);
+
+                // after post is created, go to that locations feed
+                PostsFragment postsFragment = new PostsFragment(placeInPost);
+                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer,
+                        postsFragment).addToBackStack(null).commit();
             }
         });
+
+        // launches camera on click
         bCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 launchCamera();
             }
         });
+
+        // launches gallery on click
         bGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -154,6 +154,33 @@ public class ComposeFragment extends Fragment {
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 fromGal = true;
                 startActivityForResult(Intent.createChooser(intent, "Pick an image"), REQUEST_CODE_GALLERY);
+            }
+        });
+
+        // allows this fragments menu to behave differently than in main
+        setHasOptionsMenu(true);
+
+        // initializes the client
+        if (!Places.isInitialized()) {
+            // initialize the api with key
+            Places.initialize(getContext(), getString(R.string.google_maps_api_key));
+        }
+        PlacesClient placesClient = Places.createClient(getContext());
+        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+                getActivity().getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+
+        // creates the autocomplete fragment so the user can set a location for their post
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // todo make a textview to display lcoaiton
+                // save this place to the post info
+                placeInPost = place;
+            }
+            @Override
+            public void onError(Status status) {
+                Log.i("TAG", "An error occurred: " + status);
             }
         });
     }
@@ -189,6 +216,7 @@ public class ComposeFragment extends Fragment {
             }
         }
     }
+
     public ParseFile conversionBitmapParseFile(Bitmap imageBitmap){
         ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
         imageBitmap.compress(Bitmap.CompressFormat.PNG,100,byteArrayOutputStream);
@@ -196,6 +224,7 @@ public class ComposeFragment extends Fragment {
         ParseFile parseFile = new ParseFile("image_file.png",imageByte);
         return parseFile;
     }
+
     private void launchCamera() {
         fromGal = false;
         // create Intent to take a picture and return control to the calling application
@@ -242,14 +271,17 @@ public class ComposeFragment extends Fragment {
         } else {
             post.setImage(new ParseFile(photoFile));
         }
-
+        post.put(Post.KEY_LATITUDE, placeInPost.getLatLng().latitude);
+        post.put("rating", rbRating.getRating());
+        post.put(Post.KEY_LONGITUDE, placeInPost.getLatLng().longitude);
+        post.put("placeId", placeInPost.getId());
+        // ask for rating
         post.setUser(user);
         progressBar.setVisibility(View.VISIBLE);
         post.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if (e != null){
-                    Log.e("EROOOR", e.toString());
                     return;
                 }
                 progressBar.setVisibility(View.GONE);
@@ -259,17 +291,4 @@ public class ComposeFragment extends Fragment {
         });
     }
 
-    private void queryPosts() {
-        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
-        query.findInBackground(new FindCallback<Post>() {
-            @Override
-            public void done(List<Post> objects, ParseException e) {
-                if (e != null) {
-                    Log.e("MAIN", e.toString());
-                }
-                // now you have a bunch of previously posted posts
-            }
-        });
-
-    }
 }

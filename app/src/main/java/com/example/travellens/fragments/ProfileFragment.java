@@ -38,45 +38,28 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class ProfileFragment extends Fragment {
-    Button bLogout;
-    Button bEdit;
-    TextView tvUserName;
-    TextView tvRealName;
-    ImageView ivProfilePicture;
-    TextView tvBio;
-    ParseUser userProfile;
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private Button bEdit;
+    private String mParam1;
+    private String mParam2;
+    private Button bLogout;
+    private TextView tvBio;
+    private TextView tvUserName;
+    private TextView tvRealName;
+    private RecyclerView rvPosts;
+    private ParseUser userProfile;
+    protected List<Post> allPosts;
+    protected ProfileAdapter adapter;
+    private ImageView ivProfilePicture;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-
-    RecyclerView rvPosts;
-    protected ProfileAdapter adapter;
-    protected List<Post> allPosts;
-
     public ProfileFragment() {
-        // Required empty public constructor
         userProfile = ParseUser.getCurrentUser();
     }
     public ProfileFragment(ParseUser user) {
-        // Required empty public constructor
         userProfile = user;
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProfileFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static ProfileFragment newInstance(String param1, String param2) {
         ProfileFragment fragment = new ProfileFragment();
         Bundle args = new Bundle();
@@ -105,30 +88,27 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //ParseUser user  = ParseUser.getCurrentUser();
+        bEdit = view.findViewById(R.id.bEdit);
+        tvBio = view.findViewById(R.id.tvBio);
         rvPosts = view.findViewById(R.id.rvGrid);
+        tvRealName = view.findViewById(R.id.tvRealName);
+        tvUserName = view.findViewById(R.id.tvUserName);
+        ivProfilePicture = view.findViewById(R.id.ivPP2);
+
         allPosts = new ArrayList<>();
         adapter = new ProfileAdapter(getContext(), allPosts);
         rvPosts.setAdapter(adapter);
-        bEdit = view.findViewById(R.id.bEdit);
-        // set the layout manager on the recycler view
-        rvPosts.setLayoutManager(new GridLayoutManager(getContext(), 3));
 
-        tvUserName = view.findViewById(R.id.tvUserName);
+        // set the layout manager on the recycler view
+        rvPosts.setLayoutManager(new GridLayoutManager(getContext(), 3)); // TODO make staggered
         tvUserName.setText(userProfile.getUsername());
-        ivProfilePicture = view.findViewById(R.id.ivPP2);
-        tvRealName = view.findViewById(R.id.tvRealName);
-        tvBio = view.findViewById(R.id.tvBio);
         tvBio.setText(userProfile.getString("biography"));
         tvRealName.setText(userProfile.getString("name"));
 
         ParseFile profilepic = userProfile.getParseFile("profilePicture");
-
         if (profilepic != null) {
             Glide.with(getContext()).load(profilepic.getUrl()).circleCrop().into(ivProfilePicture);
         }
-
-
 
         bEdit.setOnClickListener(new View.OnClickListener() {
             @Override
