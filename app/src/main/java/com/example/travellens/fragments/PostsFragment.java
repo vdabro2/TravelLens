@@ -18,6 +18,7 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -92,13 +93,15 @@ import java.util.Objects;
  * create an instance of this fragment.
  */
 public class PostsFragment extends Fragment {
-    double currLatitude;
-    double currLongitude;
+
     private String mParam1;
     private String mParam2;
+    private ImageView ivFilter;
     private List<Post> allPosts;
+    private double currLatitude;
     private RecyclerView rvPosts;
     private Place placeToQueryBy;
+    private double currLongitude;
     protected PostsAdapter adapter;
     private Location mCurrentLocation;
     private LocationRequest locationRequest;
@@ -161,6 +164,7 @@ public class PostsFragment extends Fragment {
         //searchImage = view.findViewById(R.id.ivSearch);
 
         rvPosts = view.findViewById(R.id.rvPosts);
+        ivFilter = view.findViewById(R.id.ivFilter);
         allPosts = new ArrayList<>();
         adapter = new PostsAdapter(getContext(), allPosts);
         rvPosts.setAdapter(adapter);
@@ -229,11 +233,8 @@ public class PostsFragment extends Fragment {
             currLongitude = placeToQueryBy.getLatLng().longitude;
             queryPosts(currLatitude, currLongitude);
         }
-        // query posts from Parstagra
 
 
-
-        //queryPosts();
 
     }
 

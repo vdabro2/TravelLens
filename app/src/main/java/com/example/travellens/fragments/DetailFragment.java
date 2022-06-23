@@ -102,6 +102,10 @@ public class DetailFragment extends Fragment {
         tvUserInDes = view.findViewById(R.id.tvUserInDes);
         tvDescription = view.findViewById(R.id.tvDescription);
         ivProfilePicture = view.findViewById(R.id.ivProfilePicture);
+        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+                getActivity().getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+        autocompleteFragment.getView().setEnabled(false);
+        autocompleteFragment.getView().setVisibility(View.INVISIBLE);
 
         // description text
         tvDescription.setText(thePost.getDescription());
@@ -168,10 +172,57 @@ public class DetailFragment extends Fragment {
             }
         });
 
-        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
-                getActivity().getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
-        autocompleteFragment.getView().setEnabled(false);
-        autocompleteFragment.getView().setVisibility(View.INVISIBLE);
+        // checks whether user has previously liked this post
+        List<String> list = ParseUser.getCurrentUser().getList("savedPosts");
+        ArrayList<String> list1 = new ArrayList<String>();
+        if (list != null)
+            list1 = new ArrayList<String>(list);
+        boolean alreadyLiked = false;
+        if (list1.contains(thePost.getObjectId())) {
+            alreadyLiked = true;
+        }
+        if (alreadyLiked) ivLikes.setImageResource(R.drawable.img_3);
+        tvLikes.setText( String.valueOf(thePost.getNumber("likes").intValue()));
+        ivLikes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                likeOrUnlike();
+            }
+        });
+    }
+
+    private void likeOrUnlike() {
+        // checks whether user has previously liked this post
+        // we want to check on every onClick
+        List<String> list = ParseUser.getCurrentUser().getList("savedPosts");
+        ArrayList<String> list1 = new ArrayList<String>();
+        if (list != null)
+            list1 = new ArrayList<String>(list);
+        boolean alreadyLiked = false;
+        if (list1.contains(thePost.getObjectId())) {
+            alreadyLiked = true;
+        }
+        if (alreadyLiked) {
+            ivLikes.setImageResource(R.drawable.ufi_heart);
+            list1.remove(thePost.getObjectId());
+            ParseUser.getCurrentUser().put("savedPosts", list1);
+            thePost.put("likes", thePost.getNumber("likes").intValue() - 1);
+        } else {
+            ivLikes.setImageResource(R.drawable.img_2);
+            list1.add(thePost.getObjectId());
+            ParseUser.getCurrentUser().put("savedPosts", list1);
+            thePost.put("likes", thePost.getNumber("likes").intValue() + 1);
+        }
+
+        thePost.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {}});
+        ParseUser.getCurrentUser().saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {}});
+
+        // resetting the text
+        tvLikes.setText(String.valueOf(thePost.getNumber("likes").intValue()));
     }
 
 }
