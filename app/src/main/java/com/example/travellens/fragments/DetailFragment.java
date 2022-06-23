@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatEditText;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -25,6 +26,7 @@ import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.maps.errors.ApiException;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -165,6 +167,11 @@ public class DetailFragment extends Fragment {
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, profileFragment).addToBackStack(null).commit();
             }
         });
+
+        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+                getActivity().getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+        autocompleteFragment.getView().setEnabled(false);
+        autocompleteFragment.getView().setVisibility(View.INVISIBLE);
     }
 
 }

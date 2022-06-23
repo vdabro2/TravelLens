@@ -72,6 +72,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         public void bind(Post post) throws JSONException {
             ParseFile image = post.getParseFile();
             if (image != null) {
+
                 Glide.with(context).load(image.getUrl()).into(ivImage);
             }
 

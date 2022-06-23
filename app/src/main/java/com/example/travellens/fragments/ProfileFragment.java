@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatEditText;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -23,6 +24,7 @@ import com.example.travellens.ProfileAdapter;
 import com.example.travellens.R;
 import com.example.travellens.Post;
 import com.example.travellens.ProfileAdapter;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -121,6 +123,11 @@ public class ProfileFragment extends Fragment {
                 fragmentTransaction.commit();
             }
         });
+
+        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+                getActivity().getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+        autocompleteFragment.getView().setEnabled(false);
+        autocompleteFragment.getView().setVisibility(View.INVISIBLE);
         queryPosts();
     }
 

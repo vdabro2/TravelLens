@@ -10,6 +10,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -21,15 +24,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -124,6 +130,7 @@ public class PostsFragment extends Fragment {
      */
     // TODO: Rename and change types and number of parameters
     public static PostsFragment newInstance(String param1, String param2) {
+        // TODO maybe try this
         PostsFragment fragment = new PostsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
@@ -166,14 +173,19 @@ public class PostsFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
-        if (!Places.isInitialized()) {
-            // initialize the api with key
-            Places.initialize(getContext(), getString(R.string.google_maps_api_key));
-        }
         // Create a new Places client instance.
         PlacesClient placesClient = Places.createClient(getContext());
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 getActivity().getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+        autocompleteFragment.getView().setEnabled(true);
+        autocompleteFragment.getView().setVisibility(View.VISIBLE);
+        ImageView searchIcon = (ImageView)((LinearLayout)autocompleteFragment.getView()).getChildAt(0);
+
+        Bitmap bitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.iconpostpage)).getBitmap();
+        // Scale it to 50 x 50
+        Drawable d = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 50, 50, true));
+        // Set the desired icon
+        searchIcon.setImageDrawable(d);
         autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
@@ -234,17 +246,19 @@ public class PostsFragment extends Fragment {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+            FragmentActivity activity = getActivity();
+            if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
+
                 if (isGPSEnabled()) {
                     // The fused location provider is a location API in Google Play services
-                    LocationServices.getFusedLocationProviderClient(getActivity())
+                    LocationServices.getFusedLocationProviderClient(activity)
                             .requestLocationUpdates(locationRequest, new LocationCallback() {
                                 @Override
                                 public void onLocationResult(@NonNull LocationResult locationResult) {
                                     super.onLocationResult(locationResult);
 
-                                    LocationServices.getFusedLocationProviderClient(getActivity())
+                                    LocationServices.getFusedLocationProviderClient(activity)
                                             .removeLocationUpdates(this);
 
                                     if (locationResult != null && locationResult.getLocations().size() >0){
@@ -389,12 +403,6 @@ public class PostsFragment extends Fragment {
         });
 
     }
-
-
-
-
-
-
 
 
 }
