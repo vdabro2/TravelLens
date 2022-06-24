@@ -107,6 +107,7 @@ public class DetailFragment extends Fragment {
         tvUserInDes = view.findViewById(R.id.tvUserInDes);
         tvDescription = view.findViewById(R.id.tvDescription);
         ivProfilePicture = view.findViewById(R.id.ivProfilePicture);
+        // turn off autocomplete fragment on this page
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 getActivity().getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
         autocompleteFragment.getView().setEnabled(false);
@@ -117,12 +118,16 @@ public class DetailFragment extends Fragment {
         // set relative time on layout
         tvTime.setText(Post.calculateTimeAgo(thePost.getCreatedAt()));
         // set second username text
-        tvUserInDes.setText(thePost.getUser().getUsername());
+        try {
+            tvUserInDes.setText(thePost.getUser().fetchIfNeeded().getUsername());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         // set name of place aka location name
         tvLocation.setText(thePost.getString("placeName"));
-
-
+        // set rating according to database
         rbRating.setRating((float) thePost.getDouble("rating"));
+
         // post image load into imageview using glide
         ParseFile image = thePost.getParseFile();
         if (image != null) {
@@ -134,22 +139,17 @@ public class DetailFragment extends Fragment {
             Glide.with(getContext()).load(profilepic.getUrl()).circleCrop().into(ivProfilePicture);
         }
 
-
         // if you click the profile image or username, you get sent to the users profile
         ivProfilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ProfileFragment profileFragment = new ProfileFragment(thePost.getUser());
-                AppCompatActivity activity = (AppCompatActivity)getActivity();
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, profileFragment).addToBackStack(null).commit();
+                goToProfile();
             }
         });
         tvUserInDes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ProfileFragment profileFragment = new ProfileFragment(thePost.getUser());
-                AppCompatActivity activity = (AppCompatActivity)getActivity();
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, profileFragment).addToBackStack(null).commit();
+                goToProfile();
             }
         });
 
@@ -162,6 +162,12 @@ public class DetailFragment extends Fragment {
                 likeOrUnlike();
             }
         });
+    }
+
+    private void goToProfile() {
+        ProfileFragment profileFragment = new ProfileFragment(thePost.getUser());
+        AppCompatActivity activity = (AppCompatActivity)getActivity();
+        activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, profileFragment).addToBackStack(null).commit();
     }
 
     private void likeOrUnlike() {
