@@ -277,6 +277,7 @@ public class ComposeFragment extends Fragment {
         }
         post.put(Post.KEY_LATITUDE, placeInPost.getLatLng().latitude);
         post.put("rating", rbRating.getRating());
+        post.put("placeName", placeInPost.getName());
         post.put(Post.KEY_LONGITUDE, placeInPost.getLatLng().longitude);
         post.put("placeId", placeInPost.getId());
         // ask for rating

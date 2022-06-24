@@ -17,6 +17,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.provider.ContactsContract;
 import android.util.Log;
@@ -75,6 +76,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.PlaceLikelihood;
+import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
+import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
@@ -84,6 +88,7 @@ import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -205,17 +210,13 @@ public class PostsFragment extends Fragment {
                 Log.i("TAG", "An error occurred: " + status);
             }
         });
-        //return true;
+
 
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // Your code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.
-               // queryPosts();
                 swipeContainer.setRefreshing(false);
             }
         });
@@ -245,6 +246,36 @@ public class PostsFragment extends Fragment {
             // is not null.
             mCurrentLocation = savedInstanceState.getParcelable(KEY_LOCATION);
         }
+
+        // TODO ignore
+// Use fields to define the data types to return.
+        List<Place.Field> placeFields = Collections.singletonList(Place.Field.NAME);
+
+// Use the builder to create a FindCurrentPlaceRequest.
+        FindCurrentPlaceRequest request = FindCurrentPlaceRequest.newInstance(placeFields);
+
+// Call findCurrentPlace and handle the response (first check that the user has granted permission).
+        PlacesClient placesClient = Places.createClient(getContext());
+        if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            Task<FindCurrentPlaceResponse> placeResponse = placesClient.findCurrentPlace(request);
+            placeResponse.addOnCompleteListener(task -> {
+                if (task.isSuccessful()){
+                    FindCurrentPlaceResponse response = task.getResult();
+                    for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
+                        Log.i("TAG", String.format("Place '%s' has likelihood: %f",
+                                placeLikelihood.getPlace().getName(),
+                                placeLikelihood.getLikelihood()));
+                    }
+                } else {
+                    Exception exception = task.getException();
+                    if (exception instanceof ApiException) {
+                        ApiException apiException = (ApiException) exception;
+                        Log.e("TAG", "Place not found: " + apiException.getStatusCode());
+                    }
+                }
+            });
+        }
+        // TODO ignore
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             FragmentActivity activity = getActivity();
