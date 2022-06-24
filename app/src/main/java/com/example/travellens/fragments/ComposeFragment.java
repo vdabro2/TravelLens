@@ -3,6 +3,8 @@ package com.example.travellens.fragments;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -14,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.Toast;
@@ -46,13 +49,13 @@ import java.io.IOException;
 import java.util.Arrays;
 
 public class ComposeFragment extends Fragment {
+    private String mParam1;
+    private String mParam2;
     private File photoFile;
     private Button bSubmit;
     private ImageView ivPic;
     private Place placeInPost;
     private RatingBar rbRating;
-    private String mParam1;
-    private String mParam2;
     private EditText etDescription;
     private ProgressBar progressBar;
     private boolean fromGal = false;
@@ -160,14 +163,19 @@ public class ComposeFragment extends Fragment {
         // allows this fragments menu to behave differently than in main
         setHasOptionsMenu(true);
 
-        // initializes the client
-        if (!Places.isInitialized()) {
-            // initialize the api with key
-            Places.initialize(getContext(), getString(R.string.google_maps_api_key));
-        }
+
         PlacesClient placesClient = Places.createClient(getContext());
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 getActivity().getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+        autocompleteFragment.getView().setEnabled(true);
+        autocompleteFragment.getView().setVisibility(View.VISIBLE);
+        ImageView searchIcon = (ImageView)((LinearLayout)autocompleteFragment.getView()).getChildAt(0);
+
+        Bitmap bitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.iconcomposepage)).getBitmap();
+        // Scale it to 50 x 50
+        Drawable d = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 50, 50, true));
+        // Set the desired icon
+        searchIcon.setImageDrawable(d);
 
         // creates the autocomplete fragment so the user can set a location for their post
         autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
@@ -180,7 +188,7 @@ public class ComposeFragment extends Fragment {
             }
             @Override
             public void onError(Status status) {
-                Log.i("TAG", "An error occurred: " + status);
+                Log.e("TAG", "An error occurred: " + status);
             }
         });
     }
@@ -190,14 +198,10 @@ public class ComposeFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == getActivity().RESULT_OK) {
-                // by this point we have the camera photo on disk
                 fromGal = false;
                 Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
-                // RESIZE BITMAP, see section below
-                // Load the taken image into a preview
-
                 ivPic.setImageBitmap(takenImage);
-            } else { // Result was a failure
+            } else {
                 Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
         } else if (requestCode == REQUEST_CODE_GALLERY && resultCode == getActivity().RESULT_OK) {

@@ -16,12 +16,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatEditText;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.travellens.LoginActivity;
 import com.example.travellens.R;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
@@ -112,6 +114,11 @@ public class EditProfileFragment extends Fragment {
                 startActivityForResult(Intent.createChooser(intent, "Pick an image"), REQUEST_CODE_GALLERY);
             }
         });
+
+        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+                getActivity().getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+        autocompleteFragment.getView().setEnabled(false);
+        autocompleteFragment.getView().setVisibility(View.INVISIBLE);
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

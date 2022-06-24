@@ -78,6 +78,11 @@ public class FeedMainActivity extends AppCompatActivity {
             }
         });
         bottomNavigationView.setSelectedItemId(R.id.action_home);
+        // initializes the client
+        if (!Places.isInitialized()) {
+            // initialize the api with key
+            Places.initialize(getApplicationContext(), getString(R.string.google_maps_api_key));
+        }
     }
 
 
