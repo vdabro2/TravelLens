@@ -134,8 +134,11 @@ public class ProfileFragment extends Fragment {
         bSavedPosts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(" clicked ", "abc");
+                //allPosts.addAll(new ArrayList<>());
+                //adapter.notifyDataSetChanged();
+                adapter.clear();
                 querySavedPosts();
+
             }
         });
     }

@@ -25,8 +25,10 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
@@ -101,7 +103,7 @@ public class PostsFragment extends Fragment {
 
     private String mParam1;
     private String mParam2;
-    private ImageView ivFilter;
+    private Spinner sFilter;
     private List<Post> allPosts;
     private double currLatitude;
     private RecyclerView rvPosts;
@@ -162,7 +164,7 @@ public class PostsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         rvPosts = view.findViewById(R.id.rvPosts);
-        ivFilter = view.findViewById(R.id.ivFilter);
+
 
         allPosts = new ArrayList<>();
         adapter = new PostsAdapter(getContext(), allPosts);
@@ -177,6 +179,14 @@ public class PostsFragment extends Fragment {
 
         // initialize the autocompletefragment and sets up on click for it
         callPlacesAPI();
+
+        // intialize drop down menu
+        /*
+        sFilter = (Spinner) view.findViewById(R.id.sFilter);
+        String[] users = { "Suresh Dasari", "Trishika Dasari", "Rohini Alavala", "Praveen Kumar", "Madhav Sai" };
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(view.getContext(), R.layout.simple_spinner_item, users);
+        adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
+        sFilter.setAdapter(adapter);*/
 
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
@@ -231,7 +241,7 @@ public class PostsFragment extends Fragment {
 
             @Override
             public void onError(Status status) {
-                Log.i("TAG", "An error occurred: " + status);
+                Log.e("Posts Fragment", "An error occurred: " + status);
             }
         });
     }

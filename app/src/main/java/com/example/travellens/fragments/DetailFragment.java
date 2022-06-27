@@ -121,7 +121,7 @@ public class DetailFragment extends Fragment {
         try {
             tvUserInDes.setText(thePost.getUser().fetchIfNeeded().getUsername());
         } catch (ParseException e) {
-            e.printStackTrace();
+            Log.e("Detail Fragment: ", e.toString());
         }
         // set name of place aka location name
         tvLocation.setText(thePost.getString("placeName"));
@@ -194,6 +194,8 @@ public class DetailFragment extends Fragment {
                         } else {
                             tvLikes.setText(likeCount + " likes");}
                     }
+                } else if (e != null){
+                    Log.e("Detail Fragment: ", e.toString());
                 } else {
                     // make a new like object
                     Likes like = new Likes();
@@ -242,6 +244,7 @@ public class DetailFragment extends Fragment {
             }
         });
     }
+
 
     private void queryHowManyLikes() {
         ParseQuery<Likes> query = ParseQuery.getQuery(Likes.class);

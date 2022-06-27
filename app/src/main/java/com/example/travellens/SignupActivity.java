@@ -41,7 +41,7 @@ public class SignupActivity extends AppCompatActivity {
                         || etName.getText().toString().isEmpty() || etUsername.getText().toString().isEmpty()) {
                     Toast.makeText(SignupActivity.this, "Fill everything out!", Toast.LENGTH_SHORT).show();
                 } else {
-                    // TODO add more things when signing up
+                    // TODO add more things when signing up like profile pic
                     String password = etPass.getText().toString();
                     String bio = etBio1.getText().toString();
                     String name = etName.getText().toString();
