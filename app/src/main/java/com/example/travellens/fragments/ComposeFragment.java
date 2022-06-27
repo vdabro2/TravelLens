@@ -194,6 +194,11 @@ public class ComposeFragment extends Fragment {
                                 @Override
                                 public void onClick(View v) {
                                     placeInPost = placeLikelihood.getPlace();
+
+                                    AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+                                            getActivity().getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+                                    autocompleteFragment.setText(placeInPost.getName());
+
                                     Log.i("populateChipsWithLocation", " Place Clicked" + placeInPost.getName());
                                 }
                             });
