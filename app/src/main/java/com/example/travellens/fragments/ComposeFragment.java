@@ -104,7 +104,6 @@ public class ComposeFragment extends Fragment {
         bGallery = view.findViewById(R.id.bGallery);
         etDescription = view.findViewById(R.id.etDescription);
         rbRating = view.findViewById(R.id.rbRatingCompose);
-        // this bar is shown while post is posting to database
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 
         // checking conditions before sharing post
@@ -112,28 +111,17 @@ public class ComposeFragment extends Fragment {
         bSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String des = etDescription.getText().toString();
-                if (des.isEmpty()) {
-                    Toast.makeText(getContext(), "Description can't be empty", Toast.LENGTH_SHORT).show();
-                }
-                if (photoFile == null || ivPic.getDrawable() == null) {
-                    Toast.makeText(getContext(), "Theres no photo", Toast.LENGTH_SHORT).show();
-                }
-                if (placeInPost == null) {
-                    Toast.makeText(getContext(), "Location can't be empty", Toast.LENGTH_SHORT).show();
-                }
-                if (rbRating.getRating() <= 0) {
-                    Toast.makeText(getContext(), "Add a rating", Toast.LENGTH_SHORT).show();
+                String description = etDescription.getText().toString();
+                if (description.isEmpty() || photoFile == null || ivPic.getDrawable() == null
+                        || placeInPost == null || rbRating.getRating() <= 0) {
+                    Toast.makeText(getContext(), "Make sure you fill out everything!", Toast.LENGTH_SHORT).show();
                 }
                 // creates post based on the rating, post, user, and description
                 ParseUser user  = ParseUser.getCurrentUser();
-                savePost(des, user);
-
+                savePost(description, user);
                 // after post is created, go to that locations feed
-                PostsFragment postsFragment = new PostsFragment(placeInPost);
-                AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer,
-                        postsFragment).addToBackStack(null).commit();
+                goLocationTimeline();
+
             }
         });
 
@@ -149,46 +137,49 @@ public class ComposeFragment extends Fragment {
         bGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                photoFile = getPhotoFileUri(photoFileName);
-                Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.codepath.fileprovider", photoFile);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
-                intent.setType("image/'");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                fromGal = true;
-                startActivityForResult(Intent.createChooser(intent, "Pick an image"), REQUEST_CODE_GALLERY);
+                launchGallery();
             }
         });
 
         // allows this fragments menu to behave differently than in main
         setHasOptionsMenu(true);
+        //
+        callPlacesAPI();
+    }
 
+    private void goLocationTimeline() {
+        PostsFragment postsFragment = new PostsFragment(placeInPost);
+        AppCompatActivity activity = (AppCompatActivity) getContext();
+        activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer,
+                postsFragment).addToBackStack(null).commit();
+    }
 
+    private void callPlacesAPI() {
+        // create client
         PlacesClient placesClient = Places.createClient(getContext());
+        // link fragment to layout
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 getActivity().getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
         autocompleteFragment.getView().setEnabled(true);
         autocompleteFragment.getView().setVisibility(View.VISIBLE);
-        ImageView searchIcon = (ImageView)((LinearLayout)autocompleteFragment.getView()).getChildAt(0);
 
+        // set the search icon of the API fragment
+        ImageView searchIcon = (ImageView)((LinearLayout)autocompleteFragment.getView()).getChildAt(0);
         Bitmap bitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.iconcomposepage)).getBitmap();
-        // Scale it to 50 x 50
         Drawable d = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 50, 50, true));
-        // Set the desired icon
         searchIcon.setImageDrawable(d);
 
-        // creates the autocomplete fragment so the user can set a location for their post
+        // asks for the info I need to store in database
         autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                // todo make a textview to display lcoaiton
                 // save this place to the post info
                 placeInPost = place;
             }
             @Override
             public void onError(Status status) {
-                Log.e("TAG", "An error occurred: " + status);
+                Log.e("COMPOSE FRAGMENT", "An error occurred: " + status);
             }
         });
     }
@@ -236,24 +227,30 @@ public class ComposeFragment extends Fragment {
         // Create a File reference for future access
         photoFile = getPhotoFileUri(photoFileName);
 
-        // wrap File object into a content provider
-        // required for API >= 24
-        // See https://guides.codepath.com/android/Sharing-Content-with-Intents#sharing-files-with-api-24-or-higher
         Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.codepath.fileprovider", photoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
 
-        // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
-        // So as long as the result is not null, it's safe to use the intent.
         if (intent.resolveActivity(getContext().getPackageManager()) != null) {
-            // Start the image capture intent to take photo
             startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
         }
     }
 
+    private void launchGallery() {
+        fromGal = true;
+
+        Intent intent = new Intent();
+        photoFile = getPhotoFileUri(photoFileName);
+
+        Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.codepath.fileprovider", photoFile);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
+
+        intent.setType("image/'");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+
+        startActivityForResult(Intent.createChooser(intent, "Pick an image"), REQUEST_CODE_GALLERY);
+    }
+
     private File getPhotoFileUri(String photoFileName) {
-        // Get safe storage directory for photos
-        // Use `getExternalFilesDir` on Context to access package-specific directories.
-        // This way, we don't need to request external read/write runtime permissions.
         File mediaStorageDir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "");
 
         // Create the storage directory if it does not exist
@@ -263,13 +260,12 @@ public class ComposeFragment extends Fragment {
 
         // Return the file target for the photo based on filename
         File file = new File(mediaStorageDir.getPath() + File.separator + photoFileName);
-
         return file;
     }
 
-    private void savePost(String des, ParseUser user) {
+    private void savePost(String description, ParseUser user) {
         Post post = new Post();
-        post.setDescription(des);
+        post.setDescription(description);
         if (fromGal == true) {
             post.setImage(photoFileFromGal);
         } else {
@@ -277,6 +273,7 @@ public class ComposeFragment extends Fragment {
         }
         post.put(Post.KEY_LATITUDE, placeInPost.getLatLng().latitude);
         post.put("rating", rbRating.getRating());
+        post.put("placeName", placeInPost.getName());
         post.put(Post.KEY_LONGITUDE, placeInPost.getLatLng().longitude);
         post.put("placeId", placeInPost.getId());
         // ask for rating

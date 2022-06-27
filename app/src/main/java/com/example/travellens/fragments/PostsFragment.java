@@ -17,6 +17,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.provider.ContactsContract;
 import android.util.Log;
@@ -75,6 +76,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.PlaceLikelihood;
+import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
+import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
@@ -84,6 +88,7 @@ import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -113,10 +118,7 @@ public class PostsFragment extends Fragment {
 
     public PostsFragment() {
         placeToQueryBy = null;
-
     }
-
-
 
     public PostsFragment(Place place) {
         // Required empty public constructor
@@ -131,9 +133,7 @@ public class PostsFragment extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment PostsFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static PostsFragment newInstance(String param1, String param2) {
-        // TODO maybe try this
         PostsFragment fragment = new PostsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
@@ -161,10 +161,9 @@ public class PostsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //searchImage = view.findViewById(R.id.ivSearch);
-
         rvPosts = view.findViewById(R.id.rvPosts);
         ivFilter = view.findViewById(R.id.ivFilter);
+
         allPosts = new ArrayList<>();
         adapter = new PostsAdapter(getContext(), allPosts);
         rvPosts.setAdapter(adapter);
@@ -174,22 +173,52 @@ public class PostsFragment extends Fragment {
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(5000);
         locationRequest.setFastestInterval(2000);
-
         setHasOptionsMenu(true);
 
+        // initialize the autocompletefragment and sets up on click for it
+        callPlacesAPI();
+
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeContainer.setRefreshing(false);
+            }
+        });
+
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+        if (placeToQueryBy == null) {
+            getCurrentLocation(savedInstanceState);
+        } else {
+            currLatitude = placeToQueryBy.getLatLng().latitude;
+            currLongitude = placeToQueryBy.getLatLng().longitude;
+            queryPosts(currLatitude, currLongitude);
+        }
+
+
+
+    }
+
+    private void callPlacesAPI() {
         // Create a new Places client instance.
         PlacesClient placesClient = Places.createClient(getContext());
+        // link fragment to layout
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 getActivity().getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
         autocompleteFragment.getView().setEnabled(true);
         autocompleteFragment.getView().setVisibility(View.VISIBLE);
-        ImageView searchIcon = (ImageView)((LinearLayout)autocompleteFragment.getView()).getChildAt(0);
 
+        // change icon for this fragment
+        ImageView searchIcon = (ImageView)((LinearLayout)autocompleteFragment.getView()).getChildAt(0);
         Bitmap bitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.iconpostpage)).getBitmap();
-        // Scale it to 50 x 50
         Drawable d = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 50, 50, true));
-        // Set the desired icon
         searchIcon.setImageDrawable(d);
+
         autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
@@ -205,52 +234,18 @@ public class PostsFragment extends Fragment {
                 Log.i("TAG", "An error occurred: " + status);
             }
         });
-        //return true;
-
-        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
-        // Setup refresh listener which triggers new data loading
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                // Your code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.
-               // queryPosts();
-                swipeContainer.setRefreshing(false);
-            }
-        });
-
-        // Configure the refreshing colors
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
-        if (placeToQueryBy == null) {
-            getCurrentLocation(savedInstanceState);
-
-        } else {
-            currLatitude = placeToQueryBy.getLatLng().latitude;
-            currLongitude = placeToQueryBy.getLatLng().longitude;
-            queryPosts(currLatitude, currLongitude);
-        }
-
-
-
     }
 
     private void getCurrentLocation(Bundle savedInstanceState) {
-
         if (savedInstanceState != null && savedInstanceState.keySet().contains(KEY_LOCATION)) {
-            // Since KEY_LOCATION was found in the Bundle, we can be sure that mCurrentLocation
-            // is not null.
             mCurrentLocation = savedInstanceState.getParcelable(KEY_LOCATION);
         }
 
+        // built in to android
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             FragmentActivity activity = getActivity();
             if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
-
                 if (isGPSEnabled()) {
                     // The fused location provider is a location API in Google Play services
                     LocationServices.getFusedLocationProviderClient(activity)
@@ -284,16 +279,10 @@ public class PostsFragment extends Fragment {
     }
 
     private void queryPosts(double latitude, double longitude) {
-        // specify what type of data we want to query - Post.class
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
-        // include data referred by user key
         query.include(Post.KEY_USER);
-        //query.whereEqualTo(Post.KEY_LATITUDE, latitude);
-        //query.whereEqualTo(Post.KEY_LONGITUDE, longitude);
-
-        // order posts by creation date (newest first)
         query.addDescendingOrder("createdAt");
-        // start an asynchronous call for posts
+
         query.findInBackground(new FindCallback<Post>() {
             @Override
             public void done(List<Post> posts, ParseException e) {
@@ -311,14 +300,11 @@ public class PostsFragment extends Fragment {
                     double latOfPost = post.getDouble(Post.KEY_LATITUDE);
                     double distance = distance(latOfPost, lonOfPost, latitude, longitude, "M");
                     Log.e(" LOCATION :" , String.valueOf(lonOfPost) + "    " +String.valueOf(latOfPost));
-                    // caculate how far
-                    // if within 50 miles
-                    // include in postsfiltered
+
                     if (distance <= 50) {
                         postsFiltered.add(post);
                     }
                 }
-
                 // save received posts to list and notify adapter of new data
                 allPosts.addAll(postsFiltered);
                 adapter.notifyDataSetChanged();

@@ -40,7 +40,6 @@ import java.io.IOException;
  * create an instance of this fragment.
  */
 public class EditProfileFragment extends Fragment {
-
     ImageView ivPP;
     TextView tvChange;
     TextView tvLogout;

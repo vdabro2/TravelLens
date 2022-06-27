@@ -11,6 +11,8 @@ public class ParseApplication extends Application {
         super.onCreate();
         // this is my database application info
         ParseObject.registerSubclass(Post.class);
+        ParseObject.registerSubclass(Likes.class);
+
         Parse.initialize(new Parse.Configuration.Builder(this)
                         .applicationId(getString(R.string.application_id))
                         .clientKey(getString(R.string.client_id))

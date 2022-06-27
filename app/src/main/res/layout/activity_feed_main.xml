@@ -25,8 +25,8 @@
     <fragment
         android:id="@+id/autocomplete_fragment"
         android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-        android:layout_width="241dp"
-        android:layout_height="55dp"
+        android:layout_width="348dp"
+        android:layout_height="50dp"
         android:layout_marginStart="5dp"
         android:layout_marginTop="9dp"
         android:layout_marginBottom="9dp"

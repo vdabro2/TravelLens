@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatEditText;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -19,11 +18,10 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.travellens.Likes;
 import com.example.travellens.Post;
 import com.example.travellens.ProfileAdapter;
 import com.example.travellens.R;
-import com.example.travellens.Post;
-import com.example.travellens.ProfileAdapter;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -45,6 +43,7 @@ public class ProfileFragment extends Fragment {
     private String mParam2;
     private Button bLogout;
     private TextView tvBio;
+    private Button bSavedPosts;
     private TextView tvUserName;
     private TextView tvRealName;
     private RecyclerView rvPosts;
@@ -90,9 +89,10 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        bEdit = view.findViewById(R.id.bEdit);
         tvBio = view.findViewById(R.id.tvBio);
         rvPosts = view.findViewById(R.id.rvGrid);
+        bEdit = view.findViewById(R.id.bEditProfile);
+        bSavedPosts = view.findViewById(R.id.bMySaves);
         tvRealName = view.findViewById(R.id.tvRealName);
         tvUserName = view.findViewById(R.id.tvUserName);
         ivProfilePicture = view.findViewById(R.id.ivPP2);
@@ -111,6 +111,7 @@ public class ProfileFragment extends Fragment {
         if (profilepic != null) {
             Glide.with(getContext()).load(profilepic.getUrl()).circleCrop().into(ivProfilePicture);
         }
+        allowEditProfile();
 
         bEdit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,6 +130,58 @@ public class ProfileFragment extends Fragment {
         autocompleteFragment.getView().setEnabled(false);
         autocompleteFragment.getView().setVisibility(View.INVISIBLE);
         queryPosts();
+
+        bSavedPosts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(" clicked ", "abc");
+                querySavedPosts();
+            }
+        });
+    }
+
+    private void querySavedPosts() {
+        ParseQuery<Likes> query = ParseQuery.getQuery(Likes.class);
+        query.include(Likes.KEY_POST);
+        query.include(Likes.KEY_USER);
+        query.whereEqualTo(Likes.KEY_USER, userProfile);
+
+        query.addDescendingOrder("createdAt");
+        query.findInBackground(new FindCallback<Likes>() {
+            @Override
+            public void done(List<Likes> results, ParseException e) {
+                if (e == null) {
+                    List<Post> posts = new ArrayList<>();
+                    for (Likes like : results) {
+                        posts.add((Post) like.getPost());
+
+                    }
+                    allPosts.addAll(posts);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
+    }
+
+
+    private void allowEditProfile() {
+        if (!userProfile.getUsername().equals(ParseUser.getCurrentUser().getUsername())) {
+            // no edit profile button should exist
+            bEdit.setEnabled(false);
+            bEdit.setVisibility(View.INVISIBLE);
+        } else {
+            bEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Fragment fragment = new EditProfileFragment();
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.flContainer, fragment);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                }
+            });
+        }
     }
 
 

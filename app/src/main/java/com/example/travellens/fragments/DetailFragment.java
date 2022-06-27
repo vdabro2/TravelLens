@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.example.travellens.FeedMainActivity;
+import com.example.travellens.Likes;
 import com.example.travellens.Post;
 import com.example.travellens.R;
 import com.example.travellens.Post;
@@ -28,8 +29,11 @@ import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.maps.errors.ApiException;
+import com.parse.CountCallback;
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -44,6 +48,7 @@ import java.util.List;
  */
 public class DetailFragment extends Fragment {
     private Post thePost;
+    private int likeCount;
     private String mParam1;
     private String mParam2;
     private TextView tvTime;
@@ -102,6 +107,7 @@ public class DetailFragment extends Fragment {
         tvUserInDes = view.findViewById(R.id.tvUserInDes);
         tvDescription = view.findViewById(R.id.tvDescription);
         ivProfilePicture = view.findViewById(R.id.ivProfilePicture);
+        // turn off autocomplete fragment on this page
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 getActivity().getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
         autocompleteFragment.getView().setEnabled(false);
@@ -112,36 +118,16 @@ public class DetailFragment extends Fragment {
         // set relative time on layout
         tvTime.setText(Post.calculateTimeAgo(thePost.getCreatedAt()));
         // set second username text
-        tvUserInDes.setText(thePost.getUser().getUsername());
-
-
-        if (!Places.isInitialized()) {
-            // initialize the api with key
-            Places.initialize(getContext(), getString(R.string.google_maps_api_key));
+        try {
+            tvUserInDes.setText(thePost.getUser().fetchIfNeeded().getUsername());
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-        // Create a new Places client instance.
-        PlacesClient placesClient = Places.createClient(getContext());
-        // Define a Place ID.
-        final String placeId = thePost.getString("placeId");
-
-        // Specify the fields to return.
-        final List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
-
-        // Construct a request object, passing the place ID and fields array.
-        final FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeId, placeFields);
-
-        placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
-            Place place = response.getPlace();
-            Log.i("TAG", "Place found: " + place.getName());
-            tvLocation.setText(place.getName());
-        }).addOnFailureListener((exception) -> {
-            if (exception instanceof ApiException) {
-                Log.e("TAG", "Place not found: " + exception.getMessage());
-            }
-        });
-
-
+        // set name of place aka location name
+        tvLocation.setText(thePost.getString("placeName"));
+        // set rating according to database
         rbRating.setRating((float) thePost.getDouble("rating"));
+
         // post image load into imageview using glide
         ParseFile image = thePost.getParseFile();
         if (image != null) {
@@ -153,36 +139,23 @@ public class DetailFragment extends Fragment {
             Glide.with(getContext()).load(profilepic.getUrl()).circleCrop().into(ivProfilePicture);
         }
 
-
         // if you click the profile image or username, you get sent to the users profile
         ivProfilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ProfileFragment profileFragment = new ProfileFragment(thePost.getUser());
-                AppCompatActivity activity = (AppCompatActivity)getActivity();
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, profileFragment).addToBackStack(null).commit();
+                goToProfile();
             }
         });
         tvUserInDes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ProfileFragment profileFragment = new ProfileFragment(thePost.getUser());
-                AppCompatActivity activity = (AppCompatActivity)getActivity();
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, profileFragment).addToBackStack(null).commit();
+                goToProfile();
             }
         });
 
         // checks whether user has previously liked this post
-        List<String> list = ParseUser.getCurrentUser().getList("savedPosts");
-        ArrayList<String> list1 = new ArrayList<String>();
-        if (list != null)
-            list1 = new ArrayList<String>(list);
-        boolean alreadyLiked = false;
-        if (list1.contains(thePost.getObjectId())) {
-            alreadyLiked = true;
-        }
-        if (alreadyLiked) ivLikes.setImageResource(R.drawable.img_3);
-        tvLikes.setText( String.valueOf(thePost.getNumber("likes").intValue()));
+        queryIfLiked();
+        queryHowManyLikes();
         ivLikes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -191,38 +164,106 @@ public class DetailFragment extends Fragment {
         });
     }
 
+    private void goToProfile() {
+        ProfileFragment profileFragment = new ProfileFragment(thePost.getUser());
+        AppCompatActivity activity = (AppCompatActivity)getActivity();
+        activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, profileFragment).addToBackStack(null).commit();
+    }
+
     private void likeOrUnlike() {
-        // checks whether user has previously liked this post
-        // we want to check on every onClick
-        List<String> list = ParseUser.getCurrentUser().getList("savedPosts");
-        ArrayList<String> list1 = new ArrayList<String>();
-        if (list != null)
-            list1 = new ArrayList<String>(list);
-        boolean alreadyLiked = false;
-        if (list1.contains(thePost.getObjectId())) {
-            alreadyLiked = true;
-        }
-        if (alreadyLiked) {
-            ivLikes.setImageResource(R.drawable.ufi_heart);
-            list1.remove(thePost.getObjectId());
-            ParseUser.getCurrentUser().put("savedPosts", list1);
-            thePost.put("likes", thePost.getNumber("likes").intValue() - 1);
-        } else {
-            ivLikes.setImageResource(R.drawable.img_2);
-            list1.add(thePost.getObjectId());
-            ParseUser.getCurrentUser().put("savedPosts", list1);
-            thePost.put("likes", thePost.getNumber("likes").intValue() + 1);
-        }
-
-        thePost.saveInBackground(new SaveCallback() {
+        ParseQuery<Likes> query = ParseQuery.getQuery(Likes.class);
+        query.whereEqualTo(Likes.KEY_POST, thePost);
+        query.whereEqualTo(Likes.KEY_USER, ParseUser.getCurrentUser());
+        query.setLimit(1);
+        query.findInBackground(new FindCallback<Likes>() {
             @Override
-            public void done(ParseException e) {}});
-        ParseUser.getCurrentUser().saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {}});
+            public void done(List<Likes> results, ParseException e) {
+                if (e == null && !results.isEmpty()) {
+                    for (Likes like : results) {
+                        // deleted from likes
+                        like.deleteInBackground();
+                        // set image to unlike heart
+                        ivLikes.setImageResource(R.drawable.ufi_heart);
+                        // update how many likes the post has
+                        likeCount = likeCount - 1;
 
-        // resetting the text
-        tvLikes.setText(String.valueOf(thePost.getNumber("likes").intValue()));
+                        if (likeCount == 0) {
+                            // no likes, shouldnt have number
+                        } else if (likeCount == 1) {
+                            tvLikes.setText(likeCount + " like");
+                        } else {
+                            tvLikes.setText(likeCount + " likes");}
+                    }
+                } else {
+                    // make a new like object
+                    Likes like = new Likes();
+                    like.setUser(ParseUser.getCurrentUser());
+                    like.setPost(thePost);
+                    // saving it
+                    like.saveInBackground();
+                    // set image to like heart
+                    ivLikes.setImageResource(R.drawable.img_2);
+                    // update how many likes the post has
+                    likeCount = likeCount + 1;
+                    if (likeCount == 0) {
+                        // no likes, shouldnt have number
+                    } else if (likeCount == 1) {
+                        tvLikes.setText(likeCount + " like");
+                    } else {
+                        tvLikes.setText(likeCount + " likes");
+                    }
+                }
+            }
+        });
+    }
+
+
+    private void queryIfLiked() {
+        ParseQuery<Likes> query = ParseQuery.getQuery(Likes.class);
+        query.whereEqualTo(Likes.KEY_POST, thePost);
+        query.whereEqualTo(Likes.KEY_USER, ParseUser.getCurrentUser());
+
+        query.findInBackground(new FindCallback<Likes>() {
+            @Override
+            public void done(List<Likes> likesList, ParseException e) {
+                // check for errors
+                if (e != null) {
+                    Log.e("FEED", "Issue with getting likes", e);
+                    return;
+                }
+                if (likesList.isEmpty()) {
+                    // the post is not liked by the current user
+                    ivLikes.setImageResource(R.drawable.ufi_heart);
+
+                } else {
+                    // the post is liked by the current user
+                    ivLikes.setImageResource(R.drawable.img_2);
+                }
+            }
+        });
+    }
+
+    private void queryHowManyLikes() {
+        ParseQuery<Likes> query = ParseQuery.getQuery(Likes.class);
+        query.whereEqualTo(Likes.KEY_POST, thePost);
+
+        query.countInBackground(new CountCallback() {
+            @Override
+            public void done(int count, ParseException e) {
+                if (e != null) {
+                    Log.e("FEED", "Issue with getting likes", e);
+                    return;
+                }
+                likeCount = count;
+                if (count == 0) {
+                    // no likes, shouldnt have number
+                } else if (count == 1) {
+                    tvLikes.setText(count + " like");
+                } else {
+                    tvLikes.setText(count + " likes");
+                }
+            }
+        });
     }
 
 }
