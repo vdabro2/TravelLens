@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".fragments.PostsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeContainer"
@@ -17,13 +16,12 @@
         android:layout_marginStart="0dp"
         android:layout_marginTop="0dp"
         android:layout_marginBottom="6dp"
-        android:background="#FFFFFF">
+        android:background="@color/white">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvPosts"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
             android:layout_centerInParent="true"
             android:padding="8dp" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

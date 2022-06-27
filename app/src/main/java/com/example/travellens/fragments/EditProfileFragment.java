@@ -121,6 +121,7 @@ public class EditProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // request getting content from photo gallery
+                // make chip group visible
                 Intent intent = new Intent();
                 intent.setType("image/'");
                 intent.setAction(Intent.ACTION_GET_CONTENT);

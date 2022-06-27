@@ -8,12 +8,12 @@
 
     <android.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_width="405dp"
+        android:layout_width="match_parent"
         android:layout_height="67dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:background="#FFFFFF"
+        android:background="@color/white"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

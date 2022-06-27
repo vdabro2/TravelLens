@@ -7,11 +7,8 @@
     android:orientation="vertical"
     tools:context=".fragments.ComposeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
     <RatingBar
         android:id="@+id/rbRatingCompose"
-
         android:layout_width="242dp"
         android:layout_height="48dp"
         android:layout_marginStart="12dp"
@@ -26,8 +23,8 @@
         android:layout_width="90dp"
         android:layout_height="45dp"
         android:background="@drawable/mysharebutton"
-        android:text="Share"
-        android:textColor="#0092ED"
+        android:text="@string/share"
+        android:textColor="@color/purple_200"
         app:layout_constraintEnd_toEndOf="@+id/bCamera"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -36,7 +33,7 @@
         android:layout_width="401dp"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Write a caption..."
+        android:hint="@string/write_a_caption"
         android:inputType="textPersonName"
         android:minHeight="48dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -61,7 +58,7 @@
         android:clickable="true"
         android:scaleType="center"
         android:src="@drawable/img"
-        app:backgroundTint="#FFFFFF"
+        app:backgroundTint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ivPic" />
 
@@ -71,7 +68,7 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:src="@drawable/img_1"
-        app:backgroundTint="#FFFFFF"
+        app:backgroundTint="@color/white"
         app:layout_constraintEnd_toStartOf="@+id/bCamera"
         app:layout_constraintTop_toTopOf="@+id/bCamera" />
 

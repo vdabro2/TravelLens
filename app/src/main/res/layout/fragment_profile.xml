@@ -11,14 +11,13 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FFFFFF">
+        android:background="@color/white">
 
         <TextView
             android:id="@+id/tvUserName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center|center_horizontal|center_vertical"
-            android:text="violetdabros"
             android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -39,7 +38,6 @@
             android:id="@+id/tvRealName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@+id/ivPP2"
             app:layout_constraintStart_toStartOf="@+id/ivPP2"
@@ -50,7 +48,6 @@
             android:layout_width="224dp"
             android:layout_height="32dp"
             android:gravity="center"
-            android:text="This is going to display the long biography of the user"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvRealName" />
@@ -73,8 +70,8 @@
             android:layout_width="183dp"
             android:layout_height="48dp"
             android:background="@drawable/mysharebutton"
-            android:text="Edit Profile"
-            android:textColor="#000000"
+            android:text="@string/edit_prof"
+            android:textColor="@color/black"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvBio" />
 
@@ -83,8 +80,8 @@
             android:layout_width="183dp"
             android:layout_height="48dp"
             android:background="@drawable/mysharebutton"
-            android:text="My saves"
-            android:textColor="#000000"
+            android:text="@string/saved"
+            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.888"
             app:layout_constraintStart_toEndOf="@+id/bEditProfile"

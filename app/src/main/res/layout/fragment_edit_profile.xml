@@ -18,8 +18,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Save"
-            android:textColor="#FF5722"
+            android:text="@string/save"
+            android:textColor="@color/purple_200"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@+id/etPassEdit"
@@ -32,8 +32,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Reset"
-            android:textColor="#FF5722"
+            android:text="@string/reset"
+            android:textColor="@color/purple_200"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/tvSaveChanges"
@@ -48,7 +48,7 @@
             android:layout_marginTop="16dp"
             android:background="@drawable/borderet"
             android:ems="10"
-            android:hint="  Password"
+            android:hint="@string/password"
             android:inputType="textPersonName"
             android:password="true"
             app:layout_constraintStart_toStartOf="parent"
@@ -60,7 +60,7 @@
             android:layout_height="55dp"
             android:background="@drawable/borderet"
             android:ems="10"
-            android:hint=" Name"
+            android:hint="@string/name"
             android:inputType="textPersonName"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ivChangePP" />
@@ -72,7 +72,7 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/borderet"
             android:ems="10"
-            android:hint=" Biography"
+            android:hint="@string/biography"
             android:inputType="textPersonName"
             app:layout_constraintEnd_toEndOf="@+id/etNameOnEdit"
             app:layout_constraintTop_toBottomOf="@+id/etNameOnEdit" />
@@ -83,7 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:text="Log Out"
-            android:textColor="#FF5722"
+            android:textColor="@color/purple_200"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -107,12 +107,12 @@
             android:layout_marginStart="130dp"
             android:layout_marginTop="52dp"
             android:layout_marginEnd="128dp"
-            android:text="Change Profile Photo"
-            android:textColor="#FF5722"
+            android:text="@string/change_prof_pic"
+            android:textColor="@color/purple_200"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="@+id/ivChangePP"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -124,11 +124,10 @@
                 android:background="@drawable/borderet"
                 android:ems="10"
                 android:gravity="start|top"
-                android:hint="  Username"
+                android:hint="@string/username"
                 android:inputType="textPersonName"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/etBiographyOnEdit" />
-
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
