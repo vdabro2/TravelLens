@@ -124,9 +124,9 @@ public class DetailFragment extends Fragment {
             Log.e("Detail Fragment: ", e.toString());
         }
         // set name of place aka location name
-        tvLocation.setText(thePost.getString("placeName"));
+        tvLocation.setText(thePost.getString(Post.KEY_PLACE_NAME));
         // set rating according to database
-        rbRating.setRating((float) thePost.getDouble("rating"));
+        rbRating.setRating((float) thePost.getDouble(Post.KEY_RATING));
 
         // post image load into imageview using glide
         ParseFile image = thePost.getParseFile();
@@ -134,7 +134,7 @@ public class DetailFragment extends Fragment {
             Glide.with(getContext()).load(image.getUrl()).into(ivImage);
         }
         // post profile image into imageview using glide
-        ParseFile profilepic = thePost.getUser().getParseFile("profilePicture");
+        ParseFile profilepic = thePost.getUser().getParseFile(Post.KEY_PROFILE_PICTURE);
         if (profilepic != null) {
             Glide.with(getContext()).load(profilepic.getUrl()).circleCrop().into(ivProfilePicture);
         }
@@ -190,9 +190,9 @@ public class DetailFragment extends Fragment {
                         if (likeCount == 0) {
                             // no likes, shouldnt have number
                         } else if (likeCount == 1) {
-                            tvLikes.setText(likeCount + " like");
+                            tvLikes.setText(likeCount + String.valueOf(R.string.one_like));
                         } else {
-                            tvLikes.setText(likeCount + " likes");}
+                            tvLikes.setText(likeCount + String.valueOf(R.string.likes));}
                     }
                 } else if (e != null){
                     Log.e("Detail Fragment: ", e.toString());
@@ -210,9 +210,9 @@ public class DetailFragment extends Fragment {
                     if (likeCount == 0) {
                         // no likes, shouldnt have number
                     } else if (likeCount == 1) {
-                        tvLikes.setText(likeCount + " like");
+                        tvLikes.setText(likeCount + String.valueOf(R.string.one_like));
                     } else {
-                        tvLikes.setText(likeCount + " likes");
+                        tvLikes.setText(likeCount + String.valueOf(R.string.likes));
                     }
                 }
             }
@@ -261,9 +261,9 @@ public class DetailFragment extends Fragment {
                 if (count == 0) {
                     // no likes, shouldnt have number
                 } else if (count == 1) {
-                    tvLikes.setText(count + " like");
+                    tvLikes.setText(count + String.valueOf(R.string.one_like));
                 } else {
-                    tvLikes.setText(count + " likes");
+                    tvLikes.setText(count + String.valueOf(R.string.likes));
                 }
             }
         });

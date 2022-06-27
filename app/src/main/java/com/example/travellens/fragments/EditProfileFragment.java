@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.travellens.LoginActivity;
+import com.example.travellens.Post;
 import com.example.travellens.R;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.parse.ParseException;
@@ -152,14 +153,14 @@ public class EditProfileFragment extends Fragment {
         autocompleteFragment.getView().setVisibility(View.INVISIBLE);
 
         ParseUser user = ParseUser.getCurrentUser();
-        ParseFile profilepic = user.getParseFile("profilePicture");
+        ParseFile profilepic = user.getParseFile(Post.KEY_PROFILE_PICTURE);
         if (profilepic != null) {
             Glide.with(getContext()).load(profilepic.getUrl()).circleCrop()
                     .into(ivPP);
         }
-        etNameOnEdit.setText(user.getString("name"));
-        etBiographyOnEdit.setText(user.getString("biography"));
-        etUsernameOnEdit.setText(user.getString("username"));
+        etNameOnEdit.setText(user.getString(Post.KEY_NAME));
+        etBiographyOnEdit.setText(user.getString(Post.KEY_BIOGRAPHY));
+        etUsernameOnEdit.setText(user.getString(Post.KEY_USERNAME));
         etPassEdit.setText("");
     }
 
@@ -196,27 +197,26 @@ public class EditProfileFragment extends Fragment {
         ParseUser user = ParseUser.getCurrentUser();
         if (updatedPhoto == null) {
             // no need to update
-            user.put("profilePicture", user.getParseFile("profilePicture"));
+            user.put(Post.KEY_PROFILE_PICTURE, user.getParseFile(Post.KEY_PROFILE_PICTURE));
         } else {
-            user.put("profilePicture", updatedPhoto);
+            user.put(Post.KEY_PROFILE_PICTURE, updatedPhoto);
         }
 
         // put name, username, bio, password
-        user.put("username", etUsernameOnEdit.getText().toString());
+        user.put(Post.KEY_USERNAME, etUsernameOnEdit.getText().toString());
         if (etPassEdit.getText() != null || !etPassEdit.getText().toString().isEmpty()) {
-            user.put("password", etPassEdit.getText().toString());
+            user.put(Post.KEY_PASSWORD, etPassEdit.getText().toString());
         }
-        user.put("name", etNameOnEdit.getText().toString());
-        user.put("biography", etBiographyOnEdit.getText().toString());
+        user.put(Post.KEY_NAME, etNameOnEdit.getText().toString());
+        user.put(Post.KEY_BIOGRAPHY, etBiographyOnEdit.getText().toString());
 
         user.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if (e != null) {
-                    Toast.makeText(getActivity(), "Error while saving", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), String.valueOf(R.string.couldnt_save), Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Toast.makeText(getActivity(), "Changed were saved", Toast.LENGTH_SHORT).show();
                 // go to profile fragment when done saving
                 ProfileFragment profileFragment = new ProfileFragment(user);
                 AppCompatActivity activity = (AppCompatActivity) getActivity();

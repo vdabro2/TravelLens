@@ -102,12 +102,12 @@ public class ProfileFragment extends Fragment {
         rvPosts.setAdapter(adapter);
 
         // set the layout manager on the recycler view
-        rvPosts.setLayoutManager(new GridLayoutManager(getContext(), 3)); // TODO make staggered
+        rvPosts.setLayoutManager(new GridLayoutManager(getContext(), 3));
         tvUserName.setText(userProfile.getUsername());
-        tvBio.setText(userProfile.getString("biography"));
-        tvRealName.setText(userProfile.getString("name"));
+        tvBio.setText(userProfile.getString(Post.KEY_BIOGRAPHY));
+        tvRealName.setText(userProfile.getString(Post.KEY_NAME));
 
-        ParseFile profilepic = userProfile.getParseFile("profilePicture");
+        ParseFile profilepic = userProfile.getParseFile(Post.KEY_PROFILE_PICTURE);
         if (profilepic != null) {
             Glide.with(getContext()).load(profilepic.getUrl()).circleCrop().into(ivProfilePicture);
         }
@@ -134,8 +134,6 @@ public class ProfileFragment extends Fragment {
         bSavedPosts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //allPosts.addAll(new ArrayList<>());
-                //adapter.notifyDataSetChanged();
                 adapter.clear();
                 querySavedPosts();
 

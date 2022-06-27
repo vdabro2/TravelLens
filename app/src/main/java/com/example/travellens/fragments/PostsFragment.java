@@ -180,14 +180,6 @@ public class PostsFragment extends Fragment {
         // initialize the autocompletefragment and sets up on click for it
         callPlacesAPI();
 
-        // intialize drop down menu
-        /*
-        sFilter = (Spinner) view.findViewById(R.id.sFilter);
-        String[] users = { "Suresh Dasari", "Trishika Dasari", "Rohini Alavala", "Praveen Kumar", "Madhav Sai" };
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(view.getContext(), R.layout.simple_spinner_item, users);
-        adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
-        sFilter.setAdapter(adapter);*/
-
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -380,7 +372,6 @@ public class PostsFragment extends Fragment {
             public void onComplete(@NonNull Task<LocationSettingsResponse> task) {
                 try {
                     LocationSettingsResponse response = task.getResult(ApiException.class);
-                    Toast.makeText(getContext(), "GPS is already tured on", Toast.LENGTH_SHORT).show();
                 } catch (ApiException e) {
                     switch (e.getStatusCode()) {
                         case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:

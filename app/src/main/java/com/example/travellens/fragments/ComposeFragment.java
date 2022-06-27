@@ -134,7 +134,7 @@ public class ComposeFragment extends Fragment {
                 String description = etDescription.getText().toString();
                 if (description.isEmpty() || photoFile == null || ivPic.getDrawable() == null
                         || placeInPost == null || rbRating.getRating() <= 0) {
-                    Toast.makeText(getContext(), "Make sure you fill out everything!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.fill_everything_out_warning, Toast.LENGTH_SHORT).show();
                 }
                 // creates post based on the rating, post, user, and description
                 ParseUser user  = ParseUser.getCurrentUser();
@@ -263,7 +263,7 @@ public class ComposeFragment extends Fragment {
                 Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 ivPic.setImageBitmap(takenImage);
             } else {
-                Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.picture_fail, Toast.LENGTH_SHORT).show();
             }
         } else if (requestCode == REQUEST_CODE_GALLERY && resultCode == getActivity().RESULT_OK) {
             fromGal = true;
@@ -342,10 +342,10 @@ public class ComposeFragment extends Fragment {
             post.setImage(new ParseFile(photoFile));
         }
         post.put(Post.KEY_LATITUDE, placeInPost.getLatLng().latitude);
-        post.put("rating", rbRating.getRating());
-        post.put("placeName", placeInPost.getName());
+        post.put(Post.KEY_RATING, rbRating.getRating());
+        post.put(Post.KEY_PLACE_NAME, placeInPost.getName());
         post.put(Post.KEY_LONGITUDE, placeInPost.getLatLng().longitude);
-        post.put("placeId", placeInPost.getId());
+        post.put(Post.KEY_PLACE_ID, placeInPost.getId());
         // ask for rating
         post.setUser(user);
         progressBar.setVisibility(View.VISIBLE);

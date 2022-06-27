@@ -17,7 +17,15 @@ public class Post extends ParseObject implements Serializable {
     public static final String KEY_LATITUDE = "latitude";
     public static final String KEY_LONGITUDE = "longitude";
     public static final String KEY_DESCRIPTION = "description";
+    public static final String KEY_RATING = "rating";
+    public static final String KEY_PLACE_NAME = "placeName";
+    public static final String KEY_PLACE_ID = "placeId";
 
+    public static final String KEY_PROFILE_PICTURE = "profilePicture";
+    public static final String KEY_USERNAME = "username";
+    public static final String KEY_NAME = "name";
+    public static final String KEY_BIOGRAPHY = "biography";
+    public static final String KEY_PASSWORD = "password";
 
     public String getDescription() {
         return getString(KEY_DESCRIPTION);
@@ -57,17 +65,17 @@ public class Post extends ParseObject implements Serializable {
 
             final long diff = now - time;
             if (diff < MINUTE_MILLIS) {
-                return "just now";
+                return String.valueOf(R.string.just_now);
             } else if (diff < 2 * MINUTE_MILLIS) {
-                return "a minute ago";
+                return String.valueOf(R.string.a_min_ago);
             } else if (diff < 50 * MINUTE_MILLIS) {
                 return diff / MINUTE_MILLIS + " m";
             } else if (diff < 90 * MINUTE_MILLIS) {
-                return "an hour ago";
+                return String.valueOf(R.string.an_hour_ago);
             } else if (diff < 24 * HOUR_MILLIS) {
                 return diff / HOUR_MILLIS + " h";
             } else if (diff < 48 * HOUR_MILLIS) {
-                return "yesterday";
+                return String.valueOf(R.string.yesterday);
             } else {
                 return diff / DAY_MILLIS + " d";
             }
