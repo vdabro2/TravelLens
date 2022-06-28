@@ -65,7 +65,7 @@ public class Post extends ParseObject implements Serializable {
 
             final long diff = now - time;
             if (diff < MINUTE_MILLIS) {
-                return String.valueOf(R.string.just_now);
+                return "just now";//String.valueOf(R.string.just_now);
             } else if (diff < 2 * MINUTE_MILLIS) {
                 return String.valueOf(R.string.a_min_ago);
             } else if (diff < 50 * MINUTE_MILLIS) {

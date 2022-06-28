@@ -1,0 +1,59 @@
+package com.example.travellens;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.ImageDecoder;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Log;
+import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
+import androidx.fragment.app.Fragment;
+
+import com.parse.ParseFile;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+public class Camera {
+    private Context context;
+    private Activity activity;
+    public Camera(Context context, Activity activity) {
+        this.context = context;
+        this.activity = activity;
+    }
+
+    public File getPhotoFileUri(String photoFileName) {
+        File mediaStorageDir = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "");
+
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
+            Log.d("compose", "failed to create directory");
+        }
+
+        // Return the file target for the photo based on filename
+        File file = new File(mediaStorageDir.getPath() + File.separator + photoFileName);
+        return file;
+    }
+
+    public ParseFile conversionBitmapParseFile(Bitmap imageBitmap){
+        ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
+        imageBitmap.compress(Bitmap.CompressFormat.PNG,100,byteArrayOutputStream);
+        byte[] imageByte = byteArrayOutputStream.toByteArray();
+        ParseFile parseFile = new ParseFile("image_file.png",imageByte);
+        return parseFile;
+    }
+
+
+}

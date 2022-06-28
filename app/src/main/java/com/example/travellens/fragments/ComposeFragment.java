@@ -11,13 +11,16 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.Toast;
@@ -29,6 +32,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.example.travellens.Camera;
 import com.example.travellens.FeedMainActivity;
 import com.example.travellens.Post;
 import com.example.travellens.R;
@@ -55,6 +59,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -70,6 +75,7 @@ public class ComposeFragment extends Fragment {
     private RatingBar rbRating;
     private ChipGroup cgRecomended;
     private EditText etDescription;
+    private Camera camera;
     private ProgressBar progressBar;
     private PlacesClient placesClient;
     private boolean fromGal = false;
@@ -81,7 +87,7 @@ public class ComposeFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     public final static int REQUEST_CODE_GALLERY = 43;
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
-
+    private List<String> list = new ArrayList<>(Arrays.asList("POINT_OF_INTEREST", "FOOD", "CAFE","TRANSIT_STATION", "TOURIST_ATTRACTION", "PARK", "MUSEUM"));
 
     public ComposeFragment() {}
 
@@ -125,16 +131,22 @@ public class ComposeFragment extends Fragment {
         placesClient = Places.createClient(getContext());
         // call method that creates recommended places based on user location
         populateChipsWithLocation();
-
+        camera = new Camera(getContext(), getActivity());
         // checking conditions before sharing post
         placeInPost = null;
         bSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String description = etDescription.getText().toString();
-                if (description.isEmpty() || photoFile == null || ivPic.getDrawable() == null
-                        || placeInPost == null || rbRating.getRating() <= 0) {
+                if (fromGal == false && (description.isEmpty() || photoFile == null || ivPic.getDrawable() == null
+                        || placeInPost == null || rbRating.getRating() <= 0)) {
                     Toast.makeText(getContext(), R.string.fill_everything_out_warning, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (fromGal == true && (description.isEmpty() || photoFileFromGal == null
+                        || placeInPost == null || rbRating.getRating() <= 0)) {
+                    Toast.makeText(getContext(), R.string.fill_everything_out_warning, Toast.LENGTH_SHORT).show();
+                    return;
                 }
                 // creates post based on the rating, post, user, and description
                 ParseUser user  = ParseUser.getCurrentUser();
@@ -169,7 +181,7 @@ public class ComposeFragment extends Fragment {
 
     private void populateChipsWithLocation() {
 
-        List<Place.Field> placeFields = (Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
+        List<Place.Field> placeFields = (Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.TYPES));
 
         // Use the builder to create a FindCurrentPlaceRequest.
         FindCurrentPlaceRequest request = FindCurrentPlaceRequest.newInstance(placeFields);
@@ -184,8 +196,8 @@ public class ComposeFragment extends Fragment {
                         Log.i("populateChipsWithLocation", String.format("Place '%s' has likelihood: %f",
                                 placeLikelihood.getPlace().getName(),
                                 placeLikelihood.getLikelihood()));
-
-                        if (placeLikelihood.getLikelihood() > .1) {
+                        boolean var = placeLikelihood.getPlace().getTypes().stream().anyMatch(element -> list.contains(element));
+                        if (var == false) {
                             Chip chip = new Chip(getContext());
                             chip.setText(placeLikelihood.getPlace().getName());
                             chip.setCloseIconVisible(true);
@@ -202,8 +214,6 @@ public class ComposeFragment extends Fragment {
                                     Log.i("populateChipsWithLocation", " Place Clicked" + placeInPost.getName());
                                 }
                             });
-                        } else {
-                            break;
                         }
 
                     }
@@ -257,23 +267,18 @@ public class ComposeFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-            if (resultCode == getActivity().RESULT_OK) {
-                fromGal = false;
-                Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
-                ivPic.setImageBitmap(takenImage);
-            } else {
-                Toast.makeText(getContext(), R.string.picture_fail, Toast.LENGTH_SHORT).show();
-            }
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == getActivity().RESULT_OK) {
+            fromGal = false;
+            Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+            ivPic.setImageBitmap(takenImage);
         } else if (requestCode == REQUEST_CODE_GALLERY && resultCode == getActivity().RESULT_OK) {
             fromGal = true;
             Uri image = data.getData();
-
             Bitmap bitmap = null;
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), image);
                 Glide.with(this).load(image).into(ivPic);
-                photoFileFromGal = conversionBitmapParseFile(bitmap);
+                photoFileFromGal = camera.conversionBitmapParseFile(bitmap);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -282,24 +287,14 @@ public class ComposeFragment extends Fragment {
         }
     }
 
-    public ParseFile conversionBitmapParseFile(Bitmap imageBitmap){
-        ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
-        imageBitmap.compress(Bitmap.CompressFormat.PNG,100,byteArrayOutputStream);
-        byte[] imageByte = byteArrayOutputStream.toByteArray();
-        ParseFile parseFile = new ParseFile("image_file.png",imageByte);
-        return parseFile;
-    }
+
 
     private void launchCamera() {
         fromGal = false;
-        // create Intent to take a picture and return control to the calling application
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Create a File reference for future access
-        photoFile = getPhotoFileUri(photoFileName);
-
+        photoFile = camera.getPhotoFileUri(photoFileName);
         Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.codepath.fileprovider", photoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
-
         if (intent.resolveActivity(getContext().getPackageManager()) != null) {
             startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
         }
@@ -307,31 +302,16 @@ public class ComposeFragment extends Fragment {
 
     private void launchGallery() {
         fromGal = true;
-
         Intent intent = new Intent();
-        photoFile = getPhotoFileUri(photoFileName);
-
+        photoFile = camera.getPhotoFileUri(photoFileName);
         Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.codepath.fileprovider", photoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
-
         intent.setType("image/'");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-
         startActivityForResult(Intent.createChooser(intent, "Pick an image"), REQUEST_CODE_GALLERY);
     }
 
-    private File getPhotoFileUri(String photoFileName) {
-        File mediaStorageDir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "");
 
-        // Create the storage directory if it does not exist
-        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
-            Log.d("compose", "failed to create directory");
-        }
-
-        // Return the file target for the photo based on filename
-        File file = new File(mediaStorageDir.getPath() + File.separator + photoFileName);
-        return file;
-    }
 
     private void savePost(String description, ParseUser user) {
         Post post = new Post();

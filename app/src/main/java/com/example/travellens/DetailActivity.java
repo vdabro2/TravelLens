@@ -1,56 +1,31 @@
-package com.example.travellens.fragments;
+package com.example.travellens;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatEditText;
-import androidx.fragment.app.Fragment;
-
 import com.bumptech.glide.Glide;
-import com.example.travellens.FeedMainActivity;
-import com.example.travellens.Likes;
-import com.example.travellens.Post;
-import com.example.travellens.R;
-import com.example.travellens.Post;
-import com.example.travellens.R;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.FetchPlaceRequest;
-import com.google.android.libraries.places.api.net.PlacesClient;
+import com.example.travellens.fragments.ProfileFragment;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
-import com.google.maps.errors.ApiException;
 import com.parse.CountCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link DetailFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class DetailFragment extends Fragment {
+public class DetailActivity extends AppCompatActivity {
+
     private Post thePost;
     private int likeCount;
-    private String mParam1;
-    private String mParam2;
     private TextView tvTime;
     private TextView tvLikes;
     private ImageView ivLikes;
@@ -60,59 +35,24 @@ public class DetailFragment extends Fragment {
     private TextView tvUserInDes;
     private TextView tvDescription;
     private ImageView ivProfilePicture;
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-
-    public DetailFragment() {}
-    public DetailFragment(Post post_) {
-        setHasOptionsMenu(true);
-        thePost = post_;
-    }
-
-    public static DetailFragment newInstance(String param1, String param2) {
-        DetailFragment fragment = new DetailFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_detail, container, false);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        tvTime = view.findViewById(R.id.tvTime);
-        tvLikes = view.findViewById(R.id.tvLikes);
-        ivLikes = view.findViewById(R.id.ivLikes);
-        ivImage = view.findViewById(R.id.ivImage);
-        rbRating = view.findViewById(R.id.rbRating);
-        tvLocation = view.findViewById(R.id.tvLocation);
-        tvUserInDes = view.findViewById(R.id.tvUserInDes);
-        tvDescription = view.findViewById(R.id.tvDescription);
-        ivProfilePicture = view.findViewById(R.id.ivProfilePicture);
-        // turn off autocomplete fragment on this page
-        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
-                getActivity().getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
-        autocompleteFragment.getView().setEnabled(false);
-        autocompleteFragment.getView().setVisibility(View.INVISIBLE);
-
+        setContentView(R.layout.activity_detail);
+        tvTime = findViewById(R.id.tvTime);
+        tvLikes = findViewById(R.id.tvLikes);
+        ivLikes = findViewById(R.id.ivLikes);
+        ivImage = findViewById(R.id.ivImage);
+        rbRating = findViewById(R.id.rbRating);
+        tvLocation = findViewById(R.id.tvLocation);
+        tvUserInDes = findViewById(R.id.tvUserInDes);
+        tvDescription = findViewById(R.id.tvDescription);
+        ivProfilePicture = findViewById(R.id.ivProfilePicture);
+        // get intent with post object
+        Intent intent = this.getIntent();
+        Bundle bundle = intent.getExtras();
+        thePost = (Post)bundle.getSerializable("post");
         // description text
         tvDescription.setText(thePost.getDescription());
         // set relative time on layout
@@ -131,12 +71,12 @@ public class DetailFragment extends Fragment {
         // post image load into imageview using glide
         ParseFile image = thePost.getParseFile();
         if (image != null) {
-            Glide.with(getContext()).load(image.getUrl()).into(ivImage);
+            Glide.with(this).load(image.getUrl()).into(ivImage);
         }
         // post profile image into imageview using glide
         ParseFile profilepic = thePost.getUser().getParseFile(Post.KEY_PROFILE_PICTURE);
         if (profilepic != null) {
-            Glide.with(getContext()).load(profilepic.getUrl()).circleCrop().into(ivProfilePicture);
+            Glide.with(this).load(profilepic.getUrl()).circleCrop().into(ivProfilePicture);
         }
 
         // if you click the profile image or username, you get sent to the users profile
@@ -166,7 +106,7 @@ public class DetailFragment extends Fragment {
 
     private void goToProfile() {
         ProfileFragment profileFragment = new ProfileFragment(thePost.getUser());
-        AppCompatActivity activity = (AppCompatActivity)getActivity();
+        AppCompatActivity activity = (AppCompatActivity)this;
         activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, profileFragment).addToBackStack(null).commit();
     }
 
@@ -269,5 +209,4 @@ public class DetailFragment extends Fragment {
             }
         });
     }
-
 }

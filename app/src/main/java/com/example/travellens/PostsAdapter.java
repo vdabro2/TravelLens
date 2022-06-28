@@ -1,6 +1,8 @@
 package com.example.travellens;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,10 +80,17 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             ivImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    //  changed to detail activity for animation purposes
+                    /*
                     DetailFragment profileFragment = new DetailFragment(post);
                     AppCompatActivity activity = (AppCompatActivity) v.getContext();
                     activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer,
-                            profileFragment).addToBackStack(null).commit();
+                            profileFragment).addToBackStack(null).commit();*/
+                    Intent intent = new Intent(context, DetailActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("post", post);
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
 
                 }
             });
