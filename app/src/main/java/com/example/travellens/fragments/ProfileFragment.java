@@ -1,5 +1,6 @@
 package com.example.travellens.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.travellens.EditProfileActivity;
 import com.example.travellens.Likes;
 import com.example.travellens.Post;
 import com.example.travellens.ProfileAdapter;
@@ -116,12 +118,16 @@ public class ProfileFragment extends Fragment {
         bEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // changed to edit profile activity
+                Intent intent = new Intent(getContext(), EditProfileActivity.class);
+                startActivity(intent);
+                /*
                 Fragment fragment = new EditProfileFragment();
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.flContainer, fragment);
                 fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
+                fragmentTransaction.commit();*/
             }
         });
 

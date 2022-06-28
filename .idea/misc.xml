@@ -7,6 +7,7 @@
         <entry key="app/src/main/res/drawable-v24/mybuttom.xml" value="0.121" />
         <entry key="app/src/main/res/drawable-v24/mysharebutton.xml" value="0.121" />
         <entry key="app/src/main/res/layout/activity_detail.xml" value="0.1983695652173913" />
+        <entry key="app/src/main/res/layout/activity_edit_profile.xml" value="0.1983695652173913" />
         <entry key="app/src/main/res/layout/activity_feed_main.xml" value="0.4405085245768229" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.8026041666666667" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.4302536231884058" />
