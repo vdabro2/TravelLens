@@ -25,8 +25,10 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
@@ -101,7 +103,7 @@ public class PostsFragment extends Fragment {
 
     private String mParam1;
     private String mParam2;
-    private ImageView ivFilter;
+    private Spinner sFilter;
     private List<Post> allPosts;
     private double currLatitude;
     private RecyclerView rvPosts;
@@ -162,7 +164,7 @@ public class PostsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         rvPosts = view.findViewById(R.id.rvPosts);
-        ivFilter = view.findViewById(R.id.ivFilter);
+
 
         allPosts = new ArrayList<>();
         adapter = new PostsAdapter(getContext(), allPosts);
@@ -231,7 +233,7 @@ public class PostsFragment extends Fragment {
 
             @Override
             public void onError(Status status) {
-                Log.i("TAG", "An error occurred: " + status);
+                Log.e("Posts Fragment", "An error occurred: " + status);
             }
         });
     }
@@ -370,7 +372,6 @@ public class PostsFragment extends Fragment {
             public void onComplete(@NonNull Task<LocationSettingsResponse> task) {
                 try {
                     LocationSettingsResponse response = task.getResult(ApiException.class);
-                    Toast.makeText(getContext(), "GPS is already tured on", Toast.LENGTH_SHORT).show();
                 } catch (ApiException e) {
                     switch (e.getStatusCode()) {
                         case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:

@@ -1,0 +1,15 @@
+<resources>
+
+
+
+    <style name="counterText">
+        <item name="android:textColor">#aa5353cc</item>
+    </style>
+
+    <style name="counterOverride">
+        <item name="android:textColor">#ff0000</item>
+    </style>
+    <style name="Button.Blue" parent="ThemeOverlay.AppCompat">
+        <item name="colorAccent">#801da1f2</item>
+    </style>
+</resources>

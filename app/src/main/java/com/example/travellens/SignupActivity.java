@@ -39,9 +39,9 @@ public class SignupActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (etPass.getText().toString().isEmpty() || etBio1.getText().toString().isEmpty()
                         || etName.getText().toString().isEmpty() || etUsername.getText().toString().isEmpty()) {
-                    Toast.makeText(SignupActivity.this, "Fill everything out!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignupActivity.this, String.valueOf(R.string.couldnt_save), Toast.LENGTH_SHORT).show();
                 } else {
-                    // TODO add more things when signing up
+                    // TODO add profile pic from gallery and from camera
                     String password = etPass.getText().toString();
                     String bio = etBio1.getText().toString();
                     String name = etName.getText().toString();
@@ -50,21 +50,21 @@ public class SignupActivity extends AppCompatActivity {
                     ParseUser user = new ParseUser();
                     user.setUsername(un);
                     user.setPassword(password);
-                    user.put("biography", bio);
-                    user.put("name", name);
+                    user.put(Post.KEY_BIOGRAPHY, bio);
+                    user.put(Post.KEY_NAME, name);
 
                     // call the database to add the user
                     user.signUpInBackground(new SignUpCallback() {
                         @Override
                         public void done(ParseException e) {
                             if (e != null) {
-                                Log.e(" ERROR ", e.toString());
+                                Log.e("Signup Problem", e.toString());
                             } else {
                                 ParseUser.logInInBackground(un, password, new LogInCallback() {
                                     @Override
                                     public void done(ParseUser user, ParseException e) {
                                         if (e!= null) {
-                                            Log.e("LOGIN", e.toString());
+                                            Log.e("LOGIN ISSUE after signup", e.toString());
                                             Toast.makeText(SignupActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
                                             return;
                                         }

@@ -1,6 +1,7 @@
 package com.example.travellens.fragments;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
@@ -31,12 +33,19 @@ import com.example.travellens.FeedMainActivity;
 import com.example.travellens.Post;
 import com.example.travellens.R;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.PlaceLikelihood;
+import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
+import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.maps.errors.ApiException;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
@@ -47,6 +56,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 public class ComposeFragment extends Fragment {
     private String mParam1;
@@ -56,8 +68,10 @@ public class ComposeFragment extends Fragment {
     private ImageView ivPic;
     private Place placeInPost;
     private RatingBar rbRating;
+    private ChipGroup cgRecomended;
     private EditText etDescription;
     private ProgressBar progressBar;
+    private PlacesClient placesClient;
     private boolean fromGal = false;
     private ParseFile photoFileFromGal;
     private FloatingActionButton bCamera;
@@ -104,7 +118,13 @@ public class ComposeFragment extends Fragment {
         bGallery = view.findViewById(R.id.bGallery);
         etDescription = view.findViewById(R.id.etDescription);
         rbRating = view.findViewById(R.id.rbRatingCompose);
+        cgRecomended = view.findViewById(R.id.cgRecomended);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+
+        // initialize api client
+        placesClient = Places.createClient(getContext());
+        // call method that creates recommended places based on user location
+        populateChipsWithLocation();
 
         // checking conditions before sharing post
         placeInPost = null;
@@ -114,7 +134,7 @@ public class ComposeFragment extends Fragment {
                 String description = etDescription.getText().toString();
                 if (description.isEmpty() || photoFile == null || ivPic.getDrawable() == null
                         || placeInPost == null || rbRating.getRating() <= 0) {
-                    Toast.makeText(getContext(), "Make sure you fill out everything!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.fill_everything_out_warning, Toast.LENGTH_SHORT).show();
                 }
                 // creates post based on the rating, post, user, and description
                 ParseUser user  = ParseUser.getCurrentUser();
@@ -143,8 +163,60 @@ public class ComposeFragment extends Fragment {
 
         // allows this fragments menu to behave differently than in main
         setHasOptionsMenu(true);
-        //
+        // method creates the autocomplete fragment
         callPlacesAPI();
+    }
+
+    private void populateChipsWithLocation() {
+
+        List<Place.Field> placeFields = (Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
+
+        // Use the builder to create a FindCurrentPlaceRequest.
+        FindCurrentPlaceRequest request = FindCurrentPlaceRequest.newInstance(placeFields);
+
+        // Call findCurrentPlace and handle the response (first check that the user has granted permission).
+        if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            Task<FindCurrentPlaceResponse> placeResponse = placesClient.findCurrentPlace(request);
+            placeResponse.addOnCompleteListener(task -> {
+                if (task.isSuccessful()){
+                    FindCurrentPlaceResponse response = task.getResult();
+                    for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
+                        Log.i("populateChipsWithLocation", String.format("Place '%s' has likelihood: %f",
+                                placeLikelihood.getPlace().getName(),
+                                placeLikelihood.getLikelihood()));
+
+                        if (placeLikelihood.getLikelihood() > .1) {
+                            Chip chip = new Chip(getContext());
+                            chip.setText(placeLikelihood.getPlace().getName());
+                            chip.setCloseIconVisible(true);
+                            cgRecomended.addView(chip);
+                            chip.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    placeInPost = placeLikelihood.getPlace();
+
+                                    AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+                                            getActivity().getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+                                    autocompleteFragment.setText(placeInPost.getName());
+
+                                    Log.i("populateChipsWithLocation", " Place Clicked" + placeInPost.getName());
+                                }
+                            });
+                        } else {
+                            break;
+                        }
+
+                    }
+                } else {
+                    Exception exception = task.getException();
+                    if (exception instanceof ApiException) {
+                        ApiException apiException = (ApiException) exception;
+                        Log.e("populateChipsWithLocation", "Place not found: " + apiException.toString());
+                    }
+                }
+            });
+        }
+
     }
 
     private void goLocationTimeline() {
@@ -155,8 +227,6 @@ public class ComposeFragment extends Fragment {
     }
 
     private void callPlacesAPI() {
-        // create client
-        PlacesClient placesClient = Places.createClient(getContext());
         // link fragment to layout
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 getActivity().getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
@@ -193,7 +263,7 @@ public class ComposeFragment extends Fragment {
                 Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 ivPic.setImageBitmap(takenImage);
             } else {
-                Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.picture_fail, Toast.LENGTH_SHORT).show();
             }
         } else if (requestCode == REQUEST_CODE_GALLERY && resultCode == getActivity().RESULT_OK) {
             fromGal = true;
@@ -272,10 +342,10 @@ public class ComposeFragment extends Fragment {
             post.setImage(new ParseFile(photoFile));
         }
         post.put(Post.KEY_LATITUDE, placeInPost.getLatLng().latitude);
-        post.put("rating", rbRating.getRating());
-        post.put("placeName", placeInPost.getName());
+        post.put(Post.KEY_RATING, rbRating.getRating());
+        post.put(Post.KEY_PLACE_NAME, placeInPost.getName());
         post.put(Post.KEY_LONGITUDE, placeInPost.getLatLng().longitude);
-        post.put("placeId", placeInPost.getId());
+        post.put(Post.KEY_PLACE_ID, placeInPost.getId());
         // ask for rating
         post.setUser(user);
         progressBar.setVisibility(View.VISIBLE);

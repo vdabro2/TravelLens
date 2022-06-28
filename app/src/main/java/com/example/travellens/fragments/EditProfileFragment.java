@@ -10,18 +10,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.travellens.LoginActivity;
+import com.example.travellens.Post;
 import com.example.travellens.R;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.parse.ParseException;
@@ -40,11 +43,19 @@ import java.io.IOException;
  * create an instance of this fragment.
  */
 public class EditProfileFragment extends Fragment {
-    ImageView ivPP;
-    TextView tvChange;
-    TextView tvLogout;
+
     private String mParam1;
     private String mParam2;
+    private ImageView ivPP;
+    private TextView tvSave;
+    private TextView tvChange;
+    private TextView tvLogout;
+    private EditText etPassEdit;
+    private EditText etNameOnEdit;
+    private TextView tvResetChanges;
+    private EditText etUsernameOnEdit;
+    private EditText etBiographyOnEdit;
+    private ParseFile updatedPhoto = null;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     public final static int REQUEST_CODE_GALLERY = 43;
@@ -85,12 +96,16 @@ public class EditProfileFragment extends Fragment {
         tvChange = view.findViewById(R.id.tvChangePP);
         tvLogout = view.findViewById(R.id.tvLogOut);
         ivPP = view.findViewById(R.id.ivChangePP);
+        etPassEdit = view.findViewById(R.id.etPassEdit);
+        etNameOnEdit = view.findViewById(R.id.etNameOnEdit);
+        etUsernameOnEdit = view.findViewById(R.id.etUsernameOnEdit);
+        etBiographyOnEdit = view.findViewById(R.id.etBiographyOnEdit);
+        tvSave = view.findViewById(R.id.tvSaveChanges);
+        tvResetChanges = view.findViewById(R.id.tvResetChanges);
 
-        ParseFile profilepic = ParseUser.getCurrentUser().getParseFile("profilePicture");
-        if (profilepic != null) {
-            Glide.with(getContext()).load(profilepic.getUrl()).circleCrop()
-                    .into(ivPP);
-        }
+        populateCurrentUserInfo();
+
+
         // on logout click
         tvLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,6 +122,7 @@ public class EditProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // request getting content from photo gallery
+                // make chip group visible
                 Intent intent = new Intent();
                 intent.setType("image/'");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -114,11 +130,40 @@ public class EditProfileFragment extends Fragment {
             }
         });
 
+        tvSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateUser();
+            }
+        });
+
+        tvResetChanges.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                populateCurrentUserInfo();
+            }
+        });
+
+    }
+
+    private void populateCurrentUserInfo() {
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 getActivity().getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
         autocompleteFragment.getView().setEnabled(false);
         autocompleteFragment.getView().setVisibility(View.INVISIBLE);
+
+        ParseUser user = ParseUser.getCurrentUser();
+        ParseFile profilepic = user.getParseFile(Post.KEY_PROFILE_PICTURE);
+        if (profilepic != null) {
+            Glide.with(getContext()).load(profilepic.getUrl()).circleCrop()
+                    .into(ivPP);
+        }
+        etNameOnEdit.setText(user.getString(Post.KEY_NAME));
+        etBiographyOnEdit.setText(user.getString(Post.KEY_BIOGRAPHY));
+        etUsernameOnEdit.setText(user.getString(Post.KEY_USERNAME));
+        etPassEdit.setText("");
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -135,17 +180,7 @@ public class EditProfileFragment extends Fragment {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            user.put("profilePicture", conversionBitmapParseFile(bitmap));
-            user.saveInBackground(new SaveCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if (e != null) {
-                        Toast.makeText(getActivity(), "Error while saving", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    Toast.makeText(getActivity(), " saved ", Toast.LENGTH_SHORT).show();
-                }
-            });
+            updatedPhoto = conversionBitmapParseFile(bitmap);
 
         }
     }
@@ -158,33 +193,37 @@ public class EditProfileFragment extends Fragment {
         return parseFile;
     }
 
-    private void updateUser(ParseFile photoFile, ParseUser user) {
-        user.put("profilePicture", photoFile);
+    private void updateUser() {
+        ParseUser user = ParseUser.getCurrentUser();
+        if (updatedPhoto == null) {
+            // no need to update
+            user.put(Post.KEY_PROFILE_PICTURE, user.getParseFile(Post.KEY_PROFILE_PICTURE));
+        } else {
+            user.put(Post.KEY_PROFILE_PICTURE, updatedPhoto);
+        }
+
+        // put name, username, bio, password
+        user.put(Post.KEY_USERNAME, etUsernameOnEdit.getText().toString());
+        if (etPassEdit.getText() != null || !etPassEdit.getText().toString().isEmpty()) {
+            user.put(Post.KEY_PASSWORD, etPassEdit.getText().toString());
+        }
+        user.put(Post.KEY_NAME, etNameOnEdit.getText().toString());
+        user.put(Post.KEY_BIOGRAPHY, etBiographyOnEdit.getText().toString());
+
         user.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                if (e != null){
-                    Log.e(" EROOOR ", e.toString());
+                if (e != null) {
+                    Toast.makeText(getActivity(), String.valueOf(R.string.couldnt_save), Toast.LENGTH_SHORT).show();
                     return;
                 }
+                // go to profile fragment when done saving
+                ProfileFragment profileFragment = new ProfileFragment(user);
+                AppCompatActivity activity = (AppCompatActivity) getActivity();
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, profileFragment).addToBackStack(null).commit();
             }
         });
     }
 
-    private File getPhotoFileUri(String photoFileName) {
-        // Get safe storage directory for photos
-        // Use `getExternalFilesDir` on Context to access package-specific directories.
-        // This way, we don't need to request external read/write runtime permissions.
-        File mediaStorageDir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "");
 
-        // Create the storage directory if it does not exist
-        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
-            Log.d("compose", "failed to create directory");
-        }
-
-        // Return the file target for the photo based on filename
-        File file = new File(mediaStorageDir.getPath() + File.separator + photoFileName);
-
-        return file;
-    }
 }
