@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +16,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatEditText;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -33,7 +30,6 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -43,7 +39,6 @@ import java.io.IOException;
  * create an instance of this fragment.
  */
 public class EditProfileFragment extends Fragment {
-
     private String mParam1;
     private String mParam2;
     private ImageView ivPP;
@@ -61,7 +56,6 @@ public class EditProfileFragment extends Fragment {
     public final static int REQUEST_CODE_GALLERY = 43;
 
     public EditProfileFragment() {
-        // Required empty public constructor
     }
 
     public static EditProfileFragment newInstance(String param1, String param2) {
@@ -92,27 +86,23 @@ public class EditProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // initiate
-        tvChange = view.findViewById(R.id.tvChangePP);
+        ivPP = view.findViewById(R.id.ivChangeProfilePic);
         tvLogout = view.findViewById(R.id.tvLogOut);
-        ivPP = view.findViewById(R.id.ivChangePP);
+        tvChange = view.findViewById(R.id.tvChangeProfilePic);
+        tvSave = view.findViewById(R.id.tvSaveChanges);
         etPassEdit = view.findViewById(R.id.etPassEdit);
         etNameOnEdit = view.findViewById(R.id.etNameOnEdit);
+        tvResetChanges = view.findViewById(R.id.tvResetChanges);
         etUsernameOnEdit = view.findViewById(R.id.etUsernameOnEdit);
         etBiographyOnEdit = view.findViewById(R.id.etBiographyOnEdit);
-        tvSave = view.findViewById(R.id.tvSaveChanges);
-        tvResetChanges = view.findViewById(R.id.tvResetChanges);
 
         populateCurrentUserInfo();
-
-
         // on logout click
         tvLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // log out parse user
                 ParseUser.logOutInBackground();
-                ParseUser currentUser = ParseUser.getCurrentUser();
                 Intent i = new Intent(getContext(), LoginActivity.class);
                 startActivity(i);
             }
@@ -121,8 +111,6 @@ public class EditProfileFragment extends Fragment {
         tvChange.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // request getting content from photo gallery
-                // make chip group visible
                 Intent intent = new Intent();
                 intent.setType("image/'");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -148,7 +136,7 @@ public class EditProfileFragment extends Fragment {
 
     private void populateCurrentUserInfo() {
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
-                getActivity().getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+                getActivity().getSupportFragmentManager().findFragmentById(R.id.afSearchAPI);
         autocompleteFragment.getView().setEnabled(false);
         autocompleteFragment.getView().setVisibility(View.INVISIBLE);
 

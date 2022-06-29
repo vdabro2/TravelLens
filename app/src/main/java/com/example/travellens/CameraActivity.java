@@ -3,37 +3,18 @@ package com.example.travellens;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.RatingBar;
-
-import com.bumptech.glide.Glide;
-import com.example.travellens.fragments.ComposeFragment;
-import com.example.travellens.fragments.EditProfileFragment;
-import com.example.travellens.fragments.ProfileFragment;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.PlacesClient;
-import com.google.android.material.chip.ChipGroup;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.parse.ParseFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -42,11 +23,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class CameraActivity extends AppCompatActivity {
-    private Camera camera;
+    private CameraHelper camera;
     private File photoFile;
     private Button bFromGallery;
     private Bitmap bitmap;
-    private ImageView ivTest;
     private Button bFromCamera;
     public String photoFileName = "photo.jpg";
     public final static int REQUEST_CODE_GALLERY = 43;
@@ -55,10 +35,9 @@ public class CameraActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
-        ivTest = findViewById(R.id.ivPicTest);
         bFromCamera = findViewById(R.id.bFromCamera);
         bFromGallery = findViewById(R.id.bFromGallery);
-        camera = new Camera();
+        camera = new CameraHelper();
         bFromCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,8 +58,6 @@ public class CameraActivity extends AppCompatActivity {
 
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             bitmap = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
-
-            ivTest.setImageBitmap(bitmap);
         } else if (requestCode == REQUEST_CODE_GALLERY && resultCode == RESULT_OK) {
 
             Uri selectedImage = data.getData();
@@ -104,8 +81,6 @@ public class CameraActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     Log.e("CAMERA ACTIVITY" , e.toString());
                 }
-
-                ivTest.setImageBitmap(bitmap);
                 photoFile = resizedFile;
             } catch (FileNotFoundException e) {
                 Log.e("CAMERA ACTIVITY" , e.toString());

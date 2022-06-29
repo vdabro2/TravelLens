@@ -13,8 +13,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -102,7 +100,6 @@ public class ProfileFragment extends Fragment {
         allPosts = new ArrayList<>();
         adapter = new ProfileAdapter(getContext(), allPosts);
         rvPosts.setAdapter(adapter);
-
         attachProfileElements();
         allowEditProfile();
 
@@ -116,7 +113,7 @@ public class ProfileFragment extends Fragment {
         });
 
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
-                getActivity().getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+                getActivity().getSupportFragmentManager().findFragmentById(R.id.afSearchAPI);
         autocompleteFragment.getView().setEnabled(false);
         autocompleteFragment.getView().setVisibility(View.INVISIBLE);
         queryPosts();
@@ -187,12 +184,8 @@ public class ProfileFragment extends Fragment {
             bEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Fragment fragment = new EditProfileFragment();
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.flContainer, fragment);
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.commit();
+                    Intent i = new Intent(getContext(), EditProfileActivity.class);
+                    startActivity(i);
                 }
             });
         }

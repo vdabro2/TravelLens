@@ -26,20 +26,18 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class Camera {
+public class CameraHelper {
 
-    public Camera() {
+    public CameraHelper() {
 
     }
 
     public File getPhotoFileUri(String photoFileName, Context context) {
         File mediaStorageDir = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "");
-
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
             Log.d("compose", "failed to create directory");
         }
-
         // Return the file target for the photo based on filename
         File file = new File(mediaStorageDir.getPath() + File.separator + photoFileName);
         return file;
@@ -68,7 +66,6 @@ public class Camera {
                 FileOutputStream fos = null;
                 try {
                     fos = new FileOutputStream(resizedFile);
-                    // Write the bytes of the bitmap to file
                     fos.write(bytes.toByteArray());
                     fos.close();
                 } catch (FileNotFoundException e) {
@@ -78,8 +75,6 @@ public class Camera {
                 e.printStackTrace();
             }
             return resizedFile;
-            //ivPic.setImageBitmap(bitmap);
-            //photoFile = resizedFile;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

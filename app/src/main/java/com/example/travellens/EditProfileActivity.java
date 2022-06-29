@@ -1,6 +1,5 @@
 package com.example.travellens;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -8,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -16,52 +14,48 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.example.travellens.fragments.ComposeFragment;
-import com.example.travellens.fragments.ProfileFragment;
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 public class EditProfileActivity extends AppCompatActivity {
+    private File photoFile;
     private ImageView ivPP;
     private TextView tvSave;
     private TextView tvChange;
     private TextView tvLogout;
     private EditText etPassEdit;
+    private CameraHelper camera;
     private EditText etNameOnEdit;
-    private File photoFile;
     private TextView tvResetChanges;
     private EditText etUsernameOnEdit;
     private EditText etBiographyOnEdit;
     private ParseFile updatedPhoto = null;
-    private Camera camera;
     public String photoFileName = "photo.jpg";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
         // initiate
-        tvChange = findViewById(R.id.tvChangePP);
+        photoFile = null;
+        camera = new CameraHelper();
+        ivPP = findViewById(R.id.ivChangeProfilePic);
         tvLogout = findViewById(R.id.tvLogOut);
-        ivPP = findViewById(R.id.ivChangePP);
+        tvChange = findViewById(R.id.tvChangeProfilePic);
+        tvSave = findViewById(R.id.tvSaveChanges);
         etPassEdit = findViewById(R.id.etPassEdit);
         etNameOnEdit = findViewById(R.id.etNameOnEdit);
+        tvResetChanges = findViewById(R.id.tvResetChanges);
         etUsernameOnEdit = findViewById(R.id.etUsernameOnEdit);
         etBiographyOnEdit = findViewById(R.id.etBiographyOnEdit);
-        tvSave = findViewById(R.id.tvSaveChanges);
-        tvResetChanges = findViewById(R.id.tvResetChanges);
-        camera = new Camera();
+
         populateCurrentUserInfo();
-        photoFile = null;
 
         // on logout click
         tvLogout.setOnClickListener(new View.OnClickListener() {
@@ -97,6 +91,7 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
     }
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ComposeFragment.RESULT_CODE_FROM_CAMERA) {
@@ -109,6 +104,7 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         }
     }
+
     private void populateCurrentUserInfo() {
         ParseUser user = ParseUser.getCurrentUser();
         ParseFile profilepic = user.getParseFile(Post.KEY_PROFILE_PICTURE);

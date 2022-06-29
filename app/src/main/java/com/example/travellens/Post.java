@@ -32,28 +32,27 @@ public class Post extends ParseObject implements Serializable {
         return getString(KEY_DESCRIPTION);
     }
 
-    public void setDescription(String de) {
-         put(KEY_DESCRIPTION, de);
+    public void setDescription(String description) {
+         put(KEY_DESCRIPTION, description);
     }
 
     public ParseFile getParseFile() {
         return getParseFile(KEY_IMAGE);
     }
 
-    public void setImage(ParseFile de) {
-        put(KEY_IMAGE, de);
+    public void setImage(ParseFile image) {
+        put(KEY_IMAGE, image);
     }
 
     public ParseUser getUser() {
         return getParseUser(KEY_USER);
     }
 
-    public void setUser(ParseUser de) {
-        put(KEY_USER, de);
+    public void setUser(ParseUser user) {
+        put(KEY_USER, user);
     }
 
     public static String calculateTimeAgo(Date createdAt, Context context) {
-
         int SECOND_MILLIS = 1000;
         int MINUTE_MILLIS = 60 * SECOND_MILLIS;
         int HOUR_MILLIS = 60 * MINUTE_MILLIS;
@@ -63,8 +62,8 @@ public class Post extends ParseObject implements Serializable {
             createdAt.getTime();
             long time = createdAt.getTime();
             long now = System.currentTimeMillis();
-
             final long diff = now - time;
+
             if (diff < MINUTE_MILLIS) {
                 return context.getString(R.string.just_now);
             } else if (diff < 2 * MINUTE_MILLIS) {

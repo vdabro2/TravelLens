@@ -25,7 +25,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.example.travellens.Camera;
+import com.example.travellens.CameraHelper;
 import com.example.travellens.CameraActivity;
 import com.example.travellens.Post;
 import com.example.travellens.R;
@@ -57,7 +57,7 @@ public class ComposeFragment extends Fragment {
     private String mParam2;
     private File photoFile;
     private Button bSubmit;
-    private Camera camera;
+    private CameraHelper camera;
     private ImageView ivPic;
     private Place placeInPost;
     private RatingBar rbRating;
@@ -102,36 +102,30 @@ public class ComposeFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         // all var declarations
+        placeInPost = null;
+        camera = new CameraHelper();
         ivPic = view.findViewById(R.id.ivPic);
         bSubmit = view.findViewById(R.id.bSubmit);
         bCamera = view.findViewById(R.id.bCamera);
+        placesClient = Places.createClient(getContext());
         etDescription = view.findViewById(R.id.etDescription);
         rbRating = view.findViewById(R.id.rbRatingCompose);
         cgRecommended = view.findViewById(R.id.cgRecomended);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-        // initialize api client
-        placesClient = Places.createClient(getContext());
+
         // call method that creates recommended places based on user location
         populateChipsWithLocation();
-        camera = new Camera();
-        // checking conditions before sharing post
-        placeInPost = null;
+
+        // checking conditions and then sharing post
         bSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String description = etDescription.getText().toString();
-                if (description.isEmpty() || photoFile == null || ivPic.getDrawable() == null
-                        || placeInPost == null || rbRating.getRating() <= 0) {
-                    Toast.makeText(getContext(), R.string.fill_everything_out_warning, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                // creates post based on the rating, post, user, and description
+                checkConditionsOfPost();
                 ParseUser user  = ParseUser.getCurrentUser();
-                savePost(description, user);
-                // after post is created, go to that locations feed
+                savePost(etDescription.getText().toString(), user);
                 goLocationTimeline();
-
             }
         });
 
@@ -147,9 +141,19 @@ public class ComposeFragment extends Fragment {
         // allows this fragments menu to behave differently than in main
         setHasOptionsMenu(true);
         // method creates the autocomplete fragment
-        callPlacesAPI();
+        creatFragmentFromAPI();
 
     }
+
+    private void checkConditionsOfPost() {
+        String description = etDescription.getText().toString();
+        if (description.isEmpty() || photoFile == null || ivPic.getDrawable() == null
+                || placeInPost == null || rbRating.getRating() <= 0) {
+            Toast.makeText(getContext(), R.string.fill_everything_out_warning, Toast.LENGTH_SHORT).show();
+            return;
+        }
+    }
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == RESULT_CODE_FROM_CAMERA) {
             if (resultCode == getActivity().RESULT_OK) {
@@ -190,7 +194,7 @@ public class ComposeFragment extends Fragment {
                                     placeInPost = placeLikelihood.getPlace();
 
                                     AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
-                                            getActivity().getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+                                            getActivity().getSupportFragmentManager().findFragmentById(R.id.afSearchAPI);
                                     autocompleteFragment.setText(placeInPost.getName());
 
                                     Log.i("populateChipsWithLocation", " Place Clicked" + placeInPost.getName());
@@ -217,10 +221,10 @@ public class ComposeFragment extends Fragment {
                 postsFragment).addToBackStack(null).commit();
     }
 
-    private void callPlacesAPI() {
+    private void creatFragmentFromAPI() {
         // link fragment to layout
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
-                getActivity().getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+                getActivity().getSupportFragmentManager().findFragmentById(R.id.afSearchAPI);
         autocompleteFragment.getView().setEnabled(true);
         autocompleteFragment.getView().setVisibility(View.VISIBLE);
 

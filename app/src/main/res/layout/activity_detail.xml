@@ -29,14 +29,14 @@
             android:layout_marginStart="3dp"
             app:layout_constraintEnd_toEndOf="@+id/ivImage"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/tvUserInDes"
-            app:layout_constraintTop_toTopOf="@+id/tvUserInDes" />
+            app:layout_constraintStart_toEndOf="@+id/tvUsernameDetail"
+            app:layout_constraintTop_toTopOf="@+id/tvUsernameDetail" />
 
         <TextView
             android:id="@+id/tvTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@+id/tvUserInDes"
+            app:layout_constraintStart_toStartOf="@+id/tvUsernameDetail"
             app:layout_constraintTop_toBottomOf="@+id/tvDescription" />
 
         <ImageView
@@ -49,7 +49,7 @@
             tools:srcCompat="@drawable/instagram_user_filled_24" />
 
         <TextView
-            android:id="@+id/tvUserInDes"
+            android:id="@+id/tvUsernameDetail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"

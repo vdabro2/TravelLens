@@ -23,8 +23,6 @@ import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public class SignupActivity extends AppCompatActivity {
     private EditText etBio1;
@@ -34,21 +32,21 @@ public class SignupActivity extends AppCompatActivity {
     private EditText etUsername;
     private ImageView ivIcon;
     private File photoFile;
-    private Camera camera;
+    private CameraHelper camera;
     public String photoFileName = "photo.jpg";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
         etName = findViewById(R.id.etName);
-        etBio1 = findViewById(R.id.etBio1);
+        etBio1 = findViewById(R.id.etBiography);
         etPass = findViewById(R.id.etPass);
         tvSignup = findViewById(R.id.tvSignUp);
         etUsername = findViewById(R.id.etUsername);
         ivIcon = findViewById(R.id.ivIcon);
         ivIcon.setImageDrawable(getDrawable(R.drawable.add_pp));
         photoFile = null;
-        camera = new Camera();
+        camera = new CameraHelper();
         ivIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

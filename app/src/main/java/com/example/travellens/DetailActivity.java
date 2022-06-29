@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.travellens.fragments.ProfileFragment;
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.parse.CountCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -23,7 +22,6 @@ import com.parse.ParseUser;
 import java.util.List;
 
 public class DetailActivity extends AppCompatActivity {
-
     private Post thePost;
     private int likeCount;
     private TextView tvTime;
@@ -40,19 +38,49 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
         tvTime = findViewById(R.id.tvTime);
         tvLikes = findViewById(R.id.tvLikes);
         ivLikes = findViewById(R.id.ivLikes);
         ivImage = findViewById(R.id.ivImage);
         rbRating = findViewById(R.id.rbRating);
         tvLocation = findViewById(R.id.tvLocation);
-        tvUserInDes = findViewById(R.id.tvUserInDes);
+        tvUserInDes = findViewById(R.id.tvUsernameDetail);
         tvDescription = findViewById(R.id.tvDescription);
         ivProfilePicture = findViewById(R.id.ivProfilePicture);
+
         // get intent with post object
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
         thePost = (Post)bundle.getSerializable("post");
+
+        setAllDetails();
+        // if you click the profile image or username, you get sent to the users profile
+        ivProfilePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToProfile();
+            }
+        });
+        tvUserInDes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToProfile();
+            }
+        });
+
+        // checks whether user has previously liked this post
+        queryIfLiked();
+        queryHowManyLikes();
+        ivLikes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                likeOrUnlike();
+            }
+        });
+    }
+
+    private void setAllDetails() {
         // description text
         tvDescription.setText(thePost.getDescription());
         // set relative time on layout
@@ -78,30 +106,6 @@ public class DetailActivity extends AppCompatActivity {
         if (profilepic != null) {
             Glide.with(this).load(profilepic.getUrl()).circleCrop().into(ivProfilePicture);
         }
-
-        // if you click the profile image or username, you get sent to the users profile
-        ivProfilePicture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToProfile();
-            }
-        });
-        tvUserInDes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToProfile();
-            }
-        });
-
-        // checks whether user has previously liked this post
-        queryIfLiked();
-        queryHowManyLikes();
-        ivLikes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                likeOrUnlike();
-            }
-        });
     }
 
     private void goToProfile() {

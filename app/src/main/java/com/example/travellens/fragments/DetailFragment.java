@@ -3,7 +3,6 @@ package com.example.travellens.fragments;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -13,32 +12,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatEditText;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
-import com.example.travellens.FeedMainActivity;
 import com.example.travellens.Likes;
 import com.example.travellens.Post;
 import com.example.travellens.R;
-import com.example.travellens.Post;
-import com.example.travellens.R;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.FetchPlaceRequest;
-import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
-import com.google.maps.errors.ApiException;
 import com.parse.CountCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -104,12 +91,12 @@ public class DetailFragment extends Fragment {
         ivImage = view.findViewById(R.id.ivImage);
         rbRating = view.findViewById(R.id.rbRating);
         tvLocation = view.findViewById(R.id.tvLocation);
-        tvUserInDes = view.findViewById(R.id.tvUserInDes);
+        tvUserInDes = view.findViewById(R.id.tvUsernameDetail);
         tvDescription = view.findViewById(R.id.tvDescription);
         ivProfilePicture = view.findViewById(R.id.ivProfilePicture);
         // turn off autocomplete fragment on this page
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
-                getActivity().getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+                getActivity().getSupportFragmentManager().findFragmentById(R.id.afSearchAPI);
         autocompleteFragment.getView().setEnabled(false);
         autocompleteFragment.getView().setVisibility(View.INVISIBLE);
 

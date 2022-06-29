@@ -55,7 +55,7 @@
         android:hint="@string/name"
         android:inputType="textPersonName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivChangePP" />
+        app:layout_constraintTop_toBottomOf="@+id/ivChangeProfilePic" />
 
     <EditText
         android:id="@+id/etBiographyOnEdit"
@@ -84,7 +84,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
-        android:id="@+id/ivChangePP"
+        android:id="@+id/ivChangeProfilePic"
         android:layout_width="114dp"
         android:layout_height="110dp"
         android:layout_marginTop="4dp"
@@ -93,7 +93,7 @@
         tools:src="@tools:sample/avatars" />
 
     <TextView
-        android:id="@+id/tvChangePP"
+        android:id="@+id/tvChangeProfilePic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="130dp"
@@ -105,7 +105,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/ivChangePP"
+        app:layout_constraintStart_toStartOf="@+id/ivChangeProfilePic"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText

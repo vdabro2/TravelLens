@@ -23,7 +23,7 @@ import java.util.List;
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
     private Context context;
     private List<Post> posts;
-    private boolean isLong;
+
     public PostsAdapter(Context context, List<Post> posts) {
         this.context = context;
         this.posts = posts;
@@ -69,7 +69,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ivImage = itemView.findViewById(R.id.ivStag);
-            isLong = false;
         }
 
         public void bind(Post post) throws JSONException {
@@ -80,18 +79,11 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             ivImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //  changed to detail activity for animation purposes
-                    /*
-                    DetailFragment profileFragment = new DetailFragment(post);
-                    AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer,
-                            profileFragment).addToBackStack(null).commit();*/
                     Intent intent = new Intent(context, DetailActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("post", post);
                     intent.putExtras(bundle);
                     context.startActivity(intent);
-
                 }
             });
         }
