@@ -44,7 +44,7 @@ public class SignupActivity extends AppCompatActivity {
         tvSignup = findViewById(R.id.tvSignUp);
         etUsername = findViewById(R.id.etUsername);
         ivIcon = findViewById(R.id.ivIcon);
-        ivIcon.setImageDrawable(getDrawable(R.drawable.add_pp));
+
         photoFile = null;
         camera = new CameraHelper();
         ivIcon.setOnClickListener(new View.OnClickListener() {

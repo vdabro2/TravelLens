@@ -23,10 +23,10 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
         etPass = findViewById(R.id.etPass);
         bLogin = findViewById(R.id.bLogin);
         signup = findViewById(R.id.tvSignUp);
-        setContentView(R.layout.activity_login);
         etUsername = findViewById(R.id.etUsername);
 
         if (ParseUser.getCurrentUser() != null) {

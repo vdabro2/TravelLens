@@ -8,26 +8,26 @@
     android:background="@drawable/login"
     tools:context=".LoginActivity">
 
+
     <TextView
         android:id="@+id/tvSignUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:text="@string/sign_up"
         android:textAllCaps="false"
         android:textColor="@color/silver"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/bLogin"
+        app:layout_constraintStart_toStartOf="@+id/bLogin"
         app:layout_constraintTop_toBottomOf="@+id/bLogin" />
-
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilUsername"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="260dp"
+        android:layout_height="55dp"
         android:layout_marginTop="100dp"
         app:boxCornerRadiusBottomEnd="8dp"
         app:boxCornerRadiusBottomStart="8dp"
@@ -41,11 +41,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
         <EditText
             android:id="@+id/etUsername"
-            android:layout_width="260dp"
-            android:layout_height="55dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:ems="10"
             android:hint="@string/username"
             android:inputType="textPersonName"
@@ -53,13 +52,14 @@
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ivIcon" />
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilPassword"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="260dp"
+        android:layout_height="55dp"
         app:boxCornerRadiusBottomEnd="8dp"
         app:boxCornerRadiusBottomStart="8dp"
         app:boxCornerRadiusTopEnd="8dp"
@@ -77,21 +77,23 @@
 
         <EditText
             android:id="@+id/etPass"
-            android:layout_width="260dp"
-            android:layout_height="55dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_marginTop="10dp"
             android:ems="10"
             android:hint="@string/password"
             android:inputType="textPassword"
             app:layout_constraintEnd_toEndOf="@+id/etUsername"
             app:layout_constraintTop_toBottomOf="@+id/etUsername" />
+
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/bLogin"
         style="@style/Widget.Material3.Button.OutlinedButton.Icon"
         android:layout_width="260dp"
-        android:layout_height="0dp"
+        android:layout_height="55dp"
         android:text="@string/login"
         android:textAllCaps="false"
         android:textColor="@color/silver"
@@ -103,6 +105,20 @@
         tools:ignore="TextContrastCheck">
 
     </Button>
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="98dp"
+        android:layout_height="89dp"
+        android:layout_marginTop="40dp"
+        android:scaleType="centerCrop"
+        android:scaleX="2"
+        android:scaleY="2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/no_name_icon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

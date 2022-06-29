@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -33,12 +35,10 @@ public class DetailActivity extends AppCompatActivity {
     private TextView tvUserInDes;
     private TextView tvDescription;
     private ImageView ivProfilePicture;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-
         tvTime = findViewById(R.id.tvTime);
         tvLikes = findViewById(R.id.tvLikes);
         ivLikes = findViewById(R.id.ivLikes);
@@ -78,6 +78,8 @@ public class DetailActivity extends AppCompatActivity {
                 likeOrUnlike();
             }
         });
+
+
     }
 
     private void setAllDetails() {
@@ -198,4 +200,5 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
     }
+
 }

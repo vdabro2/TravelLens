@@ -95,7 +95,7 @@ public class ProfileFragment extends Fragment {
         bSavedPosts = view.findViewById(R.id.bMySaves);
         tvRealName = view.findViewById(R.id.tvRealName);
         tvUserName = view.findViewById(R.id.tvUserName);
-        ivProfilePicture = view.findViewById(R.id.ivPP2);
+        ivProfilePicture = view.findViewById(R.id.ivProfilePic2);
 
         allPosts = new ArrayList<>();
         adapter = new ProfileAdapter(getContext(), allPosts);
