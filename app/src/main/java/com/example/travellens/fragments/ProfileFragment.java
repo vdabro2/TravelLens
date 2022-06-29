@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.travellens.EditProfileActivity;
 import com.example.travellens.Likes;
+import com.example.travellens.LoginActivity;
 import com.example.travellens.Post;
 import com.example.travellens.ProfileAdapter;
 import com.example.travellens.R;
@@ -185,7 +188,13 @@ public class ProfileFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(getContext(), EditProfileActivity.class);
-                    startActivity(i);
+                    Pair<View, String> p1 = Pair.create((View)ivProfilePicture, "pic");
+                    Pair<View, String> p2 = Pair.create(tvBio, "bio");
+                    Pair<View, String> p3 = Pair.create((View)tvUserName, "username");
+                    Pair<View, String> p4 = Pair.create((View)tvRealName, "name");
+                    ActivityOptionsCompat options = ActivityOptionsCompat.
+                            makeSceneTransitionAnimation(getActivity(), p1, p2, p3, p4);
+                    startActivity(i, options.toBundle());
                 }
             });
         }

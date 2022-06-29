@@ -1,4 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+
     <!-- Base application theme. -->
     <style name="Theme.TravelLens" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
@@ -13,5 +14,19 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <!-- enable window content transitions -->
+        <item name="android:windowActivityTransitions">true</item>
+        <item name="android:windowContentTransitions">true</item>
+
+
+        <!-- specify enter and exit transitions -->
+        <item name="android:windowEnterTransition">@transition/explode</item>
+        <item name="android:windowExitTransition">@transition/explode</item>
+
+        <!-- specify shared element transitions -->
+        <item name="android:windowSharedElementEnterTransition">
+            @transition/change_image_transform</item>
+        <item name="android:windowSharedElementExitTransition">
+            @transition/change_image_transform</item>
     </style>
 </resources>

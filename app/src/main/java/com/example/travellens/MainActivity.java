@@ -2,6 +2,7 @@ package com.example.travellens;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,8 +19,9 @@ public class MainActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this);
                 Intent intent=new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(intent);
+                startActivity(intent, options.toBundle());
                 finish();
             }
         },1000);

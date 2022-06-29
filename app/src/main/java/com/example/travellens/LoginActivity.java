@@ -1,5 +1,6 @@
 package com.example.travellens;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +11,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
 
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -48,7 +51,12 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(LoginActivity.this, SignupActivity.class);
-                startActivity(i);
+                Pair<View, String> p1 = Pair.create((View)etUsername, "user");
+                Pair<View, String> p2 = Pair.create(etPass, "pass");
+                Pair<View, String> p3 = Pair.create((View)signup, "sign_up");
+                ActivityOptionsCompat options = ActivityOptionsCompat.
+                        makeSceneTransitionAnimation(LoginActivity.this, p1, p2, p3);
+                startActivity(i, options.toBundle());
             }
         });
     }
@@ -68,7 +76,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private void goMainActivity() {
         Intent i = new Intent(this, FeedMainActivity.class);
-        startActivity(i);
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this);
+        startActivity(i, options.toBundle());
         finish();
     }
 }

@@ -2,10 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-
+    android:id="@+id/clConstraint"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/login"
+    android:transitionName="background"
     tools:context=".LoginActivity">
 
 
@@ -19,6 +20,7 @@
         android:textColor="@color/silver"
         android:textSize="20sp"
         android:textStyle="bold"
+        android:transitionName="sign_up"
         app:layout_constraintEnd_toEndOf="@+id/bLogin"
         app:layout_constraintStart_toStartOf="@+id/bLogin"
         app:layout_constraintTop_toBottomOf="@+id/bLogin" />
@@ -29,6 +31,7 @@
         android:layout_width="260dp"
         android:layout_height="55dp"
         android:layout_marginTop="100dp"
+        android:transitionName="user"
         app:boxCornerRadiusBottomEnd="8dp"
         app:boxCornerRadiusBottomStart="8dp"
         app:boxCornerRadiusTopEnd="8dp"
@@ -41,6 +44,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
         <EditText
             android:id="@+id/etUsername"
             android:layout_width="match_parent"
@@ -60,6 +64,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="260dp"
         android:layout_height="55dp"
+        android:transitionName="pass"
         app:boxCornerRadiusBottomEnd="8dp"
         app:boxCornerRadiusBottomStart="8dp"
         app:boxCornerRadiusTopEnd="8dp"
@@ -75,7 +80,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tilUsername">
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etPass"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

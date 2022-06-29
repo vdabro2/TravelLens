@@ -15,6 +15,8 @@
 
         <TextView
             android:id="@+id/tvUserName"
+            android:transitionName="username"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center|center_horizontal|center_vertical"
@@ -27,6 +29,8 @@
         <ImageView
             android:id="@+id/ivProfilePic2"
             android:layout_width="100dp"
+            android:transitionName="pic"
+
             android:layout_height="85dp"
             android:layout_marginTop="5dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -47,6 +51,8 @@
             android:id="@+id/tvBio"
             android:layout_width="224dp"
             android:layout_height="32dp"
+            android:transitionName="bio"
+
             android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
