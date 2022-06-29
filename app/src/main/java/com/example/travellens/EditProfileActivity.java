@@ -59,7 +59,7 @@ public class EditProfileActivity extends AppCompatActivity {
         etBiographyOnEdit = findViewById(R.id.etBiographyOnEdit);
         tvSave = findViewById(R.id.tvSaveChanges);
         tvResetChanges = findViewById(R.id.tvResetChanges);
-        camera = new Camera(getApplicationContext(), EditProfileActivity.this);
+        camera = new Camera();
         populateCurrentUserInfo();
         photoFile = null;
 
@@ -102,7 +102,7 @@ public class EditProfileActivity extends AppCompatActivity {
         if (requestCode == ComposeFragment.RESULT_CODE_FROM_CAMERA) {
             if (resultCode == RESULT_OK) {
                 Uri selectedImage = data.getData();
-                photoFile = camera.uriToFile(EditProfileActivity.this, selectedImage, photoFileName);
+                photoFile = camera.uriToFile(EditProfileActivity.this, selectedImage, photoFileName, getApplicationContext());
                 Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 Glide.with(this).load(takenImage).circleCrop()
                         .into(ivPP);

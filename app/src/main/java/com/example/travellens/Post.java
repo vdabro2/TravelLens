@@ -1,5 +1,6 @@
 package com.example.travellens;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.parse.ParseClassName;
@@ -51,7 +52,7 @@ public class Post extends ParseObject implements Serializable {
         put(KEY_USER, de);
     }
 
-    public static String calculateTimeAgo(Date createdAt) {
+    public static String calculateTimeAgo(Date createdAt, Context context) {
 
         int SECOND_MILLIS = 1000;
         int MINUTE_MILLIS = 60 * SECOND_MILLIS;
@@ -65,17 +66,17 @@ public class Post extends ParseObject implements Serializable {
 
             final long diff = now - time;
             if (diff < MINUTE_MILLIS) {
-                return "just now";//String.valueOf(R.string.just_now);
+                return context.getString(R.string.just_now);
             } else if (diff < 2 * MINUTE_MILLIS) {
-                return String.valueOf(R.string.a_min_ago);
+                return context.getString(R.string.a_min_ago);
             } else if (diff < 50 * MINUTE_MILLIS) {
                 return diff / MINUTE_MILLIS + " m";
             } else if (diff < 90 * MINUTE_MILLIS) {
-                return String.valueOf(R.string.an_hour_ago);
+                return context.getString(R.string.an_hour_ago);
             } else if (diff < 24 * HOUR_MILLIS) {
                 return diff / HOUR_MILLIS + " h";
             } else if (diff < 48 * HOUR_MILLIS) {
-                return String.valueOf(R.string.yesterday);
+                return context.getString(R.string.yesterday);
             } else {
                 return diff / DAY_MILLIS + " d";
             }

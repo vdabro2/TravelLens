@@ -56,7 +56,7 @@ public class DetailActivity extends AppCompatActivity {
         // description text
         tvDescription.setText(thePost.getDescription());
         // set relative time on layout
-        tvTime.setText(Post.calculateTimeAgo(thePost.getCreatedAt()));
+        tvTime.setText(Post.calculateTimeAgo(thePost.getCreatedAt(), getApplicationContext()));
         // set second username text
         try {
             tvUserInDes.setText(thePost.getUser().fetchIfNeeded().getUsername());
@@ -127,13 +127,8 @@ public class DetailActivity extends AppCompatActivity {
                         // update how many likes the post has
                         likeCount = likeCount - 1;
 
-                        if (likeCount == 0) {
-                            tvLikes.setText("");
-                        } else if (likeCount == 1) {
-                            tvLikes.setText(getString(R.string.one_like, likeCount));
-                        } else {
-                            tvLikes.setText(getString(R.string.likes, likeCount));
-                        }
+                        tvLikes.setText(getResources().getQuantityString(R.plurals.likes, likeCount, likeCount));
+
                     }
                 } else if (e != null){
                     Log.e("Detail Fragment: ", e.toString());
@@ -148,13 +143,8 @@ public class DetailActivity extends AppCompatActivity {
                     ivLikes.setImageResource(R.drawable.img_2);
                     // update how many likes the post has
                     likeCount = likeCount + 1;
-                    if (likeCount == 0) {
-                        tvLikes.setText("");
-                    } else if (likeCount == 1) {
-                        tvLikes.setText(getString(R.string.one_like, likeCount));
-                    } else {
-                        tvLikes.setText(getString(R.string.likes, likeCount));
-                    }
+                    tvLikes.setText(getResources().getQuantityString(R.plurals.likes, likeCount, likeCount));
+
                 }
             }
         });
@@ -199,13 +189,8 @@ public class DetailActivity extends AppCompatActivity {
                     return;
                 }
                 likeCount = count;
-                if (count == 0) {
-                    tvLikes.setText("");
-                } else if (count == 1) {
-                    tvLikes.setText(getString(R.string.one_like, count));
-                } else {
-                    tvLikes.setText(getString(R.string.likes, count));
-                }
+                tvLikes.setText(getResources().getQuantityString(R.plurals.likes, likeCount, likeCount));
+
             }
         });
     }

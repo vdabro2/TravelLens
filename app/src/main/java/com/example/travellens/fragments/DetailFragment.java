@@ -116,7 +116,7 @@ public class DetailFragment extends Fragment {
         // description text
         tvDescription.setText(thePost.getDescription());
         // set relative time on layout
-        tvTime.setText(Post.calculateTimeAgo(thePost.getCreatedAt()));
+        tvTime.setText(Post.calculateTimeAgo(thePost.getCreatedAt(), getContext()));
         // set second username text
         try {
             tvUserInDes.setText(thePost.getUser().fetchIfNeeded().getUsername());

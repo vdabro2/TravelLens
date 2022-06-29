@@ -27,15 +27,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class Camera {
-    private Context context;
-    private Activity activity;
 
-    public Camera(Context context, Activity activity) {
-        this.context = context;
-        this.activity = activity;
+    public Camera() {
+
     }
 
-    public File getPhotoFileUri(String photoFileName) {
+    public File getPhotoFileUri(String photoFileName, Context context) {
         File mediaStorageDir = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "");
 
         // Create the storage directory if it does not exist
@@ -56,7 +53,7 @@ public class Camera {
         return parseFile;
     }
 
-    public File uriToFile(Activity activity, Uri selectedImage, String photoFileName) {
+    public File uriToFile(Activity activity, Uri selectedImage, String photoFileName, Context context) {
         try {
             ImageDecoder.Source source = ImageDecoder.createSource(activity.getContentResolver(), selectedImage);
             Bitmap bitmap = ImageDecoder.decodeBitmap(source);
@@ -65,7 +62,7 @@ public class Camera {
             // Compress the image further
             bitmap.compress(Bitmap.CompressFormat.JPEG, 40, bytes);
             // Create a new file for the resized bitmap
-            File resizedFile = getPhotoFileUri(photoFileName + "_resized");
+            File resizedFile = getPhotoFileUri(photoFileName + "_resized", context);
             try {
                 resizedFile.createNewFile();
                 FileOutputStream fos = null;

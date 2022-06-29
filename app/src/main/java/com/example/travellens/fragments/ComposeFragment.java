@@ -5,38 +5,28 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.ImageDecoder;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
-import com.bumptech.glide.Glide;
 import com.example.travellens.Camera;
 import com.example.travellens.CameraActivity;
-import com.example.travellens.FeedMainActivity;
 import com.example.travellens.Post;
 import com.example.travellens.R;
 import com.google.android.gms.common.api.Status;
@@ -67,12 +57,12 @@ public class ComposeFragment extends Fragment {
     private String mParam2;
     private File photoFile;
     private Button bSubmit;
+    private Camera camera;
     private ImageView ivPic;
     private Place placeInPost;
     private RatingBar rbRating;
-    private ChipGroup cgRecomended;
+    private ChipGroup cgRecommended;
     private EditText etDescription;
-    private Camera camera;
     private ProgressBar progressBar;
     private PlacesClient placesClient;
     private FloatingActionButton bCamera;
@@ -80,7 +70,8 @@ public class ComposeFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     public static final int RESULT_CODE_FROM_CAMERA = 10;
-    private List<String> list = new ArrayList<>(Arrays.asList("POINT_OF_INTEREST", "FOOD", "CAFE","TRANSIT_STATION", "TOURIST_ATTRACTION", "PARK", "MUSEUM"));
+    private List<String> typeList = new ArrayList<>(Arrays.asList("POINT_OF_INTEREST", "FOOD",
+            "CAFE","TRANSIT_STATION", "TOURIST_ATTRACTION", "PARK", "MUSEUM"));
 
     public ComposeFragment() {}
 
@@ -117,14 +108,13 @@ public class ComposeFragment extends Fragment {
         bCamera = view.findViewById(R.id.bCamera);
         etDescription = view.findViewById(R.id.etDescription);
         rbRating = view.findViewById(R.id.rbRatingCompose);
-        cgRecomended = view.findViewById(R.id.cgRecomended);
+        cgRecommended = view.findViewById(R.id.cgRecomended);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-
         // initialize api client
         placesClient = Places.createClient(getContext());
         // call method that creates recommended places based on user location
         populateChipsWithLocation();
-        camera = new Camera(getContext(), getActivity());
+        camera = new Camera();
         // checking conditions before sharing post
         placeInPost = null;
         bSubmit.setOnClickListener(new View.OnClickListener() {
@@ -150,7 +140,6 @@ public class ComposeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getActivity(), CameraActivity.class);
-                i.putExtra("fragment", "Compose");
                 startActivityForResult(i, RESULT_CODE_FROM_CAMERA);
             }
         });
@@ -165,7 +154,7 @@ public class ComposeFragment extends Fragment {
         if (requestCode == RESULT_CODE_FROM_CAMERA) {
             if (resultCode == getActivity().RESULT_OK) {
                 Uri selectedImage = data.getData();
-                photoFile = camera.uriToFile(getActivity(), selectedImage, photoFileName);
+                photoFile = camera.uriToFile(getActivity(), selectedImage, photoFileName, getContext());
                 Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 ivPic.setImageBitmap(takenImage);
             }
@@ -189,12 +178,12 @@ public class ComposeFragment extends Fragment {
                         Log.i("populateChipsWithLocation", String.format("Place '%s' has likelihood: %f",
                                 placeLikelihood.getPlace().getName(),
                                 placeLikelihood.getLikelihood()));
-                        boolean var = placeLikelihood.getPlace().getTypes().stream().anyMatch(element -> list.contains(element));
+                        boolean var = placeLikelihood.getPlace().getTypes().stream().anyMatch(element -> typeList.contains(element));
                         if (var == false) {
                             Chip chip = new Chip(context);
                             chip.setText(placeLikelihood.getPlace().getName());
                             chip.setCloseIconVisible(true);
-                            cgRecomended.addView(chip);
+                            cgRecommended.addView(chip);
                             chip.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -208,7 +197,6 @@ public class ComposeFragment extends Fragment {
                                 }
                             });
                         }
-
                     }
                 } else {
                     Exception exception = task.getException();

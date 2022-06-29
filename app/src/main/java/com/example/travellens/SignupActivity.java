@@ -48,7 +48,7 @@ public class SignupActivity extends AppCompatActivity {
         ivIcon = findViewById(R.id.ivIcon);
         ivIcon.setImageDrawable(getDrawable(R.drawable.add_pp));
         photoFile = null;
-        camera = new Camera(getApplicationContext(), SignupActivity.this);
+        camera = new Camera();
         ivIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,7 +110,7 @@ public class SignupActivity extends AppCompatActivity {
         if (requestCode == ComposeFragment.RESULT_CODE_FROM_CAMERA) {
             if (resultCode == RESULT_OK) {
                 Uri selectedImage = data.getData();
-                photoFile = camera.uriToFile(SignupActivity.this, selectedImage, photoFileName);
+                photoFile = camera.uriToFile(SignupActivity.this, selectedImage, photoFileName, getApplicationContext());
                 Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 Glide.with(this).load(takenImage).circleCrop()
                         .into(ivIcon);

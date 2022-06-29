@@ -58,7 +58,7 @@ public class CameraActivity extends AppCompatActivity {
         ivTest = findViewById(R.id.ivPicTest);
         bFromCamera = findViewById(R.id.bFromCamera);
         bFromGallery = findViewById(R.id.bFromGallery);
-        camera = new Camera(CameraActivity.this, CameraActivity.this);
+        camera = new Camera();
         bFromCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,7 +89,7 @@ public class CameraActivity extends AppCompatActivity {
                 bitmap = ImageDecoder.decodeBitmap(source);
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 40, bytes);
-                File resizedFile = camera.getPhotoFileUri(photoFileName + "_resized");
+                File resizedFile = camera.getPhotoFileUri(photoFileName + "_resized", getApplicationContext());
                 try {
                     resizedFile.createNewFile();
                     FileOutputStream fos = null;
@@ -99,18 +99,18 @@ public class CameraActivity extends AppCompatActivity {
                         fos.write(bytes.toByteArray());
                         fos.close();
                     } catch (FileNotFoundException e) {
-                        e.printStackTrace();
+                        Log.e("CAMERA ACTIVITY" , e.toString());
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.e("CAMERA ACTIVITY" , e.toString());
                 }
 
                 ivTest.setImageBitmap(bitmap);
                 photoFile = resizedFile;
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                Log.e("CAMERA ACTIVITY" , e.toString());
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e("CAMERA ACTIVITY" , e.toString());
             }
         }
 
@@ -122,7 +122,7 @@ public class CameraActivity extends AppCompatActivity {
 
     private void launchCamera() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        photoFile = camera.getPhotoFileUri(photoFileName);
+        photoFile = camera.getPhotoFileUri(photoFileName, getApplicationContext());
         Uri fileProvider = FileProvider.getUriForFile(CameraActivity.this, "com.codepath.fileprovider", photoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
         if (intent.resolveActivity(getPackageManager()) != null) {
@@ -132,7 +132,7 @@ public class CameraActivity extends AppCompatActivity {
 
     private void launchGallery() {
         Intent intent = new Intent();
-        photoFile = camera.getPhotoFileUri(photoFileName);
+        photoFile = camera.getPhotoFileUri(photoFileName, getApplicationContext());
         Uri fileProvider = FileProvider.getUriForFile(CameraActivity.this, "com.codepath.fileprovider", photoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
         intent.setType("image/'");
