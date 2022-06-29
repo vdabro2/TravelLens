@@ -1,9 +1,11 @@
 package com.example.travellens.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.ImageDecoder;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -33,6 +35,7 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.example.travellens.Camera;
+import com.example.travellens.CameraActivity;
 import com.example.travellens.FeedMainActivity;
 import com.example.travellens.Post;
 import com.example.travellens.R;
@@ -54,15 +57,9 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 public class ComposeFragment extends Fragment {
@@ -78,18 +75,15 @@ public class ComposeFragment extends Fragment {
     private Camera camera;
     private ProgressBar progressBar;
     private PlacesClient placesClient;
-    private boolean fromGal = false;
-    private ParseFile photoFileFromGal;
     private FloatingActionButton bCamera;
-    private FloatingActionButton bGallery;
     public String photoFileName = "photo.jpg";
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    public final static int REQUEST_CODE_GALLERY = 43;
-    public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
+    public static final int RESULT_CODE_FROM_CAMERA = 10;
     private List<String> list = new ArrayList<>(Arrays.asList("POINT_OF_INTEREST", "FOOD", "CAFE","TRANSIT_STATION", "TOURIST_ATTRACTION", "PARK", "MUSEUM"));
 
     public ComposeFragment() {}
+
 
     public static ComposeFragment newInstance(String param1, String param2) {
         ComposeFragment fragment = new ComposeFragment();
@@ -121,7 +115,6 @@ public class ComposeFragment extends Fragment {
         ivPic = view.findViewById(R.id.ivPic);
         bSubmit = view.findViewById(R.id.bSubmit);
         bCamera = view.findViewById(R.id.bCamera);
-        bGallery = view.findViewById(R.id.bGallery);
         etDescription = view.findViewById(R.id.etDescription);
         rbRating = view.findViewById(R.id.rbRatingCompose);
         cgRecomended = view.findViewById(R.id.cgRecomended);
@@ -138,13 +131,8 @@ public class ComposeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 String description = etDescription.getText().toString();
-                if (fromGal == false && (description.isEmpty() || photoFile == null || ivPic.getDrawable() == null
-                        || placeInPost == null || rbRating.getRating() <= 0)) {
-                    Toast.makeText(getContext(), R.string.fill_everything_out_warning, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (fromGal == true && (description.isEmpty() || photoFileFromGal == null
-                        || placeInPost == null || rbRating.getRating() <= 0)) {
+                if (description.isEmpty() || photoFile == null || ivPic.getDrawable() == null
+                        || placeInPost == null || rbRating.getRating() <= 0) {
                     Toast.makeText(getContext(), R.string.fill_everything_out_warning, Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -161,15 +149,9 @@ public class ComposeFragment extends Fragment {
         bCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                launchCamera();
-            }
-        });
-
-        // launches gallery on click
-        bGallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                launchGallery();
+                Intent i = new Intent(getActivity(), CameraActivity.class);
+                i.putExtra("fragment", "Compose");
+                startActivityForResult(i, RESULT_CODE_FROM_CAMERA);
             }
         });
 
@@ -177,8 +159,18 @@ public class ComposeFragment extends Fragment {
         setHasOptionsMenu(true);
         // method creates the autocomplete fragment
         callPlacesAPI();
-    }
 
+    }
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == RESULT_CODE_FROM_CAMERA) {
+            if (resultCode == getActivity().RESULT_OK) {
+                Uri selectedImage = data.getData();
+                photoFile = camera.uriToFile(getActivity(), selectedImage, photoFileName);
+                Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+                ivPic.setImageBitmap(takenImage);
+            }
+        }
+    }
     private void populateChipsWithLocation() {
 
         List<Place.Field> placeFields = (Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.TYPES));
@@ -187,7 +179,8 @@ public class ComposeFragment extends Fragment {
         FindCurrentPlaceRequest request = FindCurrentPlaceRequest.newInstance(placeFields);
 
         // Call findCurrentPlace and handle the response (first check that the user has granted permission).
-        if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        Context context = getContext();
+        if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             Task<FindCurrentPlaceResponse> placeResponse = placesClient.findCurrentPlace(request);
             placeResponse.addOnCompleteListener(task -> {
                 if (task.isSuccessful()){
@@ -198,7 +191,7 @@ public class ComposeFragment extends Fragment {
                                 placeLikelihood.getLikelihood()));
                         boolean var = placeLikelihood.getPlace().getTypes().stream().anyMatch(element -> list.contains(element));
                         if (var == false) {
-                            Chip chip = new Chip(getContext());
+                            Chip chip = new Chip(context);
                             chip.setText(placeLikelihood.getPlace().getName());
                             chip.setCloseIconVisible(true);
                             cgRecomended.addView(chip);
@@ -264,69 +257,16 @@ public class ComposeFragment extends Fragment {
         });
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == getActivity().RESULT_OK) {
-            fromGal = false;
-            Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
-            ivPic.setImageBitmap(takenImage);
-        } else if (requestCode == REQUEST_CODE_GALLERY && resultCode == getActivity().RESULT_OK) {
-            fromGal = true;
-            Uri image = data.getData();
-            Bitmap bitmap = null;
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), image);
-                Glide.with(this).load(image).into(ivPic);
-                photoFileFromGal = camera.conversionBitmapParseFile(bitmap);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-
-
-    private void launchCamera() {
-        fromGal = false;
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        photoFile = camera.getPhotoFileUri(photoFileName);
-        Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.codepath.fileprovider", photoFile);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
-        if (intent.resolveActivity(getContext().getPackageManager()) != null) {
-            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-        }
-    }
-
-    private void launchGallery() {
-        fromGal = true;
-        Intent intent = new Intent();
-        photoFile = camera.getPhotoFileUri(photoFileName);
-        Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.codepath.fileprovider", photoFile);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
-        intent.setType("image/'");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Pick an image"), REQUEST_CODE_GALLERY);
-    }
-
-
 
     private void savePost(String description, ParseUser user) {
         Post post = new Post();
         post.setDescription(description);
-        if (fromGal == true) {
-            post.setImage(photoFileFromGal);
-        } else {
-            post.setImage(new ParseFile(photoFile));
-        }
+        post.setImage(new ParseFile(photoFile));
         post.put(Post.KEY_LATITUDE, placeInPost.getLatLng().latitude);
         post.put(Post.KEY_RATING, rbRating.getRating());
         post.put(Post.KEY_PLACE_NAME, placeInPost.getName());
         post.put(Post.KEY_LONGITUDE, placeInPost.getLatLng().longitude);
         post.put(Post.KEY_PLACE_ID, placeInPost.getId());
-        // ask for rating
         post.setUser(user);
         progressBar.setVisibility(View.VISIBLE);
         post.saveInBackground(new SaveCallback() {

@@ -7,25 +7,50 @@
     android:layout_height="match_parent"
     tools:context=".SignupActivity">
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilPassword"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:boxStrokeColor="@color/silver"
+        app:counterTextColor="@color/silver"
+        app:errorTextColor="@color/silver"
+        app:helperTextTextColor="@color/silver"
+        app:hintTextColor="@color/silver"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivIcon">
     <EditText
         android:id="@+id/etName"
         android:layout_width="260dp"
         android:layout_height="55dp"
-        android:background="@drawable/borderet"
         android:ems="10"
         android:hint="@string/name"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/ivIcon" />
+    </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til2"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:boxStrokeColor="@color/silver"
+        app:counterTextColor="@color/silver"
+        app:errorTextColor="@color/silver"
+        app:helperTextTextColor="@color/silver"
+        app:hintTextColor="@color/silver"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tilPassword">
     <EditText
         android:id="@+id/etBio1"
         android:layout_width="260dp"
         android:layout_height="55dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/borderet"
+        android:layout_marginTop="192dp"
         android:ems="10"
         android:hint="@string/biography"
         android:inputType="textPersonName"
@@ -33,6 +58,7 @@
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etName" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/tvSignUp"
@@ -40,49 +66,75 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="Sign Up"
-        android:textColor="@color/purple_200"
+        android:textColor="@color/deep_yellow"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etPass" />
+        app:layout_constraintTop_toBottomOf="@+id/til4" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/ivIcon"
         android:layout_width="185dp"
         android:layout_height="68dp"
-        android:layout_marginTop="192dp"
+        android:layout_marginTop="200dp"
         android:src="@drawable/icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til3"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:boxStrokeColor="@color/silver"
+        app:counterTextColor="@color/silver"
+        app:errorTextColor="@color/silver"
+        app:helperTextTextColor="@color/silver"
+        app:hintTextColor="@color/silver"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/til2">
     <EditText
         android:id="@+id/etUsername"
         android:layout_width="260dp"
         android:layout_height="55dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/borderet"
+        android:layout_marginTop="260dp"
         android:ems="10"
         android:hint="@string/username"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etBio1" />
+    </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til4"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:boxStrokeColor="@color/silver"
+        app:counterTextColor="@color/silver"
+        app:errorTextColor="@color/silver"
+        app:helperTextTextColor="@color/silver"
+        app:hintTextColor="@color/silver"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/til3">
     <EditText
         android:id="@+id/etPass"
         android:layout_width="260dp"
         android:layout_height="55dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/borderet"
         android:ems="10"
         android:hint="@string/password"
         android:inputType="textPersonName"
         android:password="true"
         app:layout_constraintEnd_toEndOf="@+id/etUsername"
         app:layout_constraintTop_toBottomOf="@+id/etUsername" />
+    </com.google.android.material.textfield.TextInputLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

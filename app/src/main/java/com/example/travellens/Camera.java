@@ -29,6 +29,7 @@ import java.io.IOException;
 public class Camera {
     private Context context;
     private Activity activity;
+
     public Camera(Context context, Activity activity) {
         this.context = context;
         this.activity = activity;
@@ -53,6 +54,41 @@ public class Camera {
         byte[] imageByte = byteArrayOutputStream.toByteArray();
         ParseFile parseFile = new ParseFile("image_file.png",imageByte);
         return parseFile;
+    }
+
+    public File uriToFile(Activity activity, Uri selectedImage, String photoFileName) {
+        try {
+            ImageDecoder.Source source = ImageDecoder.createSource(activity.getContentResolver(), selectedImage);
+            Bitmap bitmap = ImageDecoder.decodeBitmap(source);
+
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            // Compress the image further
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 40, bytes);
+            // Create a new file for the resized bitmap
+            File resizedFile = getPhotoFileUri(photoFileName + "_resized");
+            try {
+                resizedFile.createNewFile();
+                FileOutputStream fos = null;
+                try {
+                    fos = new FileOutputStream(resizedFile);
+                    // Write the bytes of the bitmap to file
+                    fos.write(bytes.toByteArray());
+                    fos.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return resizedFile;
+            //ivPic.setImageBitmap(bitmap);
+            //photoFile = resizedFile;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 

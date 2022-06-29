@@ -67,21 +67,29 @@
 
         <Button
             android:id="@+id/bEditProfile"
+            style="@style/Widget.Material3.Button.OutlinedButton.Icon"
             android:layout_width="183dp"
             android:layout_height="48dp"
-            android:background="@drawable/mysharebutton"
+            android:textAllCaps="false"
+            android:textColor="@color/silver"
+            android:textSize="20sp"
+            app:strokeColor="@color/blue_grey"
+            tools:ignore="TextContrastCheck"
             android:text="@string/edit_prof"
-            android:textColor="@color/black"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvBio" />
 
         <Button
             android:id="@+id/bMySaves"
+            style="@style/Widget.Material3.Button.OutlinedButton.Icon"
             android:layout_width="183dp"
             android:layout_height="48dp"
-            android:background="@drawable/mysharebutton"
             android:text="@string/saved"
-            android:textColor="@color/black"
+            android:textAllCaps="false"
+            android:textColor="@color/silver"
+            android:textSize="20sp"
+            app:strokeColor="@color/blue_grey"
+            tools:ignore="TextContrastCheck"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.888"
             app:layout_constraintStart_toEndOf="@+id/bEditProfile"

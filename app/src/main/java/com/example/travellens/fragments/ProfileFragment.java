@@ -55,7 +55,7 @@ public class ProfileFragment extends Fragment {
     private ImageView ivProfilePicture;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    private static final int READY_TO_UPDATE = 12;
     public ProfileFragment() {
         userProfile = ParseUser.getCurrentUser();
     }
@@ -103,16 +103,7 @@ public class ProfileFragment extends Fragment {
         adapter = new ProfileAdapter(getContext(), allPosts);
         rvPosts.setAdapter(adapter);
 
-        // set the layout manager on the recycler view
-        rvPosts.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        tvUserName.setText(userProfile.getUsername());
-        tvBio.setText(userProfile.getString(Post.KEY_BIOGRAPHY));
-        tvRealName.setText(userProfile.getString(Post.KEY_NAME));
-
-        ParseFile profilepic = userProfile.getParseFile(Post.KEY_PROFILE_PICTURE);
-        if (profilepic != null) {
-            Glide.with(getContext()).load(profilepic.getUrl()).circleCrop().into(ivProfilePicture);
-        }
+        attachProfileElements();
         allowEditProfile();
 
         bEdit.setOnClickListener(new View.OnClickListener() {
@@ -120,14 +111,7 @@ public class ProfileFragment extends Fragment {
             public void onClick(View v) {
                 // changed to edit profile activity
                 Intent intent = new Intent(getContext(), EditProfileActivity.class);
-                startActivity(intent);
-                /*
-                Fragment fragment = new EditProfileFragment();
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.flContainer, fragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();*/
+                startActivityForResult(intent, READY_TO_UPDATE);
             }
         });
 
@@ -145,6 +129,29 @@ public class ProfileFragment extends Fragment {
 
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // set the layout manager on the recycler view
+        if (requestCode == READY_TO_UPDATE) {
+            attachProfileElements();
+        }
+
+
+    }
+
+    private void attachProfileElements() {
+        rvPosts.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        tvUserName.setText(userProfile.getUsername());
+        tvBio.setText(userProfile.getString(Post.KEY_BIOGRAPHY));
+        tvRealName.setText(userProfile.getString(Post.KEY_NAME));
+
+        ParseFile profilepic = userProfile.getParseFile(Post.KEY_PROFILE_PICTURE);
+        if (profilepic != null) {
+            Glide.with(getContext()).load(profilepic.getUrl()).circleCrop().into(ivProfilePicture);
+        }
     }
 
     private void querySavedPosts() {

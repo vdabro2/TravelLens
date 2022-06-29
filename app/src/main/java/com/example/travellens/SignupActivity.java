@@ -1,20 +1,28 @@
 package com.example.travellens;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
+import com.example.travellens.fragments.ComposeFragment;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +32,10 @@ public class SignupActivity extends AppCompatActivity {
     private EditText etName;
     private TextView tvSignup;
     private EditText etUsername;
+    private ImageView ivIcon;
+    private File photoFile;
+    private Camera camera;
+    public String photoFileName = "photo.jpg";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +45,17 @@ public class SignupActivity extends AppCompatActivity {
         etPass = findViewById(R.id.etPass);
         tvSignup = findViewById(R.id.tvSignUp);
         etUsername = findViewById(R.id.etUsername);
-
+        ivIcon = findViewById(R.id.ivIcon);
+        ivIcon.setImageDrawable(getDrawable(R.drawable.add_pp));
+        photoFile = null;
+        camera = new Camera(getApplicationContext(), SignupActivity.this);
+        ivIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(SignupActivity.this, CameraActivity.class);
+                startActivityForResult(i, ComposeFragment.RESULT_CODE_FROM_CAMERA);
+            }
+        });
         tvSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -41,7 +63,6 @@ public class SignupActivity extends AppCompatActivity {
                         || etName.getText().toString().isEmpty() || etUsername.getText().toString().isEmpty()) {
                     Toast.makeText(SignupActivity.this, String.valueOf(R.string.couldnt_save), Toast.LENGTH_SHORT).show();
                 } else {
-                    // TODO add profile pic from gallery and from camera
                     String password = etPass.getText().toString();
                     String bio = etBio1.getText().toString();
                     String name = etName.getText().toString();
@@ -49,6 +70,8 @@ public class SignupActivity extends AppCompatActivity {
 
                     ParseUser user = new ParseUser();
                     user.setUsername(un);
+                    if (photoFile != null)
+                        user.put(Post.KEY_PROFILE_PICTURE, new ParseFile(photoFile));
                     user.setPassword(password);
                     user.put(Post.KEY_BIOGRAPHY, bio);
                     user.put(Post.KEY_NAME, name);
@@ -80,5 +103,18 @@ public class SignupActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ComposeFragment.RESULT_CODE_FROM_CAMERA) {
+            if (resultCode == RESULT_OK) {
+                Uri selectedImage = data.getData();
+                photoFile = camera.uriToFile(SignupActivity.this, selectedImage, photoFileName);
+                Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+                Glide.with(this).load(takenImage).circleCrop()
+                        .into(ivIcon);
+            }
+        }
     }
 }

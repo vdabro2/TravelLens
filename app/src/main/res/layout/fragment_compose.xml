@@ -20,13 +20,16 @@
 
     <Button
         android:id="@+id/bSubmit"
-        android:layout_width="90dp"
+        style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+        android:layout_width="108dp"
         android:layout_height="45dp"
-        android:background="@drawable/mysharebutton"
         android:text="@string/share"
-        android:textColor="@color/purple_200"
+        android:textAllCaps="false"
+        android:textColor="@color/silver"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@+id/bCamera"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeColor="@color/blue_grey" />
 
     <EditText
         android:id="@+id/etDescription"
@@ -61,16 +64,6 @@
         app:backgroundTint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ivPic" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/bGallery"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:src="@drawable/img_1"
-        app:backgroundTint="@color/white"
-        app:layout_constraintEnd_toStartOf="@+id/bCamera"
-        app:layout_constraintTop_toTopOf="@+id/bCamera" />
 
     <ProgressBar
         android:id="@+id/progressBar"
