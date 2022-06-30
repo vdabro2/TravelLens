@@ -207,8 +207,7 @@ public class PostsFragment extends Fragment {
     }
 
     private void getCurrentLocation(Bundle savedInstanceState) {
-        //autocompleteFragment.setText("Searching current location...");
-        autocompleteFragment.setHint("Current location");
+        autocompleteFragment.setHint(getString(R.string.current_location));
         autocompleteFragment.setText("");
         if (savedInstanceState != null && savedInstanceState.keySet().contains(KEY_LOCATION)) {
             mCurrentLocation = savedInstanceState.getParcelable(KEY_LOCATION);

@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -132,17 +133,15 @@ public class DetailActivity extends AppCompatActivity {
         if (profilepic != null) {
             Glide.with(this).load(profilepic.getUrl()).circleCrop().into(ivProfilePicture);
         }
+        setUpBlurView();
+    }
 
+    private void setUpBlurView() {
         float radius = 10f;
 
         View decorView = getWindow().getDecorView();
-        // ViewGroup you want to start blur from. Choose root as close to BlurView in hierarchy as possible.
         ViewGroup rootView = (ViewGroup) decorView.findViewById(android.R.id.content);
 
-        // Optional:
-        // Set drawable to draw in the beginning of each blurred frame.
-        // Can be used in case your layout has a lot of transparent space and your content
-        // gets a too low alpha value after blur is applied.
         Drawable windowBackground = decorView.getBackground();
 
         blurView.setupWith(rootView)
@@ -150,6 +149,14 @@ public class DetailActivity extends AppCompatActivity {
                 .setBlurAlgorithm(new RenderScriptBlur(this))
                 .setBlurRadius(radius)
                 .setBlurAutoUpdate(true);
+        blurView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // moves blur window on click
+                v.animate().translationY(-900);
+
+            }
+        });
     }
 
     private void goToProfile() throws ParseException {

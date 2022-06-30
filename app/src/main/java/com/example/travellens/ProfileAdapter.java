@@ -75,7 +75,6 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
                 RequestOptions requestOptions = new RequestOptions();
                 requestOptions = requestOptions.transforms(new CenterCrop(), new RoundedCorners(16));
                 Glide.with(context).load(image.getUrl()).apply(requestOptions).override(300, new Random().nextInt(200)+400).into(ivYourPic);
-                //Glide.with(context).load(image.getUrl()).into(ivYourPic);
             }
 
             ivYourPic.setOnClickListener(new View.OnClickListener() {

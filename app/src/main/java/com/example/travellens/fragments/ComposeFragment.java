@@ -227,7 +227,7 @@ public class ComposeFragment extends Fragment {
                 getActivity().getSupportFragmentManager().findFragmentById(R.id.afSearchAPI);
         autocompleteFragment.getView().setEnabled(true);
         autocompleteFragment.getView().setVisibility(View.VISIBLE);
-        autocompleteFragment.setHint("Set post location");
+        autocompleteFragment.setHint(getString(R.string.set_post_location));
         // set the search icon of the API fragment
         ImageView searchIcon = (ImageView)((LinearLayout)autocompleteFragment.getView()).getChildAt(0);
         Bitmap bitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.iconcomposepage)).getBitmap();
