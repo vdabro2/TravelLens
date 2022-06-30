@@ -64,6 +64,7 @@ dependencies {
     implementation "org.permissionsdispatcher:permissionsdispatcher:$permissionDispatcherVersion"
     annotationProcessor "org.permissionsdispatcher:permissionsdispatcher-processor:$permissionDispatcherVersion"
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
+    implementation 'com.airbnb.android:lottie:3.4.0'
     implementation 'com.github.Dimezis:BlurView:version-2.0.0'
 
 }

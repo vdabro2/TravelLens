@@ -28,7 +28,7 @@ public class CameraActivity extends AppCompatActivity {
     private Button bFromGallery;
     private Bitmap bitmap;
     private Button bFromCamera;
-    public String photoFileName = "photo.jpg";
+    private final static String photoFileName = "photo.jpg";
     public final static int REQUEST_CODE_GALLERY = 43;
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
     @Override
@@ -71,6 +71,8 @@ public class CameraActivity extends AppCompatActivity {
                     resizedFile.createNewFile();
                     FileOutputStream fos = null;
                     try {
+                        /*todo : You should use try-with-resources for resources like this so that they will be closed/cleaned up automatically.
+                            With the current logic, the fos won't be closed if there is an exception since there is no finally block that closes it.*/
                         fos = new FileOutputStream(resizedFile);
                         // Write the bytes of the bitmap to file
                         fos.write(bytes.toByteArray());

@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
-                android:background="#12000000"
+                android:background="@color/dark_tint"
                 android:fontFamily="@font/copse"
                 android:text="bhjwdcfvgsfhsjxkcnjhdckjawjdkbcjkds  dufhbahedf vishdfvf dvsdk jhsdfh vkdfj v hjfhkjsdkjbcvadkbvkjcnvbkjsdfkandf vhj a fjhvjkdabjkv"
                 android:textColor="@color/white"
@@ -62,9 +62,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
                 android:background="@color/dark_tint"
                 android:fontFamily="@font/copse"
                 android:isIndicator="true"
+                android:maxWidth="330dp"
+                android:minWidth="300dp"
                 android:text="location of your place"
                 android:textColor="@color/white"
                 android:textSize="25sp"
@@ -74,13 +77,14 @@
 
             <ImageView
                 android:id="@+id/ivLikes"
-                android:layout_width="wrap_content"
-                android:layout_height="33dp"
+                android:layout_width="52dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="5dp"
+                android:background="@color/dark_tint"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toEndOf="@+id/tvLocation"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ufi_heart" />
+                app:srcCompat="@drawable/whiteheart" />
 
             <ImageView
                 android:id="@+id/ivProfilePicture"
@@ -134,5 +138,15 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </eightbitlab.com.blurview.BlurView>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animHearts"
+        android:layout_width="55dp"
+        android:layout_height="46dp"
+        android:layout_marginEnd="32dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toTopOf="@+id/blurView"
+        app:layout_constraintEnd_toEndOf="@+id/ivImage"
+        app:lottie_fileName="heart_anim.json" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

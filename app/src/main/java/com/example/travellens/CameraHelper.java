@@ -65,20 +65,22 @@ public class CameraHelper {
                 resizedFile.createNewFile();
                 FileOutputStream fos = null;
                 try {
+                    /*todo : You should use try-with-resources for resources like this so that they will be closed/cleaned up automatically.
+                            With the current logic, the fos won't be closed if there is an exception since there is no finally block that closes it.*/
                     fos = new FileOutputStream(resizedFile);
                     fos.write(bytes.toByteArray());
                     fos.close();
                 } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                    Log.e("Camera Helper", e.toString());//e.printStackTrace();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e("Camera Helper", e.toString());//e.printStackTrace();
             }
             return resizedFile;
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Log.e("Camera Helper", e.toString());//e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("Camera Helper", e.toString());//e.printStackTrace();
         }
         return null;
     }

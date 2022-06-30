@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
 import com.example.travellens.fragments.ProfileFragment;
 import com.parse.CountCallback;
@@ -44,6 +45,7 @@ public class DetailActivity extends AppCompatActivity {
     private TextView tvDescription;
     private ImageView ivProfilePicture;
     private BlurView blurView;
+    private LottieAnimationView hearts;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +59,7 @@ public class DetailActivity extends AppCompatActivity {
         tvUserInDes = findViewById(R.id.tvUsernameDetail);
         tvDescription = findViewById(R.id.tvDescription);
         ivProfilePicture = findViewById(R.id.ivProfilePicture);
+        hearts = findViewById(R.id.animHearts);
         blurView = findViewById(R.id.blurView);
         // get intent with post object
         Intent intent = this.getIntent();
@@ -169,7 +172,7 @@ public class DetailActivity extends AppCompatActivity {
                         // deleted from likes
                         like.deleteInBackground();
                         // set image to unlike heart
-                        ivLikes.setImageResource(R.drawable.ufi_heart);
+                        ivLikes.setImageResource(R.drawable.whiteheart);
                         // update how many likes the post has
                         likeCount = likeCount - 1;
 
@@ -180,13 +183,16 @@ public class DetailActivity extends AppCompatActivity {
                     Log.e("Detail Fragment: ", e.toString());
                 } else {
                     // make a new like object
+                    hearts.setProgress(0);
+                    hearts.pauseAnimation();
+                    hearts.playAnimation();
                     Likes like = new Likes();
                     like.setUser(ParseUser.getCurrentUser());
                     like.setPost(thePost);
                     // saving it
                     like.saveInBackground();
                     // set image to like heart
-                    ivLikes.setImageResource(R.drawable.img_2);
+                    ivLikes.setImageResource(R.drawable.pinkheart);
                     // update how many likes the post has
                     likeCount = likeCount + 1;
                     tvLikes.setText(getResources().getQuantityString(R.plurals.likes, likeCount, likeCount));
@@ -212,11 +218,11 @@ public class DetailActivity extends AppCompatActivity {
                 }
                 if (likesList.isEmpty()) {
                     // the post is not liked by the current user
-                    ivLikes.setImageResource(R.drawable.ufi_heart);
+                    ivLikes.setImageResource(R.drawable.whiteheart);
 
                 } else {
                     // the post is liked by the current user
-                    ivLikes.setImageResource(R.drawable.img_2);
+                    ivLikes.setImageResource(R.drawable.pinkheart);
                 }
             }
         });
