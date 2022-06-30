@@ -1,5 +1,6 @@
 package com.example.travellens.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,14 +12,16 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.travellens.EditProfileActivity;
 import com.example.travellens.Likes;
+import com.example.travellens.LoginActivity;
 import com.example.travellens.Post;
 import com.example.travellens.ProfileAdapter;
 import com.example.travellens.R;
@@ -53,7 +56,7 @@ public class ProfileFragment extends Fragment {
     private ImageView ivProfilePicture;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    private static final int READY_TO_UPDATE = 12;
     public ProfileFragment() {
         userProfile = ParseUser.getCurrentUser();
     }
@@ -95,38 +98,25 @@ public class ProfileFragment extends Fragment {
         bSavedPosts = view.findViewById(R.id.bMySaves);
         tvRealName = view.findViewById(R.id.tvRealName);
         tvUserName = view.findViewById(R.id.tvUserName);
-        ivProfilePicture = view.findViewById(R.id.ivPP2);
+        ivProfilePicture = view.findViewById(R.id.ivProfilePic2);
 
         allPosts = new ArrayList<>();
         adapter = new ProfileAdapter(getContext(), allPosts);
         rvPosts.setAdapter(adapter);
-
-        // set the layout manager on the recycler view
-        rvPosts.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        tvUserName.setText(userProfile.getUsername());
-        tvBio.setText(userProfile.getString(Post.KEY_BIOGRAPHY));
-        tvRealName.setText(userProfile.getString(Post.KEY_NAME));
-
-        ParseFile profilepic = userProfile.getParseFile(Post.KEY_PROFILE_PICTURE);
-        if (profilepic != null) {
-            Glide.with(getContext()).load(profilepic.getUrl()).circleCrop().into(ivProfilePicture);
-        }
+        attachProfileElements();
         allowEditProfile();
 
         bEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment fragment = new EditProfileFragment();
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.flContainer, fragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
+                // changed to edit profile activity
+                Intent intent = new Intent(getContext(), EditProfileActivity.class);
+                startActivityForResult(intent, READY_TO_UPDATE);
             }
         });
 
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
-                getActivity().getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+                getActivity().getSupportFragmentManager().findFragmentById(R.id.afSearchAPI);
         autocompleteFragment.getView().setEnabled(false);
         autocompleteFragment.getView().setVisibility(View.INVISIBLE);
         queryPosts();
@@ -139,6 +129,29 @@ public class ProfileFragment extends Fragment {
 
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // set the layout manager on the recycler view
+        if (requestCode == READY_TO_UPDATE) {
+            attachProfileElements();
+        }
+
+
+    }
+
+    private void attachProfileElements() {
+        rvPosts.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        tvUserName.setText(userProfile.getUsername());
+        tvBio.setText(userProfile.getString(Post.KEY_BIOGRAPHY));
+        tvRealName.setText(userProfile.getString(Post.KEY_NAME));
+
+        ParseFile profilepic = userProfile.getParseFile(Post.KEY_PROFILE_PICTURE);
+        if (profilepic != null) {
+            Glide.with(getContext()).load(profilepic.getUrl()).circleCrop().into(ivProfilePicture);
+        }
     }
 
     private void querySavedPosts() {
@@ -174,12 +187,14 @@ public class ProfileFragment extends Fragment {
             bEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Fragment fragment = new EditProfileFragment();
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.flContainer, fragment);
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.commit();
+                    Intent i = new Intent(getContext(), EditProfileActivity.class);
+                    Pair<View, String> p1 = Pair.create((View)ivProfilePicture, "pic");
+                    Pair<View, String> p2 = Pair.create(tvBio, "bio");
+                    Pair<View, String> p3 = Pair.create((View)tvUserName, "username");
+                    Pair<View, String> p4 = Pair.create((View)tvRealName, "name");
+                    ActivityOptionsCompat options = ActivityOptionsCompat.
+                            makeSceneTransitionAnimation(getActivity(), p1, p2, p3, p4);
+                    startActivity(i, options.toBundle());
                 }
             });
         }

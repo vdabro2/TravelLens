@@ -1,24 +1,19 @@
-package com.example.travellens.fragments;
+package com.example.travellens;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-
 import com.bumptech.glide.Glide;
-import com.example.travellens.Likes;
-import com.example.travellens.Post;
-import com.example.travellens.R;
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.example.travellens.fragments.ProfileFragment;
 import com.parse.CountCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -28,16 +23,9 @@ import com.parse.ParseUser;
 
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link DetailFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class DetailFragment extends Fragment {
+public class DetailActivity extends AppCompatActivity {
     private Post thePost;
     private int likeCount;
-    private String mParam1;
-    private String mParam2;
     private TextView tvTime;
     private TextView tvLikes;
     private ImageView ivLikes;
@@ -47,85 +35,26 @@ public class DetailFragment extends Fragment {
     private TextView tvUserInDes;
     private TextView tvDescription;
     private ImageView ivProfilePicture;
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-
-    public DetailFragment() {}
-    public DetailFragment(Post post_) {
-        setHasOptionsMenu(true);
-        thePost = post_;
-    }
-
-    public static DetailFragment newInstance(String param1, String param2) {
-        DetailFragment fragment = new DetailFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+        setContentView(R.layout.activity_detail);
+        tvTime = findViewById(R.id.tvTime);
+        tvLikes = findViewById(R.id.tvLikes);
+        ivLikes = findViewById(R.id.ivLikes);
+        ivImage = findViewById(R.id.ivImage);
+        rbRating = findViewById(R.id.rbRating);
+        tvLocation = findViewById(R.id.tvLocation);
+        tvUserInDes = findViewById(R.id.tvUsernameDetail);
+        tvDescription = findViewById(R.id.tvDescription);
+        ivProfilePicture = findViewById(R.id.ivProfilePicture);
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_detail, container, false);
-    }
+        // get intent with post object
+        Intent intent = this.getIntent();
+        Bundle bundle = intent.getExtras();
+        thePost = (Post)bundle.getSerializable("post");
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        tvTime = view.findViewById(R.id.tvTime);
-        tvLikes = view.findViewById(R.id.tvLikes);
-        ivLikes = view.findViewById(R.id.ivLikes);
-        ivImage = view.findViewById(R.id.ivImage);
-        rbRating = view.findViewById(R.id.rbRating);
-        tvLocation = view.findViewById(R.id.tvLocation);
-        tvUserInDes = view.findViewById(R.id.tvUsernameDetail);
-        tvDescription = view.findViewById(R.id.tvDescription);
-        ivProfilePicture = view.findViewById(R.id.ivProfilePicture);
-        // turn off autocomplete fragment on this page
-        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
-                getActivity().getSupportFragmentManager().findFragmentById(R.id.afSearchAPI);
-        autocompleteFragment.getView().setEnabled(false);
-        autocompleteFragment.getView().setVisibility(View.INVISIBLE);
-
-        // description text
-        tvDescription.setText(thePost.getDescription());
-        // set relative time on layout
-        tvTime.setText(Post.calculateTimeAgo(thePost.getCreatedAt(), getContext()));
-        // set second username text
-        try {
-            tvUserInDes.setText(thePost.getUser().fetchIfNeeded().getUsername());
-        } catch (ParseException e) {
-            Log.e("Detail Fragment: ", e.toString());
-        }
-        // set name of place aka location name
-        tvLocation.setText(thePost.getString(Post.KEY_PLACE_NAME));
-        // set rating according to database
-        rbRating.setRating((float) thePost.getDouble(Post.KEY_RATING));
-
-        // post image load into imageview using glide
-        ParseFile image = thePost.getParseFile();
-        if (image != null) {
-            Glide.with(getContext()).load(image.getUrl()).into(ivImage);
-        }
-        // post profile image into imageview using glide
-        ParseFile profilepic = thePost.getUser().getParseFile(Post.KEY_PROFILE_PICTURE);
-        if (profilepic != null) {
-            Glide.with(getContext()).load(profilepic.getUrl()).circleCrop().into(ivProfilePicture);
-        }
-
+        setAllDetails();
         // if you click the profile image or username, you get sent to the users profile
         ivProfilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,11 +78,41 @@ public class DetailFragment extends Fragment {
                 likeOrUnlike();
             }
         });
+
+
+    }
+
+    private void setAllDetails() {
+        // description text
+        tvDescription.setText(thePost.getDescription());
+        // set relative time on layout
+        tvTime.setText(Post.calculateTimeAgo(thePost.getCreatedAt(), getApplicationContext()));
+        // set second username text
+        try {
+            tvUserInDes.setText(thePost.getUser().fetchIfNeeded().getUsername());
+        } catch (ParseException e) {
+            Log.e("Detail Fragment: ", e.toString());
+        }
+        // set name of place aka location name
+        tvLocation.setText(thePost.getString(Post.KEY_PLACE_NAME));
+        // set rating according to database
+        rbRating.setRating((float) thePost.getDouble(Post.KEY_RATING));
+
+        // post image load into imageview using glide
+        ParseFile image = thePost.getParseFile();
+        if (image != null) {
+            Glide.with(this).load(image.getUrl()).into(ivImage);
+        }
+        // post profile image into imageview using glide
+        ParseFile profilepic = thePost.getUser().getParseFile(Post.KEY_PROFILE_PICTURE);
+        if (profilepic != null) {
+            Glide.with(this).load(profilepic.getUrl()).circleCrop().into(ivProfilePicture);
+        }
     }
 
     private void goToProfile() {
         ProfileFragment profileFragment = new ProfileFragment(thePost.getUser());
-        AppCompatActivity activity = (AppCompatActivity)getActivity();
+        AppCompatActivity activity = (AppCompatActivity)this;
         activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, profileFragment).addToBackStack(null).commit();
     }
 
@@ -174,13 +133,8 @@ public class DetailFragment extends Fragment {
                         // update how many likes the post has
                         likeCount = likeCount - 1;
 
-                        if (likeCount == 0) {
-                            tvLikes.setText("");
-                        } else if (likeCount == 1) {
-                            tvLikes.setText(getString(R.string.one_like, likeCount));
-                        } else {
-                            tvLikes.setText(getString(R.string.likes, likeCount));
-                        }
+                        tvLikes.setText(getResources().getQuantityString(R.plurals.likes, likeCount, likeCount));
+
                     }
                 } else if (e != null){
                     Log.e("Detail Fragment: ", e.toString());
@@ -195,13 +149,8 @@ public class DetailFragment extends Fragment {
                     ivLikes.setImageResource(R.drawable.img_2);
                     // update how many likes the post has
                     likeCount = likeCount + 1;
-                    if (likeCount == 0) {
-                        tvLikes.setText("");
-                    } else if (likeCount == 1) {
-                        tvLikes.setText(getString(R.string.one_like, likeCount));
-                    } else {
-                        tvLikes.setText(getString(R.string.likes, likeCount));
-                    }
+                    tvLikes.setText(getResources().getQuantityString(R.plurals.likes, likeCount, likeCount));
+
                 }
             }
         });
@@ -246,13 +195,8 @@ public class DetailFragment extends Fragment {
                     return;
                 }
                 likeCount = count;
-                if (count == 0) {
-                    tvLikes.setText("");
-                } else if (count == 1) {
-                    tvLikes.setText(getString(R.string.one_like, count));
-                } else {
-                    tvLikes.setText(getString(R.string.likes, count));
-                }
+                tvLikes.setText(getResources().getQuantityString(R.plurals.likes, likeCount, likeCount));
+
             }
         });
     }

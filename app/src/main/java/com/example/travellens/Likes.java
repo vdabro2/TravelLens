@@ -14,14 +14,14 @@ public class Likes extends ParseObject implements Serializable {
     public ParseUser getUser() {
         return getParseUser(KEY_USER);
     }
-    public void setUser(ParseUser de) {
-        put(KEY_USER, de);
+    public void setUser(ParseUser user) {
+        put(KEY_USER, user);
     }
 
     public ParseObject getPost() {
         return getParseObject(KEY_POST);
     }
-    public void setPost(ParseObject de) {
-        put(KEY_POST, de);
+    public void setPost(ParseObject post) {
+        put(KEY_POST, post);
     }
 }

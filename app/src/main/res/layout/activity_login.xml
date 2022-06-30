@@ -2,72 +2,128 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-
+    android:id="@+id/clConstraint"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/login"
+    android:transitionName="background"
     tools:context=".LoginActivity">
+
 
     <TextView
         android:id="@+id/tvSignUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:text="@string/sign_up"
-        android:textColor="@color/purple_200"
-        android:textSize="16sp"
+        android:textAllCaps="false"
+        android:textColor="@color/silver"
+        android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:transitionName="sign_up"
+        app:layout_constraintEnd_toEndOf="@+id/bLogin"
+        app:layout_constraintStart_toStartOf="@+id/bLogin"
         app:layout_constraintTop_toBottomOf="@+id/bLogin" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="185dp"
-        android:layout_height="68dp"
-        android:layout_marginTop="192dp"
-        android:src="@drawable/icon"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/etUsername"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilUsername"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="260dp"
         android:layout_height="55dp"
-        android:background="@drawable/borderet"
-        android:ems="10"
-        android:hint="@string/username"
-        android:inputType="textPersonName"
+        android:layout_marginTop="100dp"
+        android:transitionName="user"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        app:boxStrokeColor="@color/silver"
+        app:counterTextColor="@color/silver"
+        app:errorTextColor="@color/silver"
+        app:helperTextTextColor="@color/silver"
+        app:hintTextColor="@color/silver"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <EditText
-        android:id="@+id/etPass"
+        <EditText
+            android:id="@+id/etUsername"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:ems="10"
+            android:hint="@string/username"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ivIcon" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilPassword"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="260dp"
         android:layout_height="55dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/borderet"
-        android:ems="10"
-        android:hint="@string/password"
-        android:inputType="textPersonName"
-        android:password="true"
-        app:layout_constraintEnd_toEndOf="@+id/etUsername"
-        app:layout_constraintTop_toBottomOf="@+id/etUsername" />
+        android:transitionName="pass"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        app:boxStrokeColor="@color/silver"
+        app:counterTextColor="@color/silver"
+        app:endIconDrawable="@drawable/password_toggle"
+        app:endIconMode="password_toggle"
+        app:errorTextColor="@color/silver"
+        app:helperTextTextColor="@color/silver"
+        app:hintTextColor="@color/silver"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tilUsername">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etPass"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            app:layout_constraintEnd_toEndOf="@+id/etUsername"
+            app:layout_constraintTop_toBottomOf="@+id/etUsername" />
+
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/bLogin"
+        style="@style/Widget.Material3.Button.OutlinedButton.Icon"
         android:layout_width="260dp"
         android:layout_height="55dp"
-        android:layout_marginTop="10dp"
         android:text="@string/login"
-        android:background="@drawable/mybuttom"
-
+        android:textAllCaps="false"
+        android:textColor="@color/silver"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etPass" />
+        app:layout_constraintTop_toBottomOf="@+id/tilPassword"
+        app:strokeColor="@color/blue_grey"
+        tools:ignore="TextContrastCheck">
+
+    </Button>
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="98dp"
+        android:layout_height="89dp"
+        android:layout_marginTop="40dp"
+        android:scaleType="centerCrop"
+        android:scaleX="2"
+        android:scaleY="2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/no_name_icon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EditProfileActivity">
+    <TextView
+        android:id="@+id/tvSaveChanges"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/save"
+        android:textColor="@color/purple_200"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/etPassEdit"
+        app:layout_constraintHorizontal_bias="0.669"
+        app:layout_constraintStart_toStartOf="@+id/etPassEdit"
+        app:layout_constraintTop_toBottomOf="@+id/etPassEdit" />
+
+    <TextView
+        android:id="@+id/tvResetChanges"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/reset"
+        android:textColor="@color/purple_200"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/tvSaveChanges"
+        app:layout_constraintStart_toStartOf="@+id/etPassEdit"
+        app:layout_constraintTop_toBottomOf="@+id/etPassEdit" />
+
+    <EditText
+        android:id="@+id/etPassEdit"
+        android:layout_width="260dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/borderet"
+        android:ems="10"
+        android:hint="@string/password"
+        android:inputType="textPersonName"
+        android:password="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etUsernameOnEdit" />
+
+    <EditText
+        android:id="@+id/etNameOnEdit"
+        android:layout_width="260dp"
+        android:transitionName="name"
+
+        android:layout_height="55dp"
+        android:background="@drawable/borderet"
+        android:ems="10"
+        android:hint="@string/name"
+        android:inputType="textPersonName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivChangeProfilePic" />
+
+    <EditText
+        android:id="@+id/etBiographyOnEdit"
+        android:layout_width="260dp"
+        android:transitionName="bio"
+        android:layout_height="55dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/borderet"
+        android:ems="10"
+        android:hint="@string/biography"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/etNameOnEdit"
+        app:layout_constraintTop_toBottomOf="@+id/etNameOnEdit" />
+
+    <TextView
+        android:id="@+id/tvLogOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:text="Log Out"
+        android:textColor="@color/purple_200"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/ivChangeProfilePic"
+        android:layout_width="114dp"
+        android:layout_height="110dp"
+        android:transitionName="pic"
+
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/tvChangeProfilePic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="130dp"
+        android:layout_marginTop="52dp"
+        android:layout_marginEnd="128dp"
+        android:text="@string/change_prof_pic"
+        android:textColor="@color/purple_200"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/ivChangeProfilePic"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/etUsernameOnEdit"
+        android:layout_width="260dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="12dp"
+        android:transitionName="username"
+
+        android:background="@drawable/borderet"
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="@string/username"
+        android:inputType="textPersonName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etBiographyOnEdit" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

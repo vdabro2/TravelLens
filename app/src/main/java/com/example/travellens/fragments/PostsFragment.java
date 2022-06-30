@@ -3,11 +3,7 @@ package com.example.travellens.fragments;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -17,70 +13,41 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Looper;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
-import android.widget.Toast;
-import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.travellens.FeedMainActivity;
 import com.example.travellens.Post;
 import com.example.travellens.PostsAdapter;
 import com.example.travellens.R;
-import com.example.travellens.Post;
-import com.example.travellens.PostsAdapter;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.model.PlaceLikelihood;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
@@ -90,7 +57,6 @@ import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -100,10 +66,8 @@ import java.util.Objects;
  * create an instance of this fragment.
  */
 public class PostsFragment extends Fragment {
-
     private String mParam1;
     private String mParam2;
-    private Spinner sFilter;
     private List<Post> allPosts;
     private double currLatitude;
     private RecyclerView rvPosts;
@@ -163,24 +127,20 @@ public class PostsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+
         rvPosts = view.findViewById(R.id.rvPosts);
-
-
         allPosts = new ArrayList<>();
         adapter = new PostsAdapter(getContext(), allPosts);
         rvPosts.setAdapter(adapter);
-        // set the layout manager on the recycler view
         rvPosts.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(5000);
         locationRequest.setFastestInterval(2000);
         setHasOptionsMenu(true);
+        createFragmentFromAPI();
 
-        // initialize the autocompletefragment and sets up on click for it
-        callPlacesAPI();
-
-        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -194,6 +154,7 @@ public class PostsFragment extends Fragment {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+        // choosing whether user wants current or typed location
         if (placeToQueryBy == null) {
             getCurrentLocation(savedInstanceState);
         } else {
@@ -206,12 +167,12 @@ public class PostsFragment extends Fragment {
 
     }
 
-    private void callPlacesAPI() {
+    private void createFragmentFromAPI() {
         // Create a new Places client instance.
         PlacesClient placesClient = Places.createClient(getContext());
         // link fragment to layout
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
-                getActivity().getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+                getActivity().getSupportFragmentManager().findFragmentById(R.id.afSearchAPI);
         autocompleteFragment.getView().setEnabled(true);
         autocompleteFragment.getView().setVisibility(View.VISIBLE);
 
@@ -242,7 +203,6 @@ public class PostsFragment extends Fragment {
         if (savedInstanceState != null && savedInstanceState.keySet().contains(KEY_LOCATION)) {
             mCurrentLocation = savedInstanceState.getParcelable(KEY_LOCATION);
         }
-
         // built in to android
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             FragmentActivity activity = getActivity();
@@ -338,7 +298,6 @@ public class PostsFragment extends Fragment {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 1){
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
-
                 if (isGPSEnabled()) {
                 } else {
                     turnOnGPS();

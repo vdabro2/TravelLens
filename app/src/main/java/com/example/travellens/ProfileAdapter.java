@@ -1,6 +1,8 @@
 package com.example.travellens;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,10 +74,11 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
             ivYourPic.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    DetailFragment profileFragment = new DetailFragment(post);
-                    AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer,
-                            profileFragment, "detail").addToBackStack(null).commit();
+                    Intent intent = new Intent(context, DetailActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("post", post);
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
                 }
             });
         }
