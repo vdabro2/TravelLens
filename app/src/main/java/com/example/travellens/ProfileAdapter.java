@@ -13,10 +13,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.travellens.fragments.DetailFragment;
 import com.parse.ParseFile;
 
 import java.util.List;
+import java.util.Random;
 
 public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHolder> {
     private Context context;
@@ -68,7 +72,10 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         public void bind(Post post) {
             ParseFile image = post.getParseFile();
             if (image != null) {
-                Glide.with(context).load(image.getUrl()).into(ivYourPic);
+                RequestOptions requestOptions = new RequestOptions();
+                requestOptions = requestOptions.transforms(new CenterCrop(), new RoundedCorners(16));
+                Glide.with(context).load(image.getUrl()).apply(requestOptions).override(300, new Random().nextInt(200)+400).into(ivYourPic);
+                //Glide.with(context).load(image.getUrl()).into(ivYourPic);
             }
 
             ivYourPic.setOnClickListener(new View.OnClickListener() {

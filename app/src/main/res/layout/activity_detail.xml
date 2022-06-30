@@ -1,96 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".DetailActivity">
+
+    <ImageView
+        android:id="@+id/ivImage"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <eightbitlab.com.blurview.BlurView
+        android:id="@+id/blurView"
+        android:layout_width="409dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        tools:context=".DetailActivity">
+        app:layout_constraintBottom_toBottomOf="@+id/ivImage"
+        app:layout_constraintStart_toStartOf="parent">
 
-        <ImageView
-            android:id="@+id/ivImage"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:scaleType="centerCrop"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvLocation"
-            app:layout_constraintVertical_bias="0.0"
-            tools:srcCompat="@tools:sample/avatars" />
-
-        <TextView
-            android:id="@+id/tvDescription"
-            android:layout_width="251dp"
-            android:layout_height="28dp"
-            android:layout_marginStart="3dp"
-            app:layout_constraintEnd_toEndOf="@+id/ivImage"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/tvUsernameDetail"
-            app:layout_constraintTop_toTopOf="@+id/tvUsernameDetail" />
-
-        <TextView
-            android:id="@+id/tvTime"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@+id/tvUsernameDetail"
-            app:layout_constraintTop_toBottomOf="@+id/tvDescription" />
+            android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/ivProfilePicture"
-            android:layout_width="37dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="4dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ivImage"
-            tools:srcCompat="@drawable/instagram_user_filled_24" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:background="#12000000"
+                android:fontFamily="@font/copse"
+                android:text="bhjwdcfvgsfhsjxkcnjhdckjawjdkbcjkds  dufhbahedf vishdfvf dvsdk jhsdfh vkdfj v hjfhkjsdkjbcvadkbvkjcnvbkjsdfkandf vhj a fjhvjkdabjkv"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvTime" />
 
-        <TextView
-            android:id="@+id/tvUsernameDetail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/ivImage"
-            app:layout_constraintTop_toBottomOf="@+id/ivProfilePicture" />
+            <me.zhanghai.android.materialratingbar.MaterialRatingBar
+                android:id="@+id/rbRating"
+                style="@style/Widget.MaterialRatingBar.RatingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:isIndicator="true"
+                android:max="5"
+                android:numStars="5"
+                android:scaleX="1"
+                android:scaleY="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvLocation" />
 
-        <ImageView
-            android:id="@+id/ivLikes"
-            android:layout_width="wrap_content"
-            android:layout_height="33dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ivImage"
-            app:srcCompat="@drawable/ufi_heart" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:background="@color/dark_tint"
+                android:fontFamily="@font/copse"
+                android:isIndicator="true"
+                android:text="location of your place"
+                android:textColor="@color/white"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tvLikes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/ivLikes"
-            app:layout_constraintTop_toBottomOf="@+id/ivLikes" />
+            <ImageView
+                android:id="@+id/ivLikes"
+                android:layout_width="wrap_content"
+                android:layout_height="33dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/tvLocation"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ufi_heart" />
 
-        <RatingBar
-            android:id="@+id/rbRating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:max="5"
-            android:numStars="5"
-            android:scaleX="1"
-            android:scaleY="1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvLocation" />
+            <ImageView
+                android:id="@+id/ivProfilePicture"
+                android:layout_width="41dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvUsernameDetail"
+                tools:srcCompat="@drawable/instagram_user_filled_24" />
 
-        <TextView
-            android:id="@+id/tvLocation"
-            android:layout_width="182dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="4dp"
-            android:textSize="25sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvUsernameDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/dark_tint"
+                android:fontFamily="@font/copse"
+                android:text="violetdabros"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvDescription" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvLikes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/dark_tint"
+                android:fontFamily="@font/copse"
+                android:text="5 likes"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/ivLikes"
+                app:layout_constraintStart_toStartOf="@+id/ivLikes"
+                app:layout_constraintTop_toBottomOf="@+id/ivLikes" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:background="@color/dark_tint"
+                android:fontFamily="@font/copse"
+                android:text="2 hours"
+                android:textColor="@color/white"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rbRating" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </eightbitlab.com.blurview.BlurView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

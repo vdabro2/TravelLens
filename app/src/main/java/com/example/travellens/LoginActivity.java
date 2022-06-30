@@ -3,10 +3,12 @@ package com.example.travellens;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +25,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextView signup;
     private EditText etPass;
     private EditText etUsername;
+    private ImageView ivBackLogin;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
         bLogin = findViewById(R.id.bLogin);
         signup = findViewById(R.id.tvSignUp);
         etUsername = findViewById(R.id.etUsername);
+        ivBackLogin = findViewById(R.id.ivBackLogin);
 
         if (ParseUser.getCurrentUser() != null) {
             // no need for re-authentication if user is already logged in
@@ -53,9 +57,10 @@ public class LoginActivity extends AppCompatActivity {
                 Intent i = new Intent(LoginActivity.this, SignupActivity.class);
                 Pair<View, String> p1 = Pair.create((View)etUsername, "user");
                 Pair<View, String> p2 = Pair.create(etPass, "pass");
-                Pair<View, String> p3 = Pair.create((View)signup, "sign_up");
+                Pair<View, String> p4 = Pair.create((View)ivBackLogin, "background");
                 ActivityOptionsCompat options = ActivityOptionsCompat.
-                        makeSceneTransitionAnimation(LoginActivity.this, p1, p2, p3);
+                        makeSceneTransitionAnimation(LoginActivity.this, p1, p2, p4);
+                //ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(LoginActivity.this);
                 startActivity(i, options.toBundle());
             }
         });

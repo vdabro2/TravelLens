@@ -77,9 +77,11 @@ public class PostsFragment extends Fragment {
     private Location mCurrentLocation;
     private LocationRequest locationRequest;
     private SwipeRefreshLayout swipeContainer;
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private final static String KEY_LOCATION = "location";
+    private AutocompleteSupportFragment autocompleteFragment;
 
 
     public PostsFragment() {
@@ -133,7 +135,10 @@ public class PostsFragment extends Fragment {
         allPosts = new ArrayList<>();
         adapter = new PostsAdapter(getContext(), allPosts);
         rvPosts.setAdapter(adapter);
-        rvPosts.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        StaggeredGridLayoutManager sGrid = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+        sGrid.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
+        rvPosts.setLayoutManager(sGrid);
+
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(5000);
@@ -171,7 +176,7 @@ public class PostsFragment extends Fragment {
         // Create a new Places client instance.
         PlacesClient placesClient = Places.createClient(getContext());
         // link fragment to layout
-        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+        autocompleteFragment = (AutocompleteSupportFragment)
                 getActivity().getSupportFragmentManager().findFragmentById(R.id.afSearchAPI);
         autocompleteFragment.getView().setEnabled(true);
         autocompleteFragment.getView().setVisibility(View.VISIBLE);
@@ -187,6 +192,8 @@ public class PostsFragment extends Fragment {
             @Override
             public void onPlaceSelected(Place place) {
                 Log.i("TAG", "Place: " + place.getName() + ", " + place.getId()+ ", " + Objects.requireNonNull(place.getLatLng()).latitude+ ", " + place.getLatLng().longitude);
+                autocompleteFragment.setHint(place.getName());
+                autocompleteFragment.setText("");
                 PostsFragment posts_with_loc = new PostsFragment(place);
                 AppCompatActivity activity = (AppCompatActivity) getActivity();
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, posts_with_loc).addToBackStack(null).commit();
@@ -200,6 +207,9 @@ public class PostsFragment extends Fragment {
     }
 
     private void getCurrentLocation(Bundle savedInstanceState) {
+        //autocompleteFragment.setText("Searching current location...");
+        autocompleteFragment.setHint("Current location");
+        autocompleteFragment.setText("");
         if (savedInstanceState != null && savedInstanceState.keySet().contains(KEY_LOCATION)) {
             mCurrentLocation = savedInstanceState.getParcelable(KEY_LOCATION);
         }

@@ -7,8 +7,9 @@
     android:orientation="vertical"
     tools:context=".fragments.ComposeFragment">
 
-    <RatingBar
+    <me.zhanghai.android.materialratingbar.MaterialRatingBar
         android:id="@+id/rbRatingCompose"
+        style="@style/Widget.MaterialRatingBar.RatingBar"
         android:layout_width="242dp"
         android:layout_height="48dp"
         android:layout_marginStart="12dp"

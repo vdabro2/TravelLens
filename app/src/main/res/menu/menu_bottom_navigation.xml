@@ -5,19 +5,19 @@
         android:id="@+id/action_home"
         android:enabled="true"
         android:icon="@drawable/img_5"
-        android:title=""
+        android:title="search"
         />
 
     <item
         android:id="@+id/action_post"
         android:enabled="true"
         android:icon="@drawable/instagram_new_post_outline_24"
-        android:title=""
+        android:title="post"
         />
     <item
         android:id="@+id/action_prof"
         android:enabled="true"
         android:icon="@drawable/instagram_user_filled_24"
-        android:title=""
+        android:title="me"
         />
 </menu>

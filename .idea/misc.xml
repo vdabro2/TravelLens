@@ -12,10 +12,10 @@
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/password_toggle.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_camera.xml" value="0.1983695652173913" />
-        <entry key="app/src/main/res/layout/activity_detail.xml" value="0.1983695652173913" />
+        <entry key="app/src/main/res/layout/activity_detail.xml" value="0.47508038585209006" />
         <entry key="app/src/main/res/layout/activity_edit_profile.xml" value="0.18113171121348504" />
-        <entry key="app/src/main/res/layout/activity_feed_main.xml" value="0.24151153564453126" />
-        <entry key="app/src/main/res/layout/activity_login.xml" value="0.5161234537760416" />
+        <entry key="app/src/main/res/layout/activity_feed_main.xml" value="0.22514648437499998" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.3631983439127604" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.4302536231884058" />
         <entry key="app/src/main/res/layout/activity_signup.xml" value="0.45235850016276047" />
         <entry key="app/src/main/res/layout/bottom_navigation_selector.xml" value="0.43439716312056736" />
@@ -28,6 +28,7 @@
         <entry key="app/src/main/res/layout/item_profile_post.xml" value="0.4302536231884058" />
         <entry key="app/src/main/res/layout/item_staggered_post.xml" value="0.16822916666666668" />
         <entry key="app/src/main/res/layout/popout_window.xml" value="0.37228260869565216" />
+        <entry key="app/src/main/res/layout/shimmer_layout.xml" value="0.3067708333333333" />
         <entry key="app/src/main/res/layout/simple_spinner_dropdown_item.xml" value="0.37228260869565216" />
         <entry key="app/src/main/res/layout/simple_spinner_item.xml" value="0.37228260869565216" />
         <entry key="app/src/main/res/menu/menu_bottom_navigation.xml" value="0.8026041666666667" />
