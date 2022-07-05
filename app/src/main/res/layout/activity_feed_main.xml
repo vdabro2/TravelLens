@@ -22,6 +22,20 @@
         app:menu="@menu/menu_tool"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
+    <ImageView
+        android:id="@+id/ivIconShowOnProf"
+        android:layout_width="199dp"
+        android:layout_height="80dp"
+        android:scaleType="fitCenter"
+        android:scaleX="2.5"
+        android:scaleY="2.5"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+        app:layout_constraintEnd_toEndOf="@+id/toolbar"
+        app:layout_constraintStart_toStartOf="@+id/toolbar"
+        app:layout_constraintTop_toTopOf="@+id/toolbar"
+        app:srcCompat="@drawable/name_of_app" />
+
     <fragment
         android:id="@+id/afSearchAPI"
         android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"

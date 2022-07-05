@@ -14,12 +14,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.view.WindowManager;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.ablanco.zoomy.DoubleTapListener;
+import com.ablanco.zoomy.LongPressListener;
+import com.ablanco.zoomy.TapListener;
+import com.ablanco.zoomy.ZoomListener;
+import com.ablanco.zoomy.Zoomy;
 import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
 import com.example.travellens.fragments.ProfileFragment;
@@ -43,8 +49,9 @@ public class DetailActivity extends AppCompatActivity {
     private ImageView ivLikes;
     private BlurView blurView;
     private ImageView ivImage;
-    private TextView tvLocation;
     private RatingBar rbRating;
+    private TextView tvLocation;
+    private boolean blurClicked;
     private TextView tvUserInDes;
     private TextView tvDescription;
     private ImageView ivProfilePicture;
@@ -53,6 +60,7 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        blurClicked = false;
         tvTime = findViewById(R.id.tvTime);
         tvLikes = findViewById(R.id.tvLikes);
         ivLikes = findViewById(R.id.ivLikes);
@@ -140,25 +148,59 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void setUpBlurView() {
-        float radius = 10f;
-
         View decorView = getWindow().getDecorView();
         ViewGroup rootView = (ViewGroup) decorView.findViewById(android.R.id.content);
-
         Drawable windowBackground = decorView.getBackground();
 
         blurView.setupWith(rootView)
                 .setFrameClearDrawable(windowBackground) // Optional
                 .setBlurAlgorithm(new RenderScriptBlur(this))
-                .setBlurRadius(radius)
+                .setBlurRadius(10f)
                 .setBlurAutoUpdate(true);
-        blurView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // moves blur window on click
-                v.animate().translationY(-900);
-            }
-        });
+
+        final View root = findViewById(R.id.root);
+        Zoomy.Builder builder = new Zoomy.Builder(this).target(blurView);
+        builder.tapListener(new TapListener() {
+                    @Override
+                    public void onTap(View v) {
+                        if (blurClicked) {
+                            v.animate().translationX(0).translationY(0)
+                                    .setInterpolator(new AccelerateInterpolator()).setDuration(500);
+                        } else {
+                            v.animate().translationX(0)
+                                    .translationY(-1 * (root.getHeight() - v.getHeight()))
+                                    .setInterpolator(new AccelerateInterpolator())
+                                    .setDuration(500);
+                        }
+                        blurClicked = !blurClicked;
+                    }
+                })
+                .longPressListener(new LongPressListener() {
+                    @Override
+                    public void onLongPress(View v) {
+                        //View long pressed, do stuff
+                    }
+                }).doubleTapListener(new DoubleTapListener() {
+                    @Override
+                    public void onDoubleTap(View v) {
+                        //View double tapped, do stuff
+                        likeOrUnlike();
+                    }
+                })
+                .zoomListener(new ZoomListener() {
+                    @Override
+                    public void onViewStartedZooming(View view) {
+                        //View started zooming
+                    }
+
+                    @Override
+                    public void onViewEndedZooming(View view) {
+                        //View ended zooming
+
+                    }
+                });
+
+        builder.register();
     }
 
     private void goToProfile() throws ParseException {

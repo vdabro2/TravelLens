@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toolbar;
 
 import com.example.travellens.fragments.ComposeFragment;
 import com.example.travellens.fragments.ProfileFragment;
@@ -28,12 +30,14 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 public class FeedMainActivity extends AppCompatActivity {
+    private ImageView ivIcon;
     private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feed_main);
+        ivIcon = findViewById(R.id.ivIconShowOnProf);
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 this.getSupportFragmentManager().findFragmentById(R.id.afSearchAPI);
         autocompleteFragment.getView().setEnabled(true);
@@ -50,12 +54,15 @@ public class FeedMainActivity extends AppCompatActivity {
                 Fragment fragment = new Fragment();
                 switch (item.getItemId()) {
                     case R.id.action_post:
+                        ivIcon.setVisibility(View.INVISIBLE);
                         fragment = new ComposeFragment();
                         break;
                     case R.id.action_home:
+                        ivIcon.setVisibility(View.INVISIBLE);
                         fragment = new PostsFragment();
                         break;
                     case R.id.action_prof:
+                        ivIcon.setVisibility(View.VISIBLE);
                         fragment = new ProfileFragment();
                         break;
                     default: break;
@@ -90,6 +97,7 @@ public class FeedMainActivity extends AppCompatActivity {
                 public void done(ParseUser object, ParseException e) {
                     if (e == null) {
                         Log.e(" userId 1", object.getObjectId());
+                        ivIcon.setVisibility(View.VISIBLE);
                         getSupportFragmentManager().beginTransaction().replace(R.id.flContainer,
                                 new ProfileFragment(object)).commit();
 
