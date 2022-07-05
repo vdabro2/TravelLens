@@ -1,17 +1,24 @@
 package com.example.travellens;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewOutlineProvider;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
 import com.example.travellens.fragments.ProfileFragment;
 import com.parse.CountCallback;
@@ -22,6 +29,9 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.List;
+
+import eightbitlab.com.blurview.BlurView;
+import eightbitlab.com.blurview.RenderScriptBlur;
 
 public class DetailActivity extends AppCompatActivity {
     private Post thePost;
@@ -35,6 +45,8 @@ public class DetailActivity extends AppCompatActivity {
     private TextView tvUserInDes;
     private TextView tvDescription;
     private ImageView ivProfilePicture;
+    private BlurView blurView;
+    private LottieAnimationView hearts;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +60,8 @@ public class DetailActivity extends AppCompatActivity {
         tvUserInDes = findViewById(R.id.tvUsernameDetail);
         tvDescription = findViewById(R.id.tvDescription);
         ivProfilePicture = findViewById(R.id.ivProfilePicture);
-
+        hearts = findViewById(R.id.animHearts);
+        blurView = findViewById(R.id.blurView);
         // get intent with post object
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
@@ -59,13 +72,21 @@ public class DetailActivity extends AppCompatActivity {
         ivProfilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToProfile();
+                try {
+                    goToProfile();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
         tvUserInDes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToProfile();
+                try {
+                    goToProfile();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -96,7 +117,11 @@ public class DetailActivity extends AppCompatActivity {
         // set name of place aka location name
         tvLocation.setText(thePost.getString(Post.KEY_PLACE_NAME));
         // set rating according to database
-        rbRating.setRating((float) thePost.getDouble(Post.KEY_RATING));
+        //rbRating.setRating((float) thePost.getDouble(Post.KEY_RATING));
+
+        ObjectAnimator anim = ObjectAnimator.ofFloat(rbRating, "rating", 0f, (float) thePost.getDouble(Post.KEY_RATING));
+        anim.setDuration(1000);
+        anim.start();
 
         // post image load into imageview using glide
         ParseFile image = thePost.getParseFile();
@@ -108,12 +133,37 @@ public class DetailActivity extends AppCompatActivity {
         if (profilepic != null) {
             Glide.with(this).load(profilepic.getUrl()).circleCrop().into(ivProfilePicture);
         }
+        setUpBlurView();
     }
 
-    private void goToProfile() {
-        ProfileFragment profileFragment = new ProfileFragment(thePost.getUser());
-        AppCompatActivity activity = (AppCompatActivity)this;
-        activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, profileFragment).addToBackStack(null).commit();
+    private void setUpBlurView() {
+        float radius = 10f;
+
+        View decorView = getWindow().getDecorView();
+        ViewGroup rootView = (ViewGroup) decorView.findViewById(android.R.id.content);
+
+        Drawable windowBackground = decorView.getBackground();
+
+        blurView.setupWith(rootView)
+                .setFrameClearDrawable(windowBackground) // Optional
+                .setBlurAlgorithm(new RenderScriptBlur(this))
+                .setBlurRadius(radius)
+                .setBlurAutoUpdate(true);
+        blurView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // moves blur window on click
+                v.animate().translationY(-900);
+
+            }
+        });
+    }
+
+    private void goToProfile() throws ParseException {
+        // send intent to main so main knows to show user profile
+        Intent intent = new Intent(this, FeedMainActivity.class);
+        intent.putExtra("userId", thePost.getUser().fetchIfNeeded().getObjectId());
+        startActivity(intent);
     }
 
     private void likeOrUnlike() {
@@ -129,7 +179,7 @@ public class DetailActivity extends AppCompatActivity {
                         // deleted from likes
                         like.deleteInBackground();
                         // set image to unlike heart
-                        ivLikes.setImageResource(R.drawable.ufi_heart);
+                        ivLikes.setImageResource(R.drawable.whiteheart);
                         // update how many likes the post has
                         likeCount = likeCount - 1;
 
@@ -140,13 +190,16 @@ public class DetailActivity extends AppCompatActivity {
                     Log.e("Detail Fragment: ", e.toString());
                 } else {
                     // make a new like object
+                    hearts.setProgress(0);
+                    hearts.pauseAnimation();
+                    hearts.playAnimation();
                     Likes like = new Likes();
                     like.setUser(ParseUser.getCurrentUser());
                     like.setPost(thePost);
                     // saving it
                     like.saveInBackground();
                     // set image to like heart
-                    ivLikes.setImageResource(R.drawable.img_2);
+                    ivLikes.setImageResource(R.drawable.pinkheart);
                     // update how many likes the post has
                     likeCount = likeCount + 1;
                     tvLikes.setText(getResources().getQuantityString(R.plurals.likes, likeCount, likeCount));
@@ -172,11 +225,11 @@ public class DetailActivity extends AppCompatActivity {
                 }
                 if (likesList.isEmpty()) {
                     // the post is not liked by the current user
-                    ivLikes.setImageResource(R.drawable.ufi_heart);
+                    ivLikes.setImageResource(R.drawable.whiteheart);
 
                 } else {
                     // the post is liked by the current user
-                    ivLikes.setImageResource(R.drawable.img_2);
+                    ivLikes.setImageResource(R.drawable.pinkheart);
                 }
             }
         });

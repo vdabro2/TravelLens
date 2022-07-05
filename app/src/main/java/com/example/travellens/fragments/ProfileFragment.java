@@ -16,7 +16,9 @@ import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.example.travellens.EditProfileActivity;
@@ -103,6 +105,9 @@ public class ProfileFragment extends Fragment {
         allPosts = new ArrayList<>();
         adapter = new ProfileAdapter(getContext(), allPosts);
         rvPosts.setAdapter(adapter);
+        StaggeredGridLayoutManager sGrid = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+        sGrid.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
+        rvPosts.setLayoutManager(sGrid);
         attachProfileElements();
         allowEditProfile();
 

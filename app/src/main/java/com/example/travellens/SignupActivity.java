@@ -30,6 +30,8 @@ public class SignupActivity extends AppCompatActivity {
     private EditText etName;
     private TextView tvSignup;
     private EditText etUsername;
+    private ImageView ivBack;
+
     private ImageView ivIcon;
     private File photoFile;
     private CameraHelper camera;
@@ -39,6 +41,7 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
         etName = findViewById(R.id.etName);
+        ivBack = findViewById(R.id.ivBack);
         etBio1 = findViewById(R.id.etBiography);
         etPass = findViewById(R.id.etPass);
         tvSignup = findViewById(R.id.tvSignUp);

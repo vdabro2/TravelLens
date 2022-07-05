@@ -5,8 +5,19 @@
     android:transitionName="background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/login"
     tools:context=".SignupActivity">
+    <ImageView
+        android:id="@+id/ivBack"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scaleType="fitXY"
+        android:transitionName="background"
+        android:src="@drawable/login"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </ImageView>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilPassword"

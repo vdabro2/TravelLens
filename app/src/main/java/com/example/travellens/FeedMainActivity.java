@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.example.travellens.fragments.ComposeFragment;
@@ -14,6 +16,11 @@ import com.google.android.libraries.places.api.Places;
 
 import com.example.travellens.fragments.PostsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.parse.GetCallback;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 public class FeedMainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
@@ -25,6 +32,8 @@ public class FeedMainActivity extends AppCompatActivity {
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
         bottomNavigationView = findViewById(R.id.bottomNavigation);
+        sendToProfileIfNeeded();
+
 
         bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
             @Override
@@ -42,7 +51,12 @@ public class FeedMainActivity extends AppCompatActivity {
                         break;
                     default: break;
                 }
-                fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
+                fragmentManager.beginTransaction().setCustomAnimations(
+                        R.anim.slide_in,  // enter
+                        R.anim.fade_out,  // exit
+                        R.anim.fade_in,   // popEnter
+                        R.anim.slide_out  // popExit
+                ).replace(R.id.flContainer, fragment).commit();
                 return true;
             }
         });
@@ -54,11 +68,29 @@ public class FeedMainActivity extends AppCompatActivity {
         }
     }
 
+    private void sendToProfileIfNeeded() {
+        Intent intent = getIntent();
+        if (intent.getStringExtra("userId") != null) {
+            Log.e(" userId ", intent.getStringExtra("userId"));
 
+            ParseQuery<ParseUser> query = ParseUser.getQuery();
+            query.setLimit(1);
+            // Retrieve the object by id
+            query.getInBackground(intent.getStringExtra("userId"), new GetCallback<ParseUser>() {
+                @Override
+                public void done(ParseUser object, ParseException e) {
+                    if (e == null) {
+                        Log.e(" userId 1", object.getObjectId());
+                        getSupportFragmentManager().beginTransaction().replace(R.id.flContainer,
+                                new ProfileFragment(object)).commit();
 
-
-
-
+                    } else {
+                        Log.e(" userId error", e.toString());
+                    }
+                }
+            });
+        }
+    }
 
 
 }
