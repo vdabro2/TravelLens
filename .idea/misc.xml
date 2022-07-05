@@ -11,10 +11,10 @@
         <entry key="app/src/main/res/drawable/ic_eye_open.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/password_toggle.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_camera.xml" value="0.1983695652173913" />
+        <entry key="app/src/main/res/layout/activity_camera.xml" value="0.3778312351392663" />
         <entry key="app/src/main/res/layout/activity_detail.xml" value="0.4339813232421875" />
         <entry key="app/src/main/res/layout/activity_edit_profile.xml" value="0.18113171121348504" />
-        <entry key="app/src/main/res/layout/activity_feed_main.xml" value="0.22514648437499998" />
+        <entry key="app/src/main/res/layout/activity_feed_main.xml" value="0.4641098022460937" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.3631983439127604" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.4302536231884058" />
         <entry key="app/src/main/res/layout/activity_signup.xml" value="0.45235850016276047" />

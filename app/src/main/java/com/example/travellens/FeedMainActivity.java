@@ -2,19 +2,24 @@ package com.example.travellens;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 
 import com.example.travellens.fragments.ComposeFragment;
 import com.example.travellens.fragments.ProfileFragment;
 import com.google.android.libraries.places.api.Places;
 
 import com.example.travellens.fragments.PostsFragment;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parse.GetCallback;
 import com.parse.Parse;
@@ -29,7 +34,11 @@ public class FeedMainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feed_main);
-
+        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+                this.getSupportFragmentManager().findFragmentById(R.id.afSearchAPI);
+        autocompleteFragment.getView().setEnabled(true);
+        autocompleteFragment.getView().setVisibility(View.VISIBLE);
+        ((EditText)autocompleteFragment.getView().findViewById(com.google.android.libraries.places.R.id.places_autocomplete_search_input)).setHintTextColor(getResources().getColor(R.color.silver));
         final FragmentManager fragmentManager = getSupportFragmentManager();
         bottomNavigationView = findViewById(R.id.bottomNavigation);
         sendToProfileIfNeeded();

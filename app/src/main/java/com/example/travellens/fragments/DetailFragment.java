@@ -192,7 +192,7 @@ public class DetailFragment extends Fragment {
                     // saving it
                     like.saveInBackground();
                     // set image to like heart
-                    ivLikes.setImageResource(R.drawable.img_2);
+                    ivLikes.setImageResource(R.drawable.pinkheart);
                     // update how many likes the post has
                     likeCount = likeCount + 1;
                     if (likeCount == 0) {
@@ -227,7 +227,7 @@ public class DetailFragment extends Fragment {
 
                 } else {
                     // the post is liked by the current user
-                    ivLikes.setImageResource(R.drawable.img_2);
+                    ivLikes.setImageResource(R.drawable.pinkheart);
                 }
             }
         });

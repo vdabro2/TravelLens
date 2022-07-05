@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -39,13 +41,13 @@ public class DetailActivity extends AppCompatActivity {
     private TextView tvTime;
     private TextView tvLikes;
     private ImageView ivLikes;
+    private BlurView blurView;
     private ImageView ivImage;
     private TextView tvLocation;
     private RatingBar rbRating;
     private TextView tvUserInDes;
     private TextView tvDescription;
     private ImageView ivProfilePicture;
-    private BlurView blurView;
     private LottieAnimationView hearts;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,12 +58,13 @@ public class DetailActivity extends AppCompatActivity {
         ivLikes = findViewById(R.id.ivLikes);
         ivImage = findViewById(R.id.ivImage);
         rbRating = findViewById(R.id.rbRating);
+        hearts = findViewById(R.id.animHearts);
+        blurView = findViewById(R.id.blurView);
         tvLocation = findViewById(R.id.tvLocation);
         tvUserInDes = findViewById(R.id.tvUsernameDetail);
         tvDescription = findViewById(R.id.tvDescription);
         ivProfilePicture = findViewById(R.id.ivProfilePicture);
-        hearts = findViewById(R.id.animHearts);
-        blurView = findViewById(R.id.blurView);
+
         // get intent with post object
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
@@ -154,7 +157,6 @@ public class DetailActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // moves blur window on click
                 v.animate().translationY(-900);
-
             }
         });
     }
@@ -253,5 +255,7 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
 }

@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:animateLayoutChanges="true"
     tools:context=".DetailActivity">
 
     <ImageView
@@ -38,7 +39,6 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/copse"
-                android:text="bhjwdcfvgsfhsjxkcnjhdckjawjdkbcjkds  dufhbahedf vishdfvf dvsdk jhsdfh vkdfj v hjfhkjsdkjbcvadkbvkjcnvbkjsdfkandf vhj a fjhvjkdabjkv"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"

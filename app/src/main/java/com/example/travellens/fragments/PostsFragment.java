@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -77,7 +78,6 @@ public class PostsFragment extends Fragment {
     private Location mCurrentLocation;
     private LocationRequest locationRequest;
     private SwipeRefreshLayout swipeContainer;
-
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private final static String KEY_LOCATION = "location";
@@ -209,6 +209,7 @@ public class PostsFragment extends Fragment {
     private void getCurrentLocation(Bundle savedInstanceState) {
         autocompleteFragment.setHint(getString(R.string.current_location));
         autocompleteFragment.setText("");
+
         if (savedInstanceState != null && savedInstanceState.keySet().contains(KEY_LOCATION)) {
             mCurrentLocation = savedInstanceState.getParcelable(KEY_LOCATION);
         }
