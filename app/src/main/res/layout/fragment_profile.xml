@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".fragments.ProfileFragment">
 
-    <!-- TODO: Update blank fragment layout -->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -28,7 +27,7 @@
         <TextView
             android:id="@+id/tvUserName"
             android:transitionName="username"
-
+            android:fontFamily="@font/copse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center|center_horizontal|center_vertical"
@@ -53,6 +52,7 @@
         <TextView
             android:id="@+id/tvRealName"
             android:layout_width="wrap_content"
+            android:fontFamily="@font/copse"
             android:layout_height="wrap_content"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@+id/ivProfilePic2"
@@ -64,7 +64,7 @@
             android:layout_width="247dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-
+            android:fontFamily="@font/copse"
             android:transitionName="bio"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -91,6 +91,7 @@
             android:layout_width="183dp"
             android:layout_height="48dp"
             android:text="@string/saved"
+            android:fontFamily="@font/copse"
             android:textAllCaps="false"
             android:textColor="@color/silver"
             android:textSize="20sp"

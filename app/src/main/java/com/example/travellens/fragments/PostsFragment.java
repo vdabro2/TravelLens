@@ -35,6 +35,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.travellens.Post;
 import com.example.travellens.PostsAdapter;
 import com.example.travellens.R;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.common.api.Status;
@@ -78,6 +79,7 @@ public class PostsFragment extends Fragment {
     private Location mCurrentLocation;
     private LocationRequest locationRequest;
     private SwipeRefreshLayout swipeContainer;
+    private ShimmerFrameLayout shimmerFrameLayout;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private final static String KEY_LOCATION = "location";
@@ -159,6 +161,9 @@ public class PostsFragment extends Fragment {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+        // start shimmer before loading new data in to recyclerview
+        shimmerFrameLayout = view.findViewById(R.id.shimmerLayout);
+        shimmerFrameLayout.startShimmer();
         // choosing whether user wants current or typed location
         if (placeToQueryBy == null) {
             getCurrentLocation(savedInstanceState);
@@ -280,6 +285,9 @@ public class PostsFragment extends Fragment {
                 // save received posts to list and notify adapter of new data
                 allPosts.addAll(postsFiltered);
                 adapter.notifyDataSetChanged();
+                // stop shimmering when we have the new data
+                shimmerFrameLayout.stopShimmer();
+                shimmerFrameLayout.setVisibility(View.GONE);
             }
         });
     }

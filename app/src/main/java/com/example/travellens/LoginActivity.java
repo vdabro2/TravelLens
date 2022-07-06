@@ -55,11 +55,11 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(LoginActivity.this, SignupActivity.class);
-                Pair<View, String> pair1 = Pair.create((View)etUsername, "user");
-                Pair<View, String> pair2 = Pair.create(etPass, "pass");
-                Pair<View, String> pair3 = Pair.create((View)ivBackLogin, "background");
+                Pair<View, String> pairUsername = Pair.create((View)etUsername, "user");
+                Pair<View, String> pairPassword = Pair.create(etPass, "pass");
+                Pair<View, String> pairBackground = Pair.create((View)ivBackLogin, "background");
                 ActivityOptionsCompat options = ActivityOptionsCompat.
-                        makeSceneTransitionAnimation(LoginActivity.this, pair1, pair2, pair3);
+                        makeSceneTransitionAnimation(LoginActivity.this, pairUsername, pairPassword, pairBackground);
                 startActivity(i, options.toBundle());
             }
         });

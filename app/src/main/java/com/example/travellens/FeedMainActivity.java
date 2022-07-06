@@ -40,9 +40,10 @@ public class FeedMainActivity extends AppCompatActivity {
         ivIcon = findViewById(R.id.ivIconShowOnProf);
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 this.getSupportFragmentManager().findFragmentById(R.id.afSearchAPI);
-        autocompleteFragment.getView().setEnabled(true);
-        autocompleteFragment.getView().setVisibility(View.VISIBLE);
-        ((EditText)autocompleteFragment.getView().findViewById(com.google.android.libraries.places.R.id.places_autocomplete_search_input)).setHintTextColor(getResources().getColor(R.color.silver));
+        View autocompleteFragmentView = autocompleteFragment.getView();
+        autocompleteFragmentView.setEnabled(true);
+        autocompleteFragmentView.setVisibility(View.VISIBLE);
+        ((EditText)autocompleteFragmentView.findViewById(com.google.android.libraries.places.R.id.places_autocomplete_search_input)).setHintTextColor(getResources().getColor(R.color.silver));
         final FragmentManager fragmentManager = getSupportFragmentManager();
         bottomNavigationView = findViewById(R.id.bottomNavigation);
         sendToProfileIfNeeded();

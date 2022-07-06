@@ -13,5 +13,11 @@
         <item name="colorAccent">#801da1f2</item>
     </style>
 
+    <style name="ButtonAll">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/silver</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
 
 </resources>

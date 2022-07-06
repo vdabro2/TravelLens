@@ -135,15 +135,14 @@
 
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/animHearts"
-                android:layout_width="55dp"
-                android:layout_height="46dp"
+                android:layout_width="60dp"
+                android:layout_height="51dp"
                 android:scaleType="centerCrop"
                 app:layout_constraintBottom_toBottomOf="@+id/ivLikes"
                 app:layout_constraintEnd_toEndOf="@+id/ivLikes"
-                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="@+id/ivLikes"
                 app:layout_constraintTop_toTopOf="@+id/ivLikes"
-                app:layout_constraintVertical_bias="0.562"
                 app:lottie_fileName="heart_anim.json" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

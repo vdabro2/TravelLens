@@ -4,80 +4,157 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/salmon"
     tools:context=".EditProfileActivity">
+
     <TextView
         android:id="@+id/tvSaveChanges"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:fontFamily="@font/copse"
         android:text="@string/save"
         android:textColor="@color/silver"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/etPassEdit"
-        app:layout_constraintHorizontal_bias="0.669"
-        app:layout_constraintStart_toStartOf="@+id/etPassEdit"
-        app:layout_constraintTop_toBottomOf="@+id/etPassEdit" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvResetChanges"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/copse"
         android:text="@string/reset"
         android:textColor="@color/silver"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/tvSaveChanges"
-        app:layout_constraintStart_toStartOf="@+id/etPassEdit"
-        app:layout_constraintTop_toBottomOf="@+id/etPassEdit" />
-
-    <EditText
-        android:id="@+id/etPassEdit"
-        android:layout_width="260dp"
-        android:layout_height="55dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/borderet"
-        android:ems="10"
-        android:hint="@string/password"
-        android:inputType="textPersonName"
-        android:password="true"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etUsernameOnEdit" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/etNameOnEdit"
-        android:layout_width="260dp"
-        android:transitionName="name"
-
-        android:layout_height="55dp"
-        android:background="@drawable/borderet"
-        android:ems="10"
-        android:hint="@string/name"
-        android:inputType="textPersonName"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilPassword"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:transitionName="pass"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        app:boxStrokeColor="@color/silver"
+        app:counterTextColor="@color/silver"
+        app:endIconDrawable="@drawable/password_toggle"
+        app:endIconMode="password_toggle"
+        app:errorTextColor="@color/silver"
+        app:helperTextTextColor="@color/silver"
+        app:hintTextColor="@color/silver"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivChangeProfilePic" />
+        app:layout_constraintTop_toBottomOf="@+id/tilBiography">
 
-    <EditText
-        android:id="@+id/etBiographyOnEdit"
-        android:layout_width="260dp"
-        android:transitionName="bio"
-        android:layout_height="55dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/borderet"
-        android:ems="10"
-        android:hint="@string/biography"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="@+id/etNameOnEdit"
-        app:layout_constraintTop_toBottomOf="@+id/etNameOnEdit" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etPassEdit"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="16dp"
+            android:ems="10"
+            android:fontFamily="@font/copse"
+            android:hint="@string/password"
+            android:inputType="textPersonName"
+            android:password="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etUsernameOnEdit"
+            tools:layout_editor_absoluteX="69dp"
+            tools:layout_editor_absoluteY="32dp" />
+
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilName"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:transitionName="pass"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        app:boxStrokeColor="@color/silver"
+        app:counterTextColor="@color/silver"
+        app:errorTextColor="@color/silver"
+        app:helperTextTextColor="@color/silver"
+        app:hintTextColor="@color/silver"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvChangeProfilePic">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etNameOnEdit"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:ems="10"
+            android:fontFamily="@font/copse"
+            android:hint="@string/name"
+            android:inputType="textPersonName"
+            android:transitionName="name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ivChangeProfilePic" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilBiography"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:transitionName="pass"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        app:boxStrokeColor="@color/silver"
+        app:counterTextColor="@color/silver"
+        app:errorTextColor="@color/silver"
+        app:helperTextTextColor="@color/silver"
+        app:hintTextColor="@color/silver"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tilUsername">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etBiographyOnEdit"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:fontFamily="@font/copse"
+            android:hint="@string/biography"
+            android:inputType="textMultiLine|textPersonName"
+            android:transitionName="bio"
+            app:layout_constraintEnd_toEndOf="@+id/tilName"
+            app:layout_constraintTop_toBottomOf="@+id/tilName" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/tvLogOut"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:text="Log Out"
+        android:fontFamily="@font/copse"
+        android:text="@string/log_out"
         android:textColor="@color/silver"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -90,9 +167,9 @@
         android:id="@+id/ivChangeProfilePic"
         android:layout_width="114dp"
         android:layout_height="110dp"
-        android:transitionName="pic"
-
         android:layout_marginTop="4dp"
+        android:transitionName="pic"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@tools:sample/avatars" />
@@ -101,31 +178,48 @@
         android:id="@+id/tvChangeProfilePic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="130dp"
-        android:layout_marginTop="52dp"
-        android:layout_marginEnd="128dp"
+        android:fontFamily="@font/copse"
         android:text="@string/change_prof_pic"
         android:textColor="@color/silver"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintEnd_toEndOf="@+id/ivChangeProfilePic"
         app:layout_constraintStart_toStartOf="@+id/ivChangeProfilePic"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/ivChangeProfilePic" />
 
-    <EditText
-        android:id="@+id/etUsernameOnEdit"
-        android:layout_width="260dp"
-        android:layout_height="55dp"
-        android:layout_marginTop="12dp"
-        android:transitionName="username"
-
-        android:background="@drawable/borderet"
-        android:ems="10"
-        android:gravity="start|top"
-        android:hint="@string/username"
-        android:inputType="textPersonName"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilUsername"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:transitionName="pass"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        app:boxStrokeColor="@color/silver"
+        app:counterTextColor="@color/silver"
+        app:errorTextColor="@color/silver"
+        app:helperTextTextColor="@color/silver"
+        app:hintTextColor="@color/silver"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etBiographyOnEdit" />
+        app:layout_constraintTop_toBottomOf="@+id/tilName">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etUsernameOnEdit"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="12dp"
+            android:ems="10"
+            android:fontFamily="@font/copse"
+            android:gravity="start|top"
+            android:hint="@string/username"
+            android:inputType="textPersonName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tilBiography" />
+    </com.google.android.material.textfield.TextInputLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
