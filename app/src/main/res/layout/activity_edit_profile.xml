@@ -40,8 +40,6 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
         android:transitionName="pass"
         app:boxCornerRadiusBottomEnd="8dp"
         app:boxCornerRadiusBottomStart="8dp"
@@ -55,7 +53,7 @@
         app:helperTextTextColor="@color/silver"
         app:hintTextColor="@color/silver"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tilBiography"
         app:layout_constraintTop_toBottomOf="@+id/tilBiography">
 
         <com.google.android.material.textfield.TextInputEditText

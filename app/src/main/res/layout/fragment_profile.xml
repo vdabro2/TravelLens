@@ -70,8 +70,9 @@
 
         <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/shimmerLayout"
-            android:layout_width="407dp"
-            android:layout_height="478dp"
+            android:layout_width="393dp"
+            android:layout_height="495dp"
+            android:foregroundGravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/swipeContainer">
@@ -83,7 +84,8 @@
 
                 <include
                     layout="@layout/shimmer_layout_prof"
-                    android:layout_width="match_parent"></include>
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"></include>
 
             </LinearLayout>
         </com.facebook.shimmer.ShimmerFrameLayout>
