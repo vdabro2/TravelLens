@@ -197,12 +197,12 @@ public class ProfileFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(getContext(), EditProfileActivity.class);
-                    Pair<View, String> p1 = Pair.create((View)ivProfilePicture, "pic");
-                    Pair<View, String> p2 = Pair.create(tvBio, "bio");
-                    Pair<View, String> p3 = Pair.create((View)tvUserName, "username");
-                    Pair<View, String> p4 = Pair.create((View)tvRealName, "name");
+                    Pair<View, String> pairProfilePic = Pair.create((View)ivProfilePicture, "pic");
+                    Pair<View, String> pairBiography = Pair.create(tvBio, "bio");
+                    Pair<View, String> pairUsername = Pair.create((View)tvUserName, "username");
+                    Pair<View, String> pairName = Pair.create((View)tvRealName, "name");
                     ActivityOptionsCompat options = ActivityOptionsCompat.
-                            makeSceneTransitionAnimation(getActivity(), p1, p2, p3, p4);
+                            makeSceneTransitionAnimation(getActivity(), pairProfilePic, pairBiography, pairUsername, pairName);
                     startActivity(i, options.toBundle());
                 }
             });
