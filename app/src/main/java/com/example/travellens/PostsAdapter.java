@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.CenterInside;
+import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -79,9 +81,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         public void bind(Post post) throws JSONException {
             ParseFile image = post.getParseFile();
             if (image != null) {
-                RequestOptions requestOptions = new RequestOptions();
-                requestOptions = requestOptions.transforms(new CenterCrop(), new RoundedCorners(16));
-                Glide.with(context).load(image.getUrl()).apply(requestOptions).override(300, new Random().nextInt(200)+400).into(ivImage);
+                Glide.with(context).load(image.getUrl())
+                        .override(300, new Random().nextInt(200)+400)
+                        .into(ivImage);
             }// width = 500 when 2 span (prob less), 300 with 3 span
             ivImage.setOnClickListener(new View.OnClickListener() {
                 @Override

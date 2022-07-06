@@ -70,9 +70,8 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         public void bind(Post post) {
             ParseFile image = post.getParseFile();
             if (image != null) {
-                RequestOptions requestOptions = new RequestOptions();
-                requestOptions = requestOptions.transforms(new CenterCrop(), new RoundedCorners(16));
-                Glide.with(context).load(image.getUrl()).override(300, new Random().nextInt(10)+400).apply(requestOptions).into(ivYourPic);
+                Glide.with(context).load(image.getUrl())
+                        .override(300, new Random().nextInt(10)+400).into(ivYourPic);
             }
 
             ivYourPic.setOnClickListener(new View.OnClickListener() {

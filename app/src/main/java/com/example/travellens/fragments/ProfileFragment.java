@@ -29,6 +29,7 @@ import com.example.travellens.LoginActivity;
 import com.example.travellens.Post;
 import com.example.travellens.ProfileAdapter;
 import com.example.travellens.R;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -58,9 +59,10 @@ public class ProfileFragment extends Fragment {
     protected List<Post> allPosts;
     protected ProfileAdapter adapter;
     private ImageView ivProfilePicture;
+    private static final int READY_TO_UPDATE = 12;
+    private ShimmerFrameLayout shimmerFrameLayout;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private static final int READY_TO_UPDATE = 12;
     public ProfileFragment() {
         userProfile = ParseUser.getCurrentUser();
     }
@@ -127,12 +129,19 @@ public class ProfileFragment extends Fragment {
                 getActivity().getSupportFragmentManager().findFragmentById(R.id.afSearchAPI);
         autocompleteFragment.getView().setEnabled(false);
         autocompleteFragment.getView().setVisibility(View.INVISIBLE);
+        // start shimmer before loading new data in to recyclerview
+        shimmerFrameLayout = view.findViewById(R.id.shimmerLayout);
+        shimmerFrameLayout.startShimmer();
+
         queryPosts();
 
         bSavedPosts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 adapter.clear();
+                // start shimmer before loading new data in to recyclerview
+                shimmerFrameLayout = view.findViewById(R.id.shimmerLayout);
+                shimmerFrameLayout.startShimmer();
                 querySavedPosts();
 
             }
@@ -180,6 +189,9 @@ public class ProfileFragment extends Fragment {
                     }
                     allPosts.addAll(posts);
                     adapter.notifyDataSetChanged();
+                    // stop shimmering when we have the new data
+                    shimmerFrameLayout.stopShimmer();
+                    shimmerFrameLayout.setVisibility(View.GONE);
                 }
             }
         });
@@ -238,6 +250,9 @@ public class ProfileFragment extends Fragment {
                 // save received posts to list and notify adapter of new data
                 allPosts.addAll(posts);
                 adapter.notifyDataSetChanged();
+                // stop shimmering when we have the new data
+                shimmerFrameLayout.stopShimmer();
+                shimmerFrameLayout.setVisibility(View.GONE);
             }
         });
     }
