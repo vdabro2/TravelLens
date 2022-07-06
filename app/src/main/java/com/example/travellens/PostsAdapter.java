@@ -70,7 +70,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView ivImage;
-        private ShimmerFrameLayout container;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -82,7 +81,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             ParseFile image = post.getParseFile();
             if (image != null) {
                 Glide.with(context).load(image.getUrl())
-                        .override(300, new Random().nextInt(200)+400)
+                        .override(300, new Random().nextInt(100)+400)
                         .into(ivImage);
             }// width = 500 when 2 span (prob less), 300 with 3 span
             ivImage.setOnClickListener(new View.OnClickListener() {

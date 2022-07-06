@@ -106,7 +106,6 @@ public class ProfileFragment extends Fragment {
         tvUserName = view.findViewById(R.id.tvUserName);
         ivProfilePicture = view.findViewById(R.id.ivProfilePic2);
 
-
         allPosts = new ArrayList<>();
         adapter = new ProfileAdapter(getContext(), allPosts);
         rvPosts.setAdapter(adapter);
@@ -131,6 +130,7 @@ public class ProfileFragment extends Fragment {
         autocompleteFragment.getView().setVisibility(View.INVISIBLE);
         // start shimmer before loading new data in to recyclerview
         shimmerFrameLayout = view.findViewById(R.id.shimmerLayout);
+        shimmerFrameLayout.setVisibility(View.VISIBLE);
         shimmerFrameLayout.startShimmer();
 
         queryPosts();
@@ -140,8 +140,8 @@ public class ProfileFragment extends Fragment {
             public void onClick(View v) {
                 adapter.clear();
                 // start shimmer before loading new data in to recyclerview
-                shimmerFrameLayout = view.findViewById(R.id.shimmerLayout);
                 shimmerFrameLayout.startShimmer();
+                shimmerFrameLayout.setVisibility(View.VISIBLE);
                 querySavedPosts();
 
             }

@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="10dp">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:padding="10dp">
 
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/ivForShimmer1"
-        android:layout_width="111dp"
+        android:layout_width="100dp"
         android:layout_height="160dp"
         android:layout_marginTop="20dp"
         android:background="@color/silver"
@@ -22,7 +23,7 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/ivForShimmer2"
-        android:layout_width="110dp"
+        android:layout_width="100dp"
         android:layout_height="160dp"
         android:layout_marginTop="20dp"
         android:background="@color/silver"
@@ -34,7 +35,7 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/ivForShimmer3"
-        android:layout_width="110dp"
+        android:layout_width="100dp"
         android:layout_height="160dp"
         android:layout_marginTop="20dp"
         android:background="@color/silver"
@@ -46,7 +47,7 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/ivForShimmer4"
-        android:layout_width="110dp"
+        android:layout_width="100dp"
         android:layout_height="160dp"
         android:layout_marginTop="20dp"
         android:background="@color/silver"
@@ -58,7 +59,7 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/ivForShimmer5"
-        android:layout_width="110dp"
+        android:layout_width="100dp"
         android:layout_height="160dp"
         android:layout_marginTop="20dp"
         android:background="@color/silver"
@@ -70,7 +71,7 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/ivForShimmer6"
-        android:layout_width="110dp"
+        android:layout_width="100dp"
         android:layout_height="160dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
@@ -82,7 +83,7 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/ivForShimmer7"
-        android:layout_width="110dp"
+        android:layout_width="100dp"
         android:layout_height="160dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
@@ -94,7 +95,7 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/ivForShimmer8"
-        android:layout_width="110dp"
+        android:layout_width="100dp"
         android:layout_height="160dp"
         android:layout_marginTop="20dp"
         android:background="@color/silver"
@@ -106,7 +107,7 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/ivForShimmer9"
-        android:layout_width="110dp"
+        android:layout_width="100dp"
         android:layout_height="160dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
@@ -120,7 +121,7 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/ivForShimmer10"
-        android:layout_width="110dp"
+        android:layout_width="100dp"
         android:layout_height="160dp"
         android:layout_marginTop="20dp"
         android:background="@color/silver"
@@ -132,7 +133,7 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/ivForShimmer11"
-        android:layout_width="110dp"
+        android:layout_width="100dp"
         android:layout_height="160dp"
         android:layout_marginTop="20dp"
         android:background="@color/silver"
@@ -144,7 +145,7 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/ivForShimmer12"
-        android:layout_width="110dp"
+        android:layout_width="100dp"
         android:layout_height="160dp"
         android:layout_marginTop="20dp"
         android:background="@color/silver"
