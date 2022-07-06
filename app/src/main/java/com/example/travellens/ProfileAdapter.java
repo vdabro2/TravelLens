@@ -72,7 +72,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
             if (image != null) {
                 RequestOptions requestOptions = new RequestOptions();
                 requestOptions = requestOptions.transforms(new CenterCrop(), new RoundedCorners(16));
-                Glide.with(context).load(image.getUrl()).apply(requestOptions).override(300, new Random().nextInt(200)+400).into(ivYourPic);
+                Glide.with(context).load(image.getUrl()).override(300, new Random().nextInt(10)+400).apply(requestOptions).into(ivYourPic);
             }
 
             ivYourPic.setOnClickListener(new View.OnClickListener() {
