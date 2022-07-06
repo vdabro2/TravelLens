@@ -7,6 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/root"
+    android:animateLayoutChanges="true"
     tools:context=".DetailActivity">
 
     <ImageView
@@ -21,15 +23,18 @@
 
     <eightbitlab.com.blurview.BlurView
         android:id="@+id/blurView"
-        android:layout_width="409dp"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="231dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:background="@color/dark_tint"
         app:layout_constraintBottom_toBottomOf="@+id/ivImage"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent">
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tvDescription"
@@ -38,7 +43,6 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/copse"
-                android:text="bhjwdcfvgsfhsjxkcnjhdckjawjdkbcjkds  dufhbahedf vishdfvf dvsdk jhsdfh vkdfj v hjfhkjsdkjbcvadkbvkjcnvbkjsdfkandf vhj a fjhvjkdabjkv"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -78,10 +82,9 @@
                 android:id="@+id/ivLikes"
                 android:layout_width="52dp"
                 android:layout_height="30dp"
-                android:layout_marginEnd="5dp"
+                app:layout_constraintBottom_toBottomOf="@+id/rbRating"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/tvLocation"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/rbRating"
                 app:srcCompat="@drawable/whiteheart" />
 
             <ImageView
@@ -130,18 +133,21 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/rbRating" />
 
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/animHearts"
+                android:layout_width="55dp"
+                android:layout_height="46dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="@+id/ivLikes"
+                app:layout_constraintEnd_toEndOf="@+id/ivLikes"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/ivLikes"
+                app:layout_constraintTop_toTopOf="@+id/ivLikes"
+                app:layout_constraintVertical_bias="0.562"
+                app:lottie_fileName="heart_anim.json" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </eightbitlab.com.blurview.BlurView>
-
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/animHearts"
-        android:layout_width="55dp"
-        android:layout_height="46dp"
-        android:layout_marginEnd="32dp"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toTopOf="@+id/blurView"
-        app:layout_constraintEnd_toEndOf="@+id/ivImage"
-        app:lottie_fileName="heart_anim.json" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

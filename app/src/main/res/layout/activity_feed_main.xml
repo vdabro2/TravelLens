@@ -13,7 +13,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:background="@color/sea_green"
+        android:background="@color/salmon"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -21,6 +21,20 @@
         app:layout_constraintTop_toTopOf="parent"
         app:menu="@menu/menu_tool"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+    <ImageView
+        android:id="@+id/ivIconShowOnProf"
+        android:layout_width="199dp"
+        android:layout_height="80dp"
+        android:scaleType="fitCenter"
+        android:scaleX="2.5"
+        android:scaleY="2.5"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+        app:layout_constraintEnd_toEndOf="@+id/toolbar"
+        app:layout_constraintStart_toStartOf="@+id/toolbar"
+        app:layout_constraintTop_toTopOf="@+id/toolbar"
+        app:srcCompat="@drawable/name_of_app" />
 
     <fragment
         android:id="@+id/afSearchAPI"
@@ -54,7 +68,7 @@
         android:layout_width="413dp"
         android:layout_height="56dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/sea_green"
+        android:background="@color/salmon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

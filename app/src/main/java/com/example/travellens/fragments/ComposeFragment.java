@@ -57,15 +57,15 @@ public class ComposeFragment extends Fragment {
     private String mParam2;
     private File photoFile;
     private Button bSubmit;
-    private CameraHelper camera;
+    private Button bCamera;
     private ImageView ivPic;
     private Place placeInPost;
     private RatingBar rbRating;
-    private ChipGroup cgRecommended;
+    private CameraHelper camera;
     private EditText etDescription;
+    private ChipGroup cgRecommended;
     private ProgressBar progressBar;
     private PlacesClient placesClient;
-    private FloatingActionButton bCamera;
     public String photoFileName = "photo.jpg";
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -186,7 +186,7 @@ public class ComposeFragment extends Fragment {
                         if (var == false) {
                             Chip chip = new Chip(context);
                             chip.setText(placeLikelihood.getPlace().getName());
-                            chip.setCloseIconVisible(true);
+                            chip.setCloseIconVisible(false);
                             cgRecommended.addView(chip);
                             chip.setOnClickListener(new View.OnClickListener() {
                                 @Override

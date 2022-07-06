@@ -13,6 +13,18 @@
         android:layout_height="match_parent"
         android:background="@color/white">
 
+        <ImageView
+            android:id="@+id/ivSettings"
+            android:layout_width="35dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="4dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@+id/swipeContainer"
+            app:layout_constraintStart_toEndOf="@+id/bMySaves"
+            app:layout_constraintTop_toBottomOf="@+id/tvBio"
+            app:srcCompat="@drawable/settings"
+            tools:visibility="visible" />
+
         <TextView
             android:id="@+id/tvUserName"
             android:transitionName="username"
@@ -49,11 +61,11 @@
 
         <TextView
             android:id="@+id/tvBio"
-            android:layout_width="224dp"
-            android:layout_height="32dp"
-            android:transitionName="bio"
-
+            android:layout_width="247dp"
+            android:layout_height="wrap_content"
             android:gravity="center"
+
+            android:transitionName="bio"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvRealName" />
@@ -74,20 +86,6 @@
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <Button
-            android:id="@+id/bEditProfile"
-            style="@style/Widget.Material3.Button.OutlinedButton.Icon"
-            android:layout_width="183dp"
-            android:layout_height="48dp"
-            android:textAllCaps="false"
-            android:textColor="@color/silver"
-            android:textSize="20sp"
-            app:strokeColor="@color/blue_grey"
-            tools:ignore="TextContrastCheck"
-            android:text="@string/edit_prof"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvBio" />
-
-        <Button
             android:id="@+id/bMySaves"
             style="@style/Widget.Material3.Button.OutlinedButton.Icon"
             android:layout_width="183dp"
@@ -96,12 +94,12 @@
             android:textAllCaps="false"
             android:textColor="@color/silver"
             android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="@+id/tvBio"
+            app:layout_constraintStart_toStartOf="@+id/tvBio"
+            app:layout_constraintTop_toBottomOf="@+id/tvBio"
             app:strokeColor="@color/blue_grey"
-            tools:ignore="TextContrastCheck"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.888"
-            app:layout_constraintStart_toEndOf="@+id/bEditProfile"
-            app:layout_constraintTop_toBottomOf="@+id/tvBio" />
+            tools:ignore="TextContrastCheck" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

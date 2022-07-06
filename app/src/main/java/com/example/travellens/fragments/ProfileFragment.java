@@ -9,9 +9,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
@@ -43,7 +45,7 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class ProfileFragment extends Fragment {
-    private Button bEdit;
+    private ImageView bEdit;
     private String mParam1;
     private String mParam2;
     private Button bLogout;
@@ -96,11 +98,12 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         tvBio = view.findViewById(R.id.tvBio);
         rvPosts = view.findViewById(R.id.rvGrid);
-        bEdit = view.findViewById(R.id.bEditProfile);
+        bEdit = view.findViewById(R.id.ivSettings);
         bSavedPosts = view.findViewById(R.id.bMySaves);
         tvRealName = view.findViewById(R.id.tvRealName);
         tvUserName = view.findViewById(R.id.tvUserName);
         ivProfilePicture = view.findViewById(R.id.ivProfilePic2);
+
 
         allPosts = new ArrayList<>();
         adapter = new ProfileAdapter(getContext(), allPosts);
@@ -188,6 +191,7 @@ public class ProfileFragment extends Fragment {
             // no edit profile button should exist
             bEdit.setEnabled(false);
             bEdit.setVisibility(View.INVISIBLE);
+            bEdit.setLayoutParams(new ViewGroup.LayoutParams(0,0));
         } else {
             bEdit.setOnClickListener(new View.OnClickListener() {
                 @Override

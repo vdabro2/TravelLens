@@ -7,14 +7,30 @@
     android:orientation="vertical"
     tools:context=".fragments.ComposeFragment">
 
+    <Button
+        android:id="@+id/bCamera"
+        style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+        android:layout_width="180dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="8dp"
+        android:fontFamily="@font/copse"
+        android:foregroundGravity="center_vertical"
+        android:text="@string/attach_photo"
+        android:textAllCaps="false"
+        android:textColor="@color/silver"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivPic"
+        app:strokeColor="@color/blue_grey" />
+
     <me.zhanghai.android.materialratingbar.MaterialRatingBar
         android:id="@+id/rbRatingCompose"
         style="@style/Widget.MaterialRatingBar.RatingBar"
         android:layout_width="242dp"
         android:layout_height="48dp"
-        android:layout_marginStart="12dp"
         android:layout_marginTop="4dp"
         android:numStars="5"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="SpeakableTextPresentCheck" />
@@ -22,49 +38,28 @@
     <Button
         android:id="@+id/bSubmit"
         style="@style/Widget.Material3.Button.OutlinedButton.Icon"
-        android:layout_width="108dp"
-        android:layout_height="45dp"
+        android:layout_width="180dp"
+        android:layout_height="55dp"
+        android:layout_marginEnd="8dp"
+        android:fontFamily="@font/copse"
+        android:foregroundGravity="center_vertical"
         android:text="@string/share"
         android:textAllCaps="false"
         android:textColor="@color/silver"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="@+id/bCamera"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/bCamera"
+        app:layout_constraintTop_toBottomOf="@+id/ivPic"
         app:strokeColor="@color/blue_grey" />
-
-    <EditText
-        android:id="@+id/etDescription"
-        android:layout_width="401dp"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/write_a_caption"
-        android:inputType="textPersonName"
-        android:minHeight="48dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bCamera" />
 
     <ImageView
         android:id="@+id/ivPic"
-        android:layout_width="wrap_content"
-        android:layout_height="204dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bSubmit"
+        android:layout_width="251dp"
+        android:layout_height="200dp"
+        app:layout_constraintEnd_toEndOf="@+id/rbRatingCompose"
+        app:layout_constraintStart_toStartOf="@+id/rbRatingCompose"
+        app:layout_constraintTop_toBottomOf="@+id/rbRatingCompose"
         tools:srcCompat="@tools:sample/avatars" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/bCamera"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="5dp"
-        android:clickable="true"
-        android:scaleType="center"
-        android:src="@drawable/img"
-        app:backgroundTint="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivPic" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -77,15 +72,60 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etDescription" />
 
+    <ImageView
+        android:id="@+id/ivBackgroundOnCamera"
+        android:layout_width="394dp"
+        android:layout_height="261dp"
+        android:scaleType="centerCrop"
+        android:scaleY="2"
+        android:src="@drawable/paper_image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bSubmit" />
+
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/cgRecomended"
-        app:singleSelection="true"
-        android:layout_width="405dp"
-        android:layout_height="185dp"
+        style="@style/Widget.MaterialComponents.Chip.Choice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etDescription">
+        app:layout_constraintTop_toBottomOf="@+id/tilCaption"
+        app:singleSelection="true" />
 
-    </com.google.android.material.chip.ChipGroup>
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilCaption"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="74dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="5dp"
+        android:transitionName="user"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        app:boxStrokeColor="@color/silver"
+        app:counterTextColor="@color/silver"
+        app:errorTextColor="@color/silver"
+        app:helperTextTextColor="@color/silver"
+        app:hintTextColor="@color/silver"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/ivBackgroundOnCamera">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etDescription"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginStart="4dp"
+            android:ems="10"
+            android:hint="@string/write_a_caption"
+            android:inputType="textMultiLine|textPersonName"
+            android:minHeight="48dp" />
+    </com.google.android.material.textfield.TextInputLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
