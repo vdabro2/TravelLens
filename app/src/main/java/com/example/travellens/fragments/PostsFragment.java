@@ -131,16 +131,9 @@ public class PostsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
-
-        rvPosts = view.findViewById(R.id.rvPosts);
-        allPosts = new ArrayList<>();
-        adapter = new PostsAdapter(getContext(), allPosts);
-        rvPosts.setAdapter(adapter);
-        StaggeredGridLayoutManager sGrid = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
-        sGrid.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
-        rvPosts.setLayoutManager(sGrid);
-
+        // recyclerview set up
+        setUpAdapter(view);
+        // asks for location
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(5000);
@@ -148,6 +141,21 @@ public class PostsFragment extends Fragment {
         setHasOptionsMenu(true);
         createFragmentFromAPI();
 
+        setUpRefresh();
+        // start shimmer before loading new data in to recyclerview
+        shimmerFrameLayout = view.findViewById(R.id.shimmerLayout);
+        shimmerFrameLayout.startShimmer();
+        // choosing whether user wants current or typed location
+        if (placeToQueryBy == null) {
+            getCurrentLocation(savedInstanceState);
+        } else {
+            currLatitude = placeToQueryBy.getLatLng().latitude;
+            currLongitude = placeToQueryBy.getLatLng().longitude;
+            queryPosts(currLatitude, currLongitude);
+        }
+    }
+
+    private void setUpRefresh() {
         // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -161,20 +169,17 @@ public class PostsFragment extends Fragment {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-        // start shimmer before loading new data in to recyclerview
-        shimmerFrameLayout = view.findViewById(R.id.shimmerLayout);
-        shimmerFrameLayout.startShimmer();
-        // choosing whether user wants current or typed location
-        if (placeToQueryBy == null) {
-            getCurrentLocation(savedInstanceState);
-        } else {
-            currLatitude = placeToQueryBy.getLatLng().latitude;
-            currLongitude = placeToQueryBy.getLatLng().longitude;
-            queryPosts(currLatitude, currLongitude);
-        }
+    }
 
-
-
+    private void setUpAdapter(View view) {
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+        rvPosts = view.findViewById(R.id.rvPosts);
+        allPosts = new ArrayList<>();
+        adapter = new PostsAdapter(getContext(), allPosts);
+        rvPosts.setAdapter(adapter);
+        StaggeredGridLayoutManager sGrid = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+        sGrid.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
+        rvPosts.setLayoutManager(sGrid);
     }
 
     private void createFragmentFromAPI() {
@@ -269,14 +274,11 @@ public class PostsFragment extends Fragment {
                     return;
                 }
                 List<Post> postsFiltered = new ArrayList<>();
-                Log.e(" LOCATION :" , String.valueOf(latitude) + "    " +String.valueOf(longitude));
                 // for debugging purposes let's print every post description to logcat
                 for (Post post : posts) {
-                    Log.i("FEED", "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
                     double lonOfPost = post.getDouble(Post.KEY_LONGITUDE);
                     double latOfPost = post.getDouble(Post.KEY_LATITUDE);
                     double distance = distance(latOfPost, lonOfPost, latitude, longitude, "M");
-                    Log.e(" LOCATION :" , String.valueOf(lonOfPost) + "    " +String.valueOf(latOfPost));
 
                     if (distance <= 50) {
                         postsFiltered.add(post);

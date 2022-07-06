@@ -17,7 +17,7 @@
         <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowContentTransitions">true</item>
 
-        <item name="android:button">@style/ButtonAll</item>
+        <!-- <item name="android:button">@style/ButtonAll</item> -->
 
         <!-- specify enter and exit transitions -->
         <item name="android:windowEnterTransition">@transition/explode</item>

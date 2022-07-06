@@ -106,12 +106,7 @@ public class ProfileFragment extends Fragment {
         tvUserName = view.findViewById(R.id.tvUserName);
         ivProfilePicture = view.findViewById(R.id.ivProfilePic2);
 
-        allPosts = new ArrayList<>();
-        adapter = new ProfileAdapter(getContext(), allPosts);
-        rvPosts.setAdapter(adapter);
-        StaggeredGridLayoutManager sGrid = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
-        sGrid.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
-        rvPosts.setLayoutManager(sGrid);
+        setUpAdapter();
         attachProfileElements();
         allowEditProfile();
 
@@ -123,7 +118,7 @@ public class ProfileFragment extends Fragment {
                 startActivityForResult(intent, READY_TO_UPDATE);
             }
         });
-
+        // set up invisible autocomplete fragment
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 getActivity().getSupportFragmentManager().findFragmentById(R.id.afSearchAPI);
         autocompleteFragment.getView().setEnabled(false);
@@ -146,6 +141,16 @@ public class ProfileFragment extends Fragment {
 
             }
         });
+    }
+
+    private void setUpAdapter() {
+        // set up recyclerview
+        allPosts = new ArrayList<>();
+        adapter = new ProfileAdapter(getContext(), allPosts);
+        rvPosts.setAdapter(adapter);
+        StaggeredGridLayoutManager sGrid = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+        sGrid.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
+        rvPosts.setLayoutManager(sGrid);
     }
 
     @Override
