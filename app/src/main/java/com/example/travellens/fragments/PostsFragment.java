@@ -192,10 +192,11 @@ public class PostsFragment extends Fragment {
         autocompleteFragment.getView().setVisibility(View.VISIBLE);
 
         // change icon for this fragment
+        // TODO do i want to keep automatic search or diff?
         ImageView searchIcon = (ImageView)((LinearLayout)autocompleteFragment.getView()).getChildAt(0);
         Bitmap bitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.iconpostpage)).getBitmap();
         Drawable d = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 50, 50, true));
-        searchIcon.setImageDrawable(d);
+        //searchIcon.setImageDrawable(d);
 
         autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {

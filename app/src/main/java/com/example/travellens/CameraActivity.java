@@ -29,7 +29,7 @@ public class CameraActivity extends AppCompatActivity {
     private Bitmap bitmap;
     private Button bFromCamera;
     public final static int REQUEST_CODE_GALLERY = 43;
-    private final static String photoFileName = "photo.jpg";
+    private final static String PHOTO_FILE_NAME = "photo.jpg";
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,19 +68,19 @@ public class CameraActivity extends AppCompatActivity {
                 bitmap = ImageDecoder.decodeBitmap(source);
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 40, bytes);
-                File resizedFile = camera.getPhotoFileUri(photoFileName + "_resized", getApplicationContext());
+                File resizedFile = camera.getPhotoFileUri(PHOTO_FILE_NAME + "_resized", getApplicationContext());
                 try {
                     resizedFile.createNewFile();
                     FileOutputStream fos = null;
                     try {
-                        /*todo : You should use try-with-resources for resources like this so that they will be closed/cleaned up automatically.
-                            With the current logic, the fos won't be closed if there is an exception since there is no finally block that closes it.*/
                         fos = new FileOutputStream(resizedFile);
                         // Write the bytes of the bitmap to file
                         fos.write(bytes.toByteArray());
                         fos.close();
                     } catch (FileNotFoundException e) {
                         Log.e("CAMERA ACTIVITY" , e.toString());
+                    } finally {
+                        fos.close();
                     }
                 } catch (IOException e) {
                     Log.e("CAMERA ACTIVITY" , e.toString());
@@ -92,7 +92,6 @@ public class CameraActivity extends AppCompatActivity {
                 Log.e("CAMERA ACTIVITY" , e.toString());
             }
         }
-
         Intent intentBack = new Intent();
         intentBack.setData(Uri.fromFile(photoFile));
         setResult(RESULT_OK, intentBack);
@@ -101,7 +100,7 @@ public class CameraActivity extends AppCompatActivity {
 
     private void launchCamera() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        photoFile = camera.getPhotoFileUri(photoFileName, getApplicationContext());
+        photoFile = camera.getPhotoFileUri(PHOTO_FILE_NAME, getApplicationContext());
         Uri fileProvider = FileProvider.getUriForFile(CameraActivity.this, "com.codepath.fileprovider", photoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
         if (intent.resolveActivity(getPackageManager()) != null) {
@@ -111,7 +110,7 @@ public class CameraActivity extends AppCompatActivity {
 
     private void launchGallery() {
         Intent intent = new Intent();
-        photoFile = camera.getPhotoFileUri(photoFileName, getApplicationContext());
+        photoFile = camera.getPhotoFileUri(PHOTO_FILE_NAME, getApplicationContext());
         Uri fileProvider = FileProvider.getUriForFile(CameraActivity.this, "com.codepath.fileprovider", photoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
         intent.setType("image/'");

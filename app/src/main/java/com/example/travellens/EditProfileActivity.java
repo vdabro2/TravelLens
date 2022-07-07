@@ -5,9 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,15 +25,15 @@ import com.parse.SaveCallback;
 import java.io.File;
 
 public class EditProfileActivity extends AppCompatActivity {
+    private Button bSave;
     private File photoFile;
     private ImageView ivPP;
-    private TextView tvSave;
     private TextView tvChange;
     private TextView tvLogout;
     private EditText etPassEdit;
     private CameraHelper camera;
     private EditText etNameOnEdit;
-    private TextView tvResetChanges;
+    private ImageView ivLeavePage;
     private EditText etUsernameOnEdit;
     private EditText etBiographyOnEdit;
     private ParseFile updatedPhoto = null;
@@ -41,16 +43,16 @@ public class EditProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
-        // initiate
+        // initialize
         photoFile = null;
         camera = new CameraHelper();
-        ivPP = findViewById(R.id.ivChangeProfilePic);
         tvLogout = findViewById(R.id.tvLogOut);
-        tvChange = findViewById(R.id.tvChangeProfilePic);
-        tvSave = findViewById(R.id.tvSaveChanges);
+        bSave = findViewById(R.id.bSaveChanges);
         etPassEdit = findViewById(R.id.etPassEdit);
+        ivPP = findViewById(R.id.ivChangeProfilePic);
         etNameOnEdit = findViewById(R.id.etNameOnEdit);
-        tvResetChanges = findViewById(R.id.tvResetChanges);
+        tvChange = findViewById(R.id.tvChangeProfilePic);
+        ivLeavePage = findViewById(R.id.ivCancel);
         etUsernameOnEdit = findViewById(R.id.etUsernameOnEdit);
         etBiographyOnEdit = findViewById(R.id.etBiographyOnEdit);
 
@@ -75,17 +77,20 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
-        tvSave.setOnClickListener(new View.OnClickListener() {
+        bSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 updateUser();
             }
         });
 
-        tvResetChanges.setOnClickListener(new View.OnClickListener() {
+        ivLeavePage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                populateCurrentUserInfo();
+                // use intent for result to leave without doing anything
+                Intent intentBack = new Intent();
+                setResult(RESULT_OK, intentBack);
+                finish();
             }
         });
     }
@@ -114,6 +119,7 @@ public class EditProfileActivity extends AppCompatActivity {
         etBiographyOnEdit.setText(user.getString(Post.KEY_BIOGRAPHY));
         etUsernameOnEdit.setText(user.getString(Post.KEY_USERNAME));
         etPassEdit.setText("");
+
     }
 
     private void updateUser() {

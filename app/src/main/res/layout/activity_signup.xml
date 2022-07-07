@@ -12,7 +12,7 @@
         android:layout_height="fill_parent"
         android:scaleType="fitXY"
         android:transitionName="background"
-        android:src="@drawable/login"
+        android:src="@drawable/orange_background_login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">

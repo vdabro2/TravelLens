@@ -142,7 +142,7 @@ public class ComposeFragment extends Fragment {
         // allows this fragments menu to behave differently than in main
         setHasOptionsMenu(true);
         // method creates the autocomplete fragment
-        creatFragmentFromAPI();
+        createFragmentFromAPI();
 
     }
 
@@ -216,7 +216,7 @@ public class ComposeFragment extends Fragment {
                 postsFragment).addToBackStack(null).commit();
     }
 
-    private void creatFragmentFromAPI() {
+    private void createFragmentFromAPI() {
         // link fragment to layout
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 getActivity().getSupportFragmentManager().findFragmentById(R.id.afSearchAPI);
@@ -224,10 +224,11 @@ public class ComposeFragment extends Fragment {
         autocompleteFragment.getView().setVisibility(View.VISIBLE);
         autocompleteFragment.setHint(getString(R.string.set_post_location));
         // set the search icon of the API fragment
+        // TODO do i want to keep automatic search or diff?
         ImageView searchIcon = (ImageView)((LinearLayout)autocompleteFragment.getView()).getChildAt(0);
         Bitmap bitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.iconcomposepage)).getBitmap();
         Drawable d = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 50, 50, true));
-        searchIcon.setImageDrawable(d);
+        //searchIcon.setImageDrawable(d);
 
         // asks for the info I need to store in database
         autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
