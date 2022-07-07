@@ -112,19 +112,13 @@
 
         <Button
             android:id="@+id/bMySaves"
-            style="@style/Widget.Material3.Button.OutlinedButton.Icon"
             android:layout_width="183dp"
             android:layout_height="48dp"
-            android:fontFamily="@font/copse"
             android:text="@string/saved"
-            android:textAllCaps="false"
-            android:textColor="@color/silver"
-            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="@+id/tvBio"
             app:layout_constraintStart_toStartOf="@+id/tvBio"
             app:layout_constraintTop_toBottomOf="@+id/tvBio"
-            app:strokeColor="@color/blue_grey"
-            tools:ignore="TextContrastCheck" />
+            style="@style/buttonAll"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

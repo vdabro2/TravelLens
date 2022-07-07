@@ -2,20 +2,6 @@
 
 
 
-    <style name="counterText">
-        <item name="android:textColor">#aa5353cc</item>
-    </style>
-
-    <style name="counterOverride">
-        <item name="android:textColor">#ff0000</item>
-    </style>
-
-    <style name="ButtonAll">
-        <item name="android:textAllCaps">false</item>
-        <item name="android:textColor">@color/silver</item>
-        <item name="android:textSize">20sp</item>
-        <item name="android:buttonStyle">@style/Widget.Material3.Button.OutlinedButton.Icon</item>
-    </style>
 
 
 </resources>

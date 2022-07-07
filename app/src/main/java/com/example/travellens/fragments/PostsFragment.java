@@ -82,6 +82,7 @@ public class PostsFragment extends Fragment {
     private ShimmerFrameLayout shimmerFrameLayout;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = "POSTS_FRAGMENT";
     private final static String KEY_LOCATION = "location";
     private AutocompleteSupportFragment autocompleteFragment;
 
@@ -191,18 +192,11 @@ public class PostsFragment extends Fragment {
         autocompleteFragment.getView().setEnabled(true);
         autocompleteFragment.getView().setVisibility(View.VISIBLE);
 
-        // change icon for this fragment
-        // TODO do i want to keep automatic search or diff?
-        ImageView searchIcon = (ImageView)((LinearLayout)autocompleteFragment.getView()).getChildAt(0);
-        Bitmap bitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.iconpostpage)).getBitmap();
-        Drawable d = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 50, 50, true));
-        //searchIcon.setImageDrawable(d);
-
         autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                Log.i("TAG", "Place: " + place.getName() + ", " + place.getId()+ ", " + Objects.requireNonNull(place.getLatLng()).latitude+ ", " + place.getLatLng().longitude);
+                Log.i(TAG, "Place: " + place.getName() + ", " + place.getId()+ ", " + Objects.requireNonNull(place.getLatLng()).latitude+ ", " + place.getLatLng().longitude);
                 autocompleteFragment.setHint(place.getName());
                 autocompleteFragment.setText("");
                 PostsFragment posts_with_loc = new PostsFragment(place);
@@ -212,7 +206,7 @@ public class PostsFragment extends Fragment {
 
             @Override
             public void onError(Status status) {
-                Log.e("Posts Fragment", "An error occurred: " + status);
+                Log.e(TAG, "An error occurred: " + status);
             }
         });
     }
@@ -271,7 +265,7 @@ public class PostsFragment extends Fragment {
             public void done(List<Post> posts, ParseException e) {
                 // check for errors
                 if (e != null) {
-                    Log.e("FEED", "Issue with getting posts", e);
+                    Log.e(TAG, "Issue with getting posts", e);
                     return;
                 }
                 List<Post> postsFiltered = new ArrayList<>();
