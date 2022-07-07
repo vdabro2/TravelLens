@@ -38,17 +38,12 @@ public class FeedMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feed_main);
         ivIcon = findViewById(R.id.ivIconShowOnProf);
-        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
-                this.getSupportFragmentManager().findFragmentById(R.id.afSearchAPI);
-        View autocompleteFragmentView = autocompleteFragment.getView();
-        autocompleteFragmentView.setEnabled(true);
-        autocompleteFragmentView.setVisibility(View.VISIBLE);
-        ((EditText)autocompleteFragmentView.findViewById(com.google.android.libraries.places.R.id.places_autocomplete_search_input)).setHintTextColor(getResources().getColor(R.color.silver));
-        final FragmentManager fragmentManager = getSupportFragmentManager();
-        bottomNavigationView = findViewById(R.id.bottomNavigation);
+
+        setUpSearchFragment();
         sendToProfileIfNeeded();
 
-
+        final FragmentManager fragmentManager = getSupportFragmentManager();
+        bottomNavigationView = findViewById(R.id.bottomNavigation);
         bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -83,6 +78,16 @@ public class FeedMainActivity extends AppCompatActivity {
             // initialize the api with key
             Places.initialize(getApplicationContext(), getString(R.string.google_maps_api_key));
         }
+    }
+
+    private void setUpSearchFragment() {
+        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+                this.getSupportFragmentManager().findFragmentById(R.id.afSearchAPI);
+        View autocompleteFragmentView = autocompleteFragment.getView();
+        autocompleteFragmentView.setEnabled(true);
+        autocompleteFragmentView.setVisibility(View.VISIBLE);
+        ((EditText)autocompleteFragmentView.findViewById(com.google.android.libraries.places.R.id.places_autocomplete_search_input))
+                .setHintTextColor(getResources().getColor(R.color.silver));
     }
 
     private void sendToProfileIfNeeded() {

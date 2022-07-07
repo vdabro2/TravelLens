@@ -160,8 +160,6 @@ public class ProfileFragment extends Fragment {
         if (requestCode == READY_TO_UPDATE) {
             attachProfileElements();
         }
-
-
     }
 
     private void attachProfileElements() {
@@ -246,12 +244,6 @@ public class ProfileFragment extends Fragment {
                     Log.e("FEED", "Issue with getting posts", e);
                     return;
                 }
-
-                // for debugging purposes let's print every post description to logcat
-                for (Post post : posts) {
-                    Log.i("FEED", "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
-                }
-
                 // save received posts to list and notify adapter of new data
                 allPosts.addAll(posts);
                 adapter.notifyDataSetChanged();

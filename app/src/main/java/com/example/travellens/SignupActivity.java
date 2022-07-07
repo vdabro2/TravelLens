@@ -75,10 +75,10 @@ public class SignupActivity extends AppCompatActivity {
         String password = etPass.getText().toString();
         String bio = etBio1.getText().toString();
         String name = etName.getText().toString();
-        String un = etUsername.getText().toString();
+        String username = etUsername.getText().toString();
 
         ParseUser user = new ParseUser();
-        user.setUsername(un);
+        user.setUsername(username);
         if (photoFile != null)
             user.put(Post.KEY_PROFILE_PICTURE, new ParseFile(photoFile));
         user.setPassword(password);
@@ -92,21 +92,25 @@ public class SignupActivity extends AppCompatActivity {
                 if (e != null) {
                     Log.e("Signup Problem", e.toString());
                 } else {
-                    ParseUser.logInInBackground(un, password, new LogInCallback() {
-                        @Override
-                        public void done(ParseUser user, ParseException e) {
-                            if (e!= null) {
-                                Log.e("LOGIN ISSUE after signup", e.toString());
-                                Toast.makeText(SignupActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                            Intent i = new Intent(SignupActivity.this, FeedMainActivity.class);
-                            startActivity(i);
-                            finish();
-                        }
-                    });
+                    loginNewUser(username, password);
                 }
 
+            }
+        });
+    }
+
+    private void loginNewUser(String username, String password) {
+        ParseUser.logInInBackground(username, password, new LogInCallback() {
+            @Override
+            public void done(ParseUser user, ParseException e) {
+                if (e!= null) {
+                    Log.e("LOGIN ISSUE after signup", e.toString());
+                    Toast.makeText(SignupActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Intent i = new Intent(SignupActivity.this, FeedMainActivity.class);
+                startActivity(i);
+                finish();
             }
         });
     }
