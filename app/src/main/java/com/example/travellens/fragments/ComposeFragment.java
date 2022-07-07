@@ -72,7 +72,7 @@ public class ComposeFragment extends Fragment {
     private static final String TAG = "COMPOSE_FRAGMENT";
     public static final int RESULT_CODE_FROM_CAMERA = 10;
     // list of types that I want location recommendations for the user
-    private List<String> typeList = new ArrayList<>(Arrays.asList("POINT_OF_INTEREST", "FOOD",
+    private final static List<String> TYPE_LIST = new ArrayList<>(Arrays.asList("POINT_OF_INTEREST", "FOOD",
             "CAFE","TRANSIT_STATION", "TOURIST_ATTRACTION", "PARK", "MUSEUM"));
 
     public ComposeFragment() {}
@@ -181,7 +181,7 @@ public class ComposeFragment extends Fragment {
                 if (task.isSuccessful()){
                     FindCurrentPlaceResponse response = task.getResult();
                     for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
-                        boolean var = placeLikelihood.getPlace().getTypes().stream().anyMatch(element -> typeList.contains(element));
+                        boolean var = placeLikelihood.getPlace().getTypes().stream().anyMatch(element -> TYPE_LIST.contains(element));
                         if (var == false) {
                             Chip chip = new Chip(context);
                             chip.setText(placeLikelihood.getPlace().getName());

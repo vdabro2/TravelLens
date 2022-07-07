@@ -3,24 +3,28 @@ package com.example.travellens.fragments;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -70,11 +74,13 @@ import java.util.Objects;
 public class PostsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
+    private Dialog dialog;
     private List<Post> allPosts;
     private double currLatitude;
     private RecyclerView rvPosts;
     private Place placeToQueryBy;
     private double currLongitude;
+    private ImageView ivFilterIcon;
     protected PostsAdapter adapter;
     private Location mCurrentLocation;
     private LocationRequest locationRequest;
@@ -85,6 +91,11 @@ public class PostsFragment extends Fragment {
     private static final String TAG = "POSTS_FRAGMENT";
     private final static String KEY_LOCATION = "location";
     private AutocompleteSupportFragment autocompleteFragment;
+    private final static List<String> TYPE_LIST = new ArrayList<>(Arrays.asList("AIRPORT",
+            "AMUSEMENT_PARK","AQUARIUM", "ART_GALLERY", "BAKERY","BOOK_STORE","CAFE","CAMPGROUND",
+            "CAR_RENTAL" , "CITY_HALL", "CLOTHING_STORE", "CONVENIENCE_STORE", "FLORIST", "FOOD", "LIBRARY",
+            "LODGING", "MEAL_DELIVERY", "MEAL_TAKEAWAY","MUSEUM",  "PARK", "POINT_OF_INTEREST", "RESTAURANT", "SHOPPING_MALL",
+            "SPA", "STORE", "SUBWAY_STATION", "TOURIST_ATTRACTION", "TRAIN_STATION", "TRANSIT_STATION", "TRAVEL_AGENCY", "ZOO"));
 
 
     public PostsFragment() {
@@ -134,6 +145,7 @@ public class PostsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         // recyclerview set up
         setUpAdapter(view);
+
         // asks for location
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -145,6 +157,8 @@ public class PostsFragment extends Fragment {
         setUpRefresh();
         // start shimmer before loading new data in to recyclerview
         shimmerFrameLayout = view.findViewById(R.id.shimmerLayout);
+        ivFilterIcon = view.findViewById(R.id.ivFilterIcon);
+        createFilter();
         shimmerFrameLayout.startShimmer();
         // choosing whether user wants current or typed location
         if (placeToQueryBy == null) {
@@ -154,7 +168,54 @@ public class PostsFragment extends Fragment {
             currLongitude = placeToQueryBy.getLatLng().longitude;
             queryPosts(currLatitude, currLongitude);
         }
+
+
     }
+
+    private void createFilter() {
+
+        ivFilterIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog = new Dialog(getContext());
+                dialog.setContentView(R.layout.dialog_searchable_spinner);
+                dialog.getWindow().setLayout(650,800);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+
+                // Initialize and assign variable
+                EditText editText = dialog.findViewById(R.id.etSearch);
+                ListView listView = dialog.findViewById(R.id.listOfTypes);
+
+                // Initialize array adapter
+                ArrayAdapter<String> adapter=new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1,TYPE_LIST);
+
+                // set adapter
+                listView.setAdapter(adapter);
+                editText.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        adapter.getFilter().filter(s);
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {}
+                });
+
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                        dialog.dismiss();
+                    }
+                });
+            }
+        });
+    }
+
 
     private void setUpRefresh() {
         // Setup refresh listener which triggers new data loading

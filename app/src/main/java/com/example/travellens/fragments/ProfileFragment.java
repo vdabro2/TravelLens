@@ -46,11 +46,11 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class ProfileFragment extends Fragment {
-    private ImageView bEdit;
     private String mParam1;
     private String mParam2;
     private Button bLogout;
     private TextView tvBio;
+    private ImageView bEdit;
     private Button bSavedPosts;
     private TextView tvUserName;
     private TextView tvRealName;
@@ -172,6 +172,8 @@ public class ProfileFragment extends Fragment {
         if (profilepic != null) {
             Glide.with(getContext()).load(profilepic.getUrl()).circleCrop().into(ivProfilePicture);
         }
+
+
     }
 
     private void querySavedPosts() {
