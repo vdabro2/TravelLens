@@ -28,8 +28,8 @@ public class CameraActivity extends AppCompatActivity {
     private Button bFromGallery;
     private Bitmap bitmap;
     private Button bFromCamera;
-    private final static String photoFileName = "photo.jpg";
     public final static int REQUEST_CODE_GALLERY = 43;
+    private final static String photoFileName = "photo.jpg";
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +38,14 @@ public class CameraActivity extends AppCompatActivity {
         bFromCamera = findViewById(R.id.bFromCamera);
         bFromGallery = findViewById(R.id.bFromGallery);
         camera = new CameraHelper();
+
         bFromCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 launchCamera();
             }
         });
+        
         bFromGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

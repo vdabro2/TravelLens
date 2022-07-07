@@ -29,6 +29,7 @@ import com.example.travellens.LoginActivity;
 import com.example.travellens.Post;
 import com.example.travellens.ProfileAdapter;
 import com.example.travellens.R;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -58,9 +59,10 @@ public class ProfileFragment extends Fragment {
     protected List<Post> allPosts;
     protected ProfileAdapter adapter;
     private ImageView ivProfilePicture;
+    private static final int READY_TO_UPDATE = 12;
+    private ShimmerFrameLayout shimmerFrameLayout;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private static final int READY_TO_UPDATE = 12;
     public ProfileFragment() {
         userProfile = ParseUser.getCurrentUser();
     }
@@ -104,13 +106,7 @@ public class ProfileFragment extends Fragment {
         tvUserName = view.findViewById(R.id.tvUserName);
         ivProfilePicture = view.findViewById(R.id.ivProfilePic2);
 
-
-        allPosts = new ArrayList<>();
-        adapter = new ProfileAdapter(getContext(), allPosts);
-        rvPosts.setAdapter(adapter);
-        StaggeredGridLayoutManager sGrid = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
-        sGrid.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
-        rvPosts.setLayoutManager(sGrid);
+        setUpAdapter();
         attachProfileElements();
         allowEditProfile();
 
@@ -122,21 +118,39 @@ public class ProfileFragment extends Fragment {
                 startActivityForResult(intent, READY_TO_UPDATE);
             }
         });
-
+        // set up invisible autocomplete fragment
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 getActivity().getSupportFragmentManager().findFragmentById(R.id.afSearchAPI);
         autocompleteFragment.getView().setEnabled(false);
         autocompleteFragment.getView().setVisibility(View.INVISIBLE);
+        // start shimmer before loading new data in to recyclerview
+        shimmerFrameLayout = view.findViewById(R.id.shimmerLayout);
+        shimmerFrameLayout.setVisibility(View.VISIBLE);
+        shimmerFrameLayout.startShimmer();
+
         queryPosts();
 
         bSavedPosts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 adapter.clear();
+                // start shimmer before loading new data in to recyclerview
+                shimmerFrameLayout.startShimmer();
+                shimmerFrameLayout.setVisibility(View.VISIBLE);
                 querySavedPosts();
 
             }
         });
+    }
+
+    private void setUpAdapter() {
+        // set up recyclerview
+        allPosts = new ArrayList<>();
+        adapter = new ProfileAdapter(getContext(), allPosts);
+        rvPosts.setAdapter(adapter);
+        StaggeredGridLayoutManager sGrid = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+        sGrid.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
+        rvPosts.setLayoutManager(sGrid);
     }
 
     @Override
@@ -146,8 +160,6 @@ public class ProfileFragment extends Fragment {
         if (requestCode == READY_TO_UPDATE) {
             attachProfileElements();
         }
-
-
     }
 
     private void attachProfileElements() {
@@ -180,6 +192,9 @@ public class ProfileFragment extends Fragment {
                     }
                     allPosts.addAll(posts);
                     adapter.notifyDataSetChanged();
+                    // stop shimmering when we have the new data
+                    shimmerFrameLayout.stopShimmer();
+                    shimmerFrameLayout.setVisibility(View.GONE);
                 }
             }
         });
@@ -197,12 +212,12 @@ public class ProfileFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(getContext(), EditProfileActivity.class);
-                    Pair<View, String> p1 = Pair.create((View)ivProfilePicture, "pic");
-                    Pair<View, String> p2 = Pair.create(tvBio, "bio");
-                    Pair<View, String> p3 = Pair.create((View)tvUserName, "username");
-                    Pair<View, String> p4 = Pair.create((View)tvRealName, "name");
+                    Pair<View, String> pairProfilePic = Pair.create((View)ivProfilePicture, "pic");
+                    Pair<View, String> pairBiography = Pair.create(tvBio, "bio");
+                    Pair<View, String> pairUsername = Pair.create((View)tvUserName, "username");
+                    Pair<View, String> pairName = Pair.create((View)tvRealName, "name");
                     ActivityOptionsCompat options = ActivityOptionsCompat.
-                            makeSceneTransitionAnimation(getActivity(), p1, p2, p3, p4);
+                            makeSceneTransitionAnimation(getActivity(), pairProfilePic, pairBiography, pairUsername, pairName);
                     startActivity(i, options.toBundle());
                 }
             });
@@ -229,15 +244,12 @@ public class ProfileFragment extends Fragment {
                     Log.e("FEED", "Issue with getting posts", e);
                     return;
                 }
-
-                // for debugging purposes let's print every post description to logcat
-                for (Post post : posts) {
-                    Log.i("FEED", "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
-                }
-
                 // save received posts to list and notify adapter of new data
                 allPosts.addAll(posts);
                 adapter.notifyDataSetChanged();
+                // stop shimmering when we have the new data
+                shimmerFrameLayout.stopShimmer();
+                shimmerFrameLayout.setVisibility(View.GONE);
             }
         });
     }

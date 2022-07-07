@@ -1,6 +1,5 @@
 package com.example.travellens;
 
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,14 +9,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.CenterInside;
+import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.travellens.fragments.DetailFragment;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.parse.ParseFile;
 
@@ -71,7 +70,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView ivImage;
-        private ShimmerFrameLayout container;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -82,9 +80,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         public void bind(Post post) throws JSONException {
             ParseFile image = post.getParseFile();
             if (image != null) {
-                RequestOptions requestOptions = new RequestOptions();
-                requestOptions = requestOptions.transforms(new CenterCrop(), new RoundedCorners(16));
-                Glide.with(context).load(image.getUrl()).apply(requestOptions).override(300, new Random().nextInt(200)+400).into(ivImage);
+                Glide.with(context).load(image.getUrl())
+                        .override(300, new Random().nextInt(100)+400)
+                        .into(ivImage);
             }// width = 500 when 2 span (prob less), 300 with 3 span
             ivImage.setOnClickListener(new View.OnClickListener() {
                 @Override

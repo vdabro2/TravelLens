@@ -55,11 +55,11 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(LoginActivity.this, SignupActivity.class);
-                Pair<View, String> pair1 = Pair.create((View)etUsername, "user");
-                Pair<View, String> pair2 = Pair.create(etPass, "pass");
-                Pair<View, String> pair3 = Pair.create((View)ivBackLogin, "background");
+                Pair<View, String> pairUsername = Pair.create(etUsername, "user");
+                Pair<View, String> pairPassword = Pair.create(etPass, "pass");
+                Pair<View, String> pairBackground = Pair.create(ivBackLogin, "background");
                 ActivityOptionsCompat options = ActivityOptionsCompat.
-                        makeSceneTransitionAnimation(LoginActivity.this, pair1, pair2, pair3);
+                        makeSceneTransitionAnimation(LoginActivity.this, pairUsername, pairPassword, pairBackground);
                 startActivity(i, options.toBundle());
             }
         });
@@ -71,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
             public void done(ParseUser user, ParseException e) {
                 if (e!= null) {
                     Log.e("LOGIN", e.toString());
-                    Toast.makeText(LoginActivity.this, "Your login is incorrect!", Toast.LENGTH_SHORT);
+                    Toast.makeText(LoginActivity.this, getString(R.string.cant_login), Toast.LENGTH_SHORT);
                     return;
                 }
                 goMainActivity();

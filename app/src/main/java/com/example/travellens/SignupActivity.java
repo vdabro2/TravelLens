@@ -25,31 +25,31 @@ import com.parse.SignUpCallback;
 import java.io.File;
 
 public class SignupActivity extends AppCompatActivity {
+    private File photoFile;
     private EditText etBio1;
     private EditText etPass;
     private EditText etName;
+    private ImageView ivBack;
+    private ImageView ivIcon;
     private TextView tvSignup;
     private EditText etUsername;
-    private ImageView ivBack;
-
-    private ImageView ivIcon;
-    private File photoFile;
     private CameraHelper camera;
     public String photoFileName = "photo.jpg";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-        etName = findViewById(R.id.etName);
-        ivBack = findViewById(R.id.ivBack);
-        etBio1 = findViewById(R.id.etBiography);
-        etPass = findViewById(R.id.etPass);
-        tvSignup = findViewById(R.id.tvSignUp);
-        etUsername = findViewById(R.id.etUsername);
-        ivIcon = findViewById(R.id.ivIcon);
-
         photoFile = null;
         camera = new CameraHelper();
+        etPass = findViewById(R.id.etPass);
+        etName = findViewById(R.id.etName);
+        ivBack = findViewById(R.id.ivBack);
+        ivIcon = findViewById(R.id.ivIcon);
+        tvSignup = findViewById(R.id.tvSignUp);
+        etBio1 = findViewById(R.id.etBiography);
+        etUsername = findViewById(R.id.etUsername);
+
         ivIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,6 +57,7 @@ public class SignupActivity extends AppCompatActivity {
                 startActivityForResult(i, ComposeFragment.RESULT_CODE_FROM_CAMERA);
             }
         });
+
         tvSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,44 +65,52 @@ public class SignupActivity extends AppCompatActivity {
                         || etName.getText().toString().isEmpty() || etUsername.getText().toString().isEmpty()) {
                     Toast.makeText(SignupActivity.this, String.valueOf(R.string.couldnt_save), Toast.LENGTH_SHORT).show();
                 } else {
-                    String password = etPass.getText().toString();
-                    String bio = etBio1.getText().toString();
-                    String name = etName.getText().toString();
-                    String un = etUsername.getText().toString();
-
-                    ParseUser user = new ParseUser();
-                    user.setUsername(un);
-                    if (photoFile != null)
-                        user.put(Post.KEY_PROFILE_PICTURE, new ParseFile(photoFile));
-                    user.setPassword(password);
-                    user.put(Post.KEY_BIOGRAPHY, bio);
-                    user.put(Post.KEY_NAME, name);
-
-                    // call the database to add the user
-                    user.signUpInBackground(new SignUpCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            if (e != null) {
-                                Log.e("Signup Problem", e.toString());
-                            } else {
-                                ParseUser.logInInBackground(un, password, new LogInCallback() {
-                                    @Override
-                                    public void done(ParseUser user, ParseException e) {
-                                        if (e!= null) {
-                                            Log.e("LOGIN ISSUE after signup", e.toString());
-                                            Toast.makeText(SignupActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
-                                            return;
-                                        }
-                                        Intent i = new Intent(SignupActivity.this, FeedMainActivity.class);
-                                        startActivity(i);
-                                        finish();
-                                    }
-                                });
-                            }
-
-                        }
-                    });
+                    signUpUser();
                 }
+            }
+        });
+    }
+
+    private void signUpUser() {
+        String password = etPass.getText().toString();
+        String bio = etBio1.getText().toString();
+        String name = etName.getText().toString();
+        String username = etUsername.getText().toString();
+
+        ParseUser user = new ParseUser();
+        user.setUsername(username);
+        if (photoFile != null)
+            user.put(Post.KEY_PROFILE_PICTURE, new ParseFile(photoFile));
+        user.setPassword(password);
+        user.put(Post.KEY_BIOGRAPHY, bio);
+        user.put(Post.KEY_NAME, name);
+
+        // call the database to add the user
+        user.signUpInBackground(new SignUpCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Log.e("Signup Problem", e.toString());
+                } else {
+                    loginNewUser(username, password);
+                }
+
+            }
+        });
+    }
+
+    private void loginNewUser(String username, String password) {
+        ParseUser.logInInBackground(username, password, new LogInCallback() {
+            @Override
+            public void done(ParseUser user, ParseException e) {
+                if (e!= null) {
+                    Log.e("LOGIN ISSUE after signup", e.toString());
+                    Toast.makeText(SignupActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Intent i = new Intent(SignupActivity.this, FeedMainActivity.class);
+                startActivity(i);
+                finish();
             }
         });
     }
@@ -112,9 +121,13 @@ public class SignupActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 Uri selectedImage = data.getData();
                 photoFile = camera.uriToFile(SignupActivity.this, selectedImage, photoFileName, getApplicationContext());
+                // scales back because icon image is scaled
+                ivIcon.setScaleX((float) (1/1.5));
+                ivIcon.setScaleY((float) (1/1.5));
                 Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 Glide.with(this).load(takenImage).circleCrop()
                         .into(ivIcon);
+
             }
         }
     }

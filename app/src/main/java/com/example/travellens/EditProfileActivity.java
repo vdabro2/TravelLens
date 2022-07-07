@@ -41,7 +41,6 @@ public class EditProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
-
         // initiate
         photoFile = null;
         camera = new CameraHelper();
@@ -56,7 +55,6 @@ public class EditProfileActivity extends AppCompatActivity {
         etBiographyOnEdit = findViewById(R.id.etBiographyOnEdit);
 
         populateCurrentUserInfo();
-
         // on logout click
         tvLogout.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -70,6 +70,7 @@ public class ComposeFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     public static final int RESULT_CODE_FROM_CAMERA = 10;
+    // list of types that I want location recommendations for the user
     private List<String> typeList = new ArrayList<>(Arrays.asList("POINT_OF_INTEREST", "FOOD",
             "CAFE","TRANSIT_STATION", "TOURIST_ATTRACTION", "PARK", "MUSEUM"));
 
@@ -179,9 +180,6 @@ public class ComposeFragment extends Fragment {
                 if (task.isSuccessful()){
                     FindCurrentPlaceResponse response = task.getResult();
                     for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
-                        Log.i("populateChipsWithLocation", String.format("Place '%s' has likelihood: %f",
-                                placeLikelihood.getPlace().getName(),
-                                placeLikelihood.getLikelihood()));
                         boolean var = placeLikelihood.getPlace().getTypes().stream().anyMatch(element -> typeList.contains(element));
                         if (var == false) {
                             Chip chip = new Chip(context);
@@ -192,12 +190,9 @@ public class ComposeFragment extends Fragment {
                                 @Override
                                 public void onClick(View v) {
                                     placeInPost = placeLikelihood.getPlace();
-
                                     AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                                             getActivity().getSupportFragmentManager().findFragmentById(R.id.afSearchAPI);
                                     autocompleteFragment.setText(placeInPost.getName());
-
-                                    Log.i("populateChipsWithLocation", " Place Clicked" + placeInPost.getName());
                                 }
                             });
                         }
@@ -206,7 +201,7 @@ public class ComposeFragment extends Fragment {
                     Exception exception = task.getException();
                     if (exception instanceof ApiException) {
                         ApiException apiException = (ApiException) exception;
-                        Log.e("populateChipsWithLocation", "Place not found: " + apiException.toString());
+                        Log.e("populateChipsWithLocation", "Place not found: " + apiException);
                     }
                 }
             });

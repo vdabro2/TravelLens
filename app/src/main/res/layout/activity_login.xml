@@ -27,6 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:text="@string/new_sign_up"
+        android:fontFamily="@font/copse"
         android:textAllCaps="false"
         android:textColor="@color/silver"
         android:textSize="20sp"

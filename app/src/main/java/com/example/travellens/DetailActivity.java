@@ -293,7 +293,6 @@ public class DetailActivity extends AppCompatActivity {
                 }
                 likeCount = count;
                 tvLikes.setText(getResources().getQuantityString(R.plurals.likes, likeCount, likeCount));
-
             }
         });
     }
