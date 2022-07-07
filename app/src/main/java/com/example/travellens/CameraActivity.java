@@ -29,6 +29,7 @@ public class CameraActivity extends AppCompatActivity {
     private Bitmap bitmap;
     private Button bFromCamera;
     public final static int REQUEST_CODE_GALLERY = 43;
+    private final static String TAG = "CAMERA_ACTIVITY";
     private final static String PHOTO_FILE_NAME = "photo.jpg";
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
     @Override
@@ -71,25 +72,19 @@ public class CameraActivity extends AppCompatActivity {
                 File resizedFile = camera.getPhotoFileUri(PHOTO_FILE_NAME + "_resized", getApplicationContext());
                 try {
                     resizedFile.createNewFile();
-                    FileOutputStream fos = null;
-                    try {
-                        fos = new FileOutputStream(resizedFile);
-                        // Write the bytes of the bitmap to file
+                    try (FileOutputStream fos = new FileOutputStream(resizedFile)) {
                         fos.write(bytes.toByteArray());
-                        fos.close();
                     } catch (FileNotFoundException e) {
-                        Log.e("CAMERA ACTIVITY" , e.toString());
-                    } finally {
-                        fos.close();
+                        Log.e(TAG , e.toString());
                     }
                 } catch (IOException e) {
-                    Log.e("CAMERA ACTIVITY" , e.toString());
+                    Log.e(TAG , e.toString());
                 }
                 photoFile = resizedFile;
             } catch (FileNotFoundException e) {
-                Log.e("CAMERA ACTIVITY" , e.toString());
+                Log.e(TAG , e.toString());
             } catch (IOException e) {
-                Log.e("CAMERA ACTIVITY" , e.toString());
+                Log.e(TAG , e.toString());
             }
         }
         Intent intentBack = new Intent();
