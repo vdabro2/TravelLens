@@ -88,6 +88,7 @@ public class PostsFragment extends Fragment {
     private ImageView ivFilterIcon;
     protected PostsAdapter adapter;
     private Location mCurrentLocation;
+    private List<Post> originalAllPosts = new ArrayList<>();
     private LocationRequest locationRequest;
     private SwipeRefreshLayout swipeContainer;
     private ShimmerFrameLayout shimmerFrameLayout;
@@ -178,8 +179,16 @@ public class PostsFragment extends Fragment {
 
     private void reloadPostsUsingFilter() {
         dialog.dismiss();
-        if (typesToFilterBy.isEmpty()) return;
-        allPosts = Filter.getPostsByType(typesToFilterBy, allPosts);
+        if (typesToFilterBy.isEmpty()) {
+            allPosts = originalAllPosts;
+            adapter.clear();
+            adapter.addAll(allPosts);
+            adapter.notifyDataSetChanged();
+            return;
+        }
+        /* TODO : problem: if shimmer is loading, no posts are in adapter, so if you try to
+         filter before adapter gets filled, it breaks */
+        allPosts = Filter.getPostsByType(typesToFilterBy, originalAllPosts);
         adapter.clear();
         adapter.addAll(allPosts);
         adapter.notifyDataSetChanged();
@@ -239,8 +248,13 @@ public class PostsFragment extends Fragment {
         chip.setOnCloseIconClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // TODO if chip is removed when diolog is closed, refilter based on original queried posts
                 cgFilter.removeView(v);
                 typesToFilterBy.remove(chip.getText());
+                if (!dialog.isShowing()) {
+                    reloadPostsUsingFilter();
+                }
+
             }
         });
     }
@@ -378,6 +392,7 @@ public class PostsFragment extends Fragment {
                     }
                 }
                 // save received posts to list and notify adapter of new data
+                originalAllPosts.addAll(postsFiltered);
                 allPosts.addAll(postsFiltered);
                 adapter.notifyDataSetChanged();
                 // stop shimmering when we have the new data
