@@ -208,7 +208,7 @@ public class PostsFragment extends Fragment {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         setUpFilterChip(arrayAdapter, position);
 
-                        dialog.dismiss();
+                        //dialog.dismiss();
                     }
                 });
             }
