@@ -26,7 +26,7 @@
                     android:layout_height="match_parent">
 
                         <ImageView
-                            android:id="@+id/imageView3"
+                            android:id="@+id/icCloseDialog"
                             android:layout_width="25dp"
                             android:layout_height="24dp"
                             android:layout_marginTop="5dp"
@@ -46,7 +46,7 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.0"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+                            app:layout_constraintTop_toBottomOf="@+id/icCloseDialog" />
 
                         <ListView
                             android:id="@+id/listOfTypes"

@@ -151,7 +151,10 @@ public class PostsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         // recyclerview set up
         setUpAdapter(view);
-
+        // start shimmer before loading new data in to recyclerview
+        shimmerFrameLayout = view.findViewById(R.id.shimmerLayout);
+        ivFilterIcon = view.findViewById(R.id.ivFilterIcon);
+        cgFilter = view.findViewById(R.id.cgFilter);
         // asks for location
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -161,10 +164,6 @@ public class PostsFragment extends Fragment {
         createFragmentFromAPI();
 
         setUpRefresh();
-        // start shimmer before loading new data in to recyclerview
-        shimmerFrameLayout = view.findViewById(R.id.shimmerLayout);
-        ivFilterIcon = view.findViewById(R.id.ivFilterIcon);
-        cgFilter = view.findViewById(R.id.cgFilter);
         createFilter();
         shimmerFrameLayout.startShimmer();
         // choosing whether user wants current or typed location
@@ -175,8 +174,14 @@ public class PostsFragment extends Fragment {
             currLongitude = placeToQueryBy.getLatLng().longitude;
             queryPosts(currLatitude, currLongitude);
         }
+    }
 
-
+    private void reloadPostsUsingFilter() {
+        dialog.dismiss();
+        allPosts = Filter.getPostsByType(typesToFilterBy, allPosts);
+        adapter.clear();
+        adapter.addAll(allPosts);
+        adapter.notifyDataSetChanged();
     }
 
     private void createFilter() {
@@ -187,6 +192,7 @@ public class PostsFragment extends Fragment {
                 setUpDialog();
                 EditText editText = dialog.findViewById(R.id.etSearch);
                 ListView listView = dialog.findViewById(R.id.listOfTypes);
+                ImageView ivCloseDialog = dialog.findViewById(R.id.icCloseDialog);
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1,TYPE_LIST);
 
                 listView.setAdapter(arrayAdapter);
@@ -207,8 +213,13 @@ public class PostsFragment extends Fragment {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         setUpFilterChip(arrayAdapter, position);
+                    }
+                });
 
-                        //dialog.dismiss();
+                ivCloseDialog.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        reloadPostsUsingFilter();
                     }
                 });
             }
@@ -219,12 +230,16 @@ public class PostsFragment extends Fragment {
         Chip chip = new Chip(getContext());
         chip.setText(arrayAdapter.getItem(position));
 
+        // adding to my list so i can use it to filter later
+        typesToFilterBy.add(arrayAdapter.getItem(position));
+
         chip.setCloseIconVisible(true);
         cgFilter.addView(chip);
         chip.setOnCloseIconClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 cgFilter.removeView(v);
+                typesToFilterBy.remove(chip.getText());
             }
         });
     }
