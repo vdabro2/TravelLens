@@ -178,6 +178,7 @@ public class PostsFragment extends Fragment {
 
     private void reloadPostsUsingFilter() {
         dialog.dismiss();
+        if (typesToFilterBy.isEmpty()) return;
         allPosts = Filter.getPostsByType(typesToFilterBy, allPosts);
         adapter.clear();
         adapter.addAll(allPosts);
