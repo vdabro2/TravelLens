@@ -39,13 +39,13 @@
     <fragment
         android:id="@+id/afSearchAPI"
         android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-        android:layout_width="348dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="5dp"
+        android:layout_width="286dp"
+        android:layout_height="53dp"
         android:layout_marginTop="9dp"
         android:layout_marginBottom="9dp"
         app:layout_constraintBottom_toTopOf="@+id/flContainer"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/toolbar"
+        app:layout_constraintStart_toEndOf="@+id/ivMainIcon"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
@@ -73,5 +73,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/menu_bottom_navigation" />
+
+    <ImageView
+        android:id="@+id/ivMainIcon"
+        android:layout_width="121dp"
+        android:layout_height="73dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:scaleType="fitCenter"
+        android:scaleX="2"
+        android:scaleY="2"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/flContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/name_of_app" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,18 +6,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SignupActivity">
+
     <ImageView
         android:id="@+id/ivBack"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:scaleType="fitXY"
         android:transitionName="background"
-        android:src="@drawable/login"
+        android:src="@drawable/orange_background_login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
     </ImageView>
+
+    <ImageView
+        android:id="@+id/ivIcon"
+        android:layout_width="114dp"
+        android:layout_height="110dp"
+        android:layout_marginTop="35dp"
+        android:scaleType="centerCrop"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        android:src="@drawable/addprofile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilPassword"
@@ -97,19 +111,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tilPasswordSignUp" />
-
-    <ImageView
-        android:id="@+id/ivIcon"
-        android:layout_width="114dp"
-        android:layout_height="110dp"
-        android:layout_marginTop="35dp"
-        android:scaleType="centerCrop"
-        android:scaleX="1.5"
-        android:scaleY="1.5"
-        android:src="@drawable/addprofile"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilUsernameSignUp"

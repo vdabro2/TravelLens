@@ -31,6 +31,7 @@ import com.parse.ParseUser;
 
 public class FeedMainActivity extends AppCompatActivity {
     private ImageView ivIcon;
+    private ImageView ivMainIcon;
     private BottomNavigationView bottomNavigationView;
 
     @Override
@@ -38,7 +39,7 @@ public class FeedMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feed_main);
         ivIcon = findViewById(R.id.ivIconShowOnProf);
-
+        ivMainIcon = findViewById(R.id.ivMainIcon);
         setUpSearchFragment();
         sendToProfileIfNeeded();
 
@@ -51,14 +52,17 @@ public class FeedMainActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.action_post:
                         ivIcon.setVisibility(View.INVISIBLE);
+                        ivMainIcon.setVisibility(View.VISIBLE);
                         fragment = new ComposeFragment();
                         break;
                     case R.id.action_home:
                         ivIcon.setVisibility(View.INVISIBLE);
+                        ivMainIcon.setVisibility(View.VISIBLE);
                         fragment = new PostsFragment();
                         break;
                     case R.id.action_prof:
                         ivIcon.setVisibility(View.VISIBLE);
+                        ivMainIcon.setVisibility(View.INVISIBLE);
                         fragment = new ProfileFragment();
                         break;
                     default: break;

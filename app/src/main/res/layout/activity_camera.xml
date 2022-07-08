@@ -23,42 +23,34 @@
 
     <Button
         android:id="@+id/bFromGallery"
-        style="@style/Widget.Material3.Button.OutlinedButton.Icon"
-        android:layout_width="236dp"
-        android:layout_height="65dp"
+        android:layout_width="288dp"
+        android:layout_height="68dp"
         android:layout_alignParentTop="true"
         android:layout_centerInParent="true"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="220dp"
-        android:fontFamily="@font/copse"
-        android:text="upload from gallery"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
+        android:layout_marginTop="216dp"
+        style="@style/buttonAll"
+        android:text="@string/upload_from_gallery"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/ivCamera"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/ivCamera"
+        app:layout_constraintHorizontal_bias="0.091"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ivIconOnCamera"
-        app:strokeColor="@color/black" />
+         />
 
     <Button
         android:id="@+id/bFromCamera"
-        style="@style/Widget.Material3.Button.OutlinedButton.Icon"
-        android:layout_width="228dp"
-        android:layout_height="62dp"
+        android:layout_width="285dp"
+        android:layout_height="68dp"
         android:layout_alignParentTop="true"
         android:layout_centerInParent="true"
-        android:layout_marginTop="67dp"
-        android:fontFamily="@font/copse"
-        android:text="upload from camera"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        android:textSize="20sp"
+        android:layout_marginTop="76dp"
+        style="@style/buttonAll"
+        android:text="@string/upload_from_camera"
         app:layout_constraintEnd_toEndOf="@+id/bFromGallery"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/bFromGallery"
         app:layout_constraintTop_toTopOf="@+id/bFromGallery"
-        app:strokeColor="@color/black" />
+        />
 
     <ImageView
         android:id="@+id/ivIconOnCamera"
@@ -72,24 +64,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/name_of_app" />
-
-    <ImageView
-        android:id="@+id/ivCamera"
-        android:layout_width="88dp"
-        android:layout_height="63dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="220dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivIconOnCamera"
-        app:srcCompat="@drawable/camerafrom" />
-
-    <ImageView
-        android:id="@+id/ivGallery"
-        android:layout_width="86dp"
-        android:layout_height="70dp"
-        android:layout_marginStart="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivCamera"
-        app:srcCompat="@drawable/add_pp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

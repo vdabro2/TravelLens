@@ -51,36 +51,26 @@
 
     <Button
         android:id="@+id/bSubmit"
-        style="@style/Widget.Material3.Button.OutlinedButton.Icon"
         android:layout_width="190dp"
         android:layout_height="55dp"
         android:layout_marginBottom="10dp"
-        android:fontFamily="@font/copse"
         android:foregroundGravity="center_vertical"
         android:text="@string/share"
-        android:textAllCaps="false"
-        android:textColor="@color/silver"
-        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:strokeColor="@color/blue_grey" />
+        style="@style/buttonAll"/>
 
     <Button
         android:id="@+id/bCamera"
-        style="@style/Widget.Material3.Button.OutlinedButton.Icon"
         android:layout_width="190dp"
         android:layout_height="55dp"
         android:layout_marginBottom="10dp"
-        android:fontFamily="@font/copse"
         android:foregroundGravity="center_vertical"
         android:text="@string/attach_photo"
-        android:textAllCaps="false"
-        android:textColor="@color/silver"
-        android:textSize="20sp"
+        style="@style/buttonAll"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/bSubmit"
-        app:layout_constraintStart_toStartOf="parent"
-        app:strokeColor="@color/blue_grey" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/cgRecomended"

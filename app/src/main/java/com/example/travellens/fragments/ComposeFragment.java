@@ -69,9 +69,10 @@ public class ComposeFragment extends Fragment {
     public String photoFileName = "photo.jpg";
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = "COMPOSE_FRAGMENT";
     public static final int RESULT_CODE_FROM_CAMERA = 10;
     // list of types that I want location recommendations for the user
-    private List<String> typeList = new ArrayList<>(Arrays.asList("POINT_OF_INTEREST", "FOOD",
+    private final static List<String> TYPE_LIST = new ArrayList<>(Arrays.asList("POINT_OF_INTEREST", "FOOD",
             "CAFE","TRANSIT_STATION", "TOURIST_ATTRACTION", "PARK", "MUSEUM"));
 
     public ComposeFragment() {}
@@ -142,7 +143,7 @@ public class ComposeFragment extends Fragment {
         // allows this fragments menu to behave differently than in main
         setHasOptionsMenu(true);
         // method creates the autocomplete fragment
-        creatFragmentFromAPI();
+        createFragmentFromAPI();
 
     }
 
@@ -180,7 +181,7 @@ public class ComposeFragment extends Fragment {
                 if (task.isSuccessful()){
                     FindCurrentPlaceResponse response = task.getResult();
                     for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
-                        boolean var = placeLikelihood.getPlace().getTypes().stream().anyMatch(element -> typeList.contains(element));
+                        boolean var = placeLikelihood.getPlace().getTypes().stream().anyMatch(element -> TYPE_LIST.contains(element));
                         if (var == false) {
                             Chip chip = new Chip(context);
                             chip.setText(placeLikelihood.getPlace().getName());
@@ -201,7 +202,7 @@ public class ComposeFragment extends Fragment {
                     Exception exception = task.getException();
                     if (exception instanceof ApiException) {
                         ApiException apiException = (ApiException) exception;
-                        Log.e("populateChipsWithLocation", "Place not found: " + apiException);
+                        Log.e(TAG, "Place not found: " + apiException);
                     }
                 }
             });
@@ -216,18 +217,13 @@ public class ComposeFragment extends Fragment {
                 postsFragment).addToBackStack(null).commit();
     }
 
-    private void creatFragmentFromAPI() {
+    private void createFragmentFromAPI() {
         // link fragment to layout
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 getActivity().getSupportFragmentManager().findFragmentById(R.id.afSearchAPI);
         autocompleteFragment.getView().setEnabled(true);
         autocompleteFragment.getView().setVisibility(View.VISIBLE);
         autocompleteFragment.setHint(getString(R.string.set_post_location));
-        // set the search icon of the API fragment
-        ImageView searchIcon = (ImageView)((LinearLayout)autocompleteFragment.getView()).getChildAt(0);
-        Bitmap bitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.iconcomposepage)).getBitmap();
-        Drawable d = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 50, 50, true));
-        searchIcon.setImageDrawable(d);
 
         // asks for the info I need to store in database
         autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
@@ -239,7 +235,7 @@ public class ComposeFragment extends Fragment {
             }
             @Override
             public void onError(Status status) {
-                Log.e("COMPOSE FRAGMENT", "An error occurred: " + status);
+                Log.e(TAG, "An error occurred: " + status);
             }
         });
     }

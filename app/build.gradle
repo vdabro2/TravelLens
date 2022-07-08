@@ -77,5 +77,4 @@ dependencies {
     // zooming/ double tap animations
     implementation 'io.github.imablanco:zoomy:1.0.0'
 
-
 }

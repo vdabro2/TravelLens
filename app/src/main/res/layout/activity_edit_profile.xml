@@ -7,33 +7,18 @@
     android:background="@color/salmon"
     tools:context=".EditProfileActivity">
 
-    <TextView
-        android:id="@+id/tvSaveChanges"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:fontFamily="@font/copse"
+    <Button
+        android:id="@+id/bSaveChanges"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_marginTop="5dp"
         android:text="@string/save"
-        android:textColor="@color/silver"
-        android:textSize="20sp"
-        android:textStyle="bold"
+        style="@style/buttonAll"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tilPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/tilPassword">
 
-    <TextView
-        android:id="@+id/tvResetChanges"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:fontFamily="@font/copse"
-        android:text="@string/reset"
-        android:textColor="@color/silver"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    </Button>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilPassword"
@@ -165,9 +150,10 @@
         android:id="@+id/ivChangeProfilePic"
         android:layout_width="114dp"
         android:layout_height="110dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="32dp"
         android:transitionName="pic"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@tools:sample/avatars" />
@@ -176,11 +162,11 @@
         android:id="@+id/tvChangeProfilePic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:fontFamily="@font/copse"
         android:text="@string/change_prof_pic"
         android:textColor="@color/silver"
         android:textSize="16sp"
-        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/ivChangeProfilePic"
         app:layout_constraintStart_toStartOf="@+id/ivChangeProfilePic"
         app:layout_constraintTop_toBottomOf="@+id/ivChangeProfilePic" />
@@ -219,5 +205,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tilBiography" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <ImageView
+        android:id="@+id/ivCancel"
+        android:layout_width="23dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/ivChangeProfilePic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/cancel" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

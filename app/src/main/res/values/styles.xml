@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="buttonAll" parent="@style/Widget.Material3.Button.OutlinedButton.Icon">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/silver</item>
+        <item name="android:textSize">20sp</item>
+        <item name="strokeColor">@color/silver</item>
+        <item name="fontFamily">@font/copse</item>
+    </style>
+</resources>
