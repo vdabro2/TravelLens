@@ -75,16 +75,16 @@ public class CameraActivity extends AppCompatActivity {
                     try (FileOutputStream fos = new FileOutputStream(resizedFile)) {
                         fos.write(bytes.toByteArray());
                     } catch (FileNotFoundException e) {
-                        Log.e(TAG , e.toString());
+                        Log.e(TAG, "An exception occurred: ", e);
                     }
                 } catch (IOException e) {
-                    Log.e(TAG , e.toString());
+                    Log.e(TAG, "An exception occurred: ", e);
                 }
                 photoFile = resizedFile;
             } catch (FileNotFoundException e) {
-                Log.e(TAG , e.toString());
+                Log.e(TAG, "An exception occurred: ", e);
             } catch (IOException e) {
-                Log.e(TAG ,e.getStackTrace().toString());
+                Log.e(TAG, "An exception occurred: ", e);
             }
         }
         Intent intentBack = new Intent();

@@ -21,6 +21,7 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 
 public class LoginActivity extends AppCompatActivity {
+    private static final String TAG = "LOGIN_ACTIVITY";
     private Button bLogin;
     private TextView signup;
     private EditText etPass;
@@ -70,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void done(ParseUser user, ParseException e) {
                 if (e!= null) {
-                    Log.e("LOGIN", e.toString());
+                    Log.e(TAG, "An exception occurred: ", e);
                     Toast.makeText(LoginActivity.this, getString(R.string.cant_login), Toast.LENGTH_SHORT);
                     return;
                 }

@@ -203,7 +203,7 @@ public class ComposeFragment extends Fragment {
                     Exception exception = task.getException();
                     if (exception instanceof ApiException) {
                         ApiException apiException = (ApiException) exception;
-                        Log.e(TAG, "Place not found: " + apiException.getStackTrace());
+                        Log.e(TAG, "Place not found: ", apiException);
                     }
                 }
             });

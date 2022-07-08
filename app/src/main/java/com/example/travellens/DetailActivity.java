@@ -56,6 +56,7 @@ public class DetailActivity extends AppCompatActivity {
     private TextView tvDescription;
     private ImageView ivProfilePicture;
     private LottieAnimationView hearts;
+    public final static String TAG = "DETAIL_ACTIVITY";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,13 +124,11 @@ public class DetailActivity extends AppCompatActivity {
         try {
             tvUserInDes.setText(thePost.getUser().fetchIfNeeded().getUsername());
         } catch (ParseException e) {
-            Log.e("Detail Fragment: ", e.toString());
+            Log.e(TAG, "An exception occurred: ", e);
         }
         // set name of place aka location name
         tvLocation.setText(thePost.getString(Post.KEY_PLACE_NAME));
         // set rating according to database
-        //rbRating.setRating((float) thePost.getDouble(Post.KEY_RATING));
-
         ObjectAnimator anim = ObjectAnimator.ofFloat(rbRating, "rating", 0f, (float) thePost.getDouble(Post.KEY_RATING));
         anim.setDuration(1000);
         anim.start();
@@ -231,7 +230,7 @@ public class DetailActivity extends AppCompatActivity {
 
                     }
                 } else if (e != null){
-                    Log.e("Detail Fragment: ", e.toString());
+                    Log.e(TAG, "An exception occurred: ", e);
                 } else {
                     // make a new like object
                     hearts.setProgress(0);
@@ -264,7 +263,7 @@ public class DetailActivity extends AppCompatActivity {
             public void done(List<Likes> likesList, ParseException e) {
                 // check for errors
                 if (e != null) {
-                    Log.e("FEED", "Issue with getting likes", e);
+                    Log.e(TAG, "An exception occurred: ", e);
                     return;
                 }
                 if (likesList.isEmpty()) {
@@ -288,7 +287,7 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void done(int count, ParseException e) {
                 if (e != null) {
-                    Log.e("FEED", "Issue with getting likes", e);
+                    Log.e(TAG, "An exception occurred: ", e);
                     return;
                 }
                 likeCount = count;

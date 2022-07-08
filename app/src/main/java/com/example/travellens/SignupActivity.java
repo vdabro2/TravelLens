@@ -25,6 +25,7 @@ import com.parse.SignUpCallback;
 import java.io.File;
 
 public class SignupActivity extends AppCompatActivity {
+    private static final String TAG = "SIGNUP_ACTIVITY";
     private File photoFile;
     private EditText etBio1;
     private EditText etPass;
@@ -90,7 +91,7 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void done(ParseException e) {
                 if (e != null) {
-                    Log.e("Signup Problem", e.toString());
+                    Log.e(TAG, "An exception occurred: ", e);
                 } else {
                     loginNewUser(username, password);
                 }
@@ -104,7 +105,7 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void done(ParseUser user, ParseException e) {
                 if (e!= null) {
-                    Log.e("LOGIN ISSUE after signup", e.toString());
+                    Log.e(TAG, "An exception occurred: ", e);
                     Toast.makeText(SignupActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
                     return;
                 }

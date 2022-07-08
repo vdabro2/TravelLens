@@ -30,6 +30,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 public class FeedMainActivity extends AppCompatActivity {
+    private static final String TAG = "FEED_MAIN";
     private ImageView ivIcon;
     private ImageView ivMainIcon;
     private BottomNavigationView bottomNavigationView;
@@ -97,8 +98,6 @@ public class FeedMainActivity extends AppCompatActivity {
     private void sendToProfileIfNeeded() {
         Intent intent = getIntent();
         if (intent.getStringExtra("userId") != null) {
-            Log.e(" userId ", intent.getStringExtra("userId"));
-
             ParseQuery<ParseUser> query = ParseUser.getQuery();
             query.setLimit(1);
             // Retrieve the object by id
@@ -106,13 +105,12 @@ public class FeedMainActivity extends AppCompatActivity {
                 @Override
                 public void done(ParseUser object, ParseException e) {
                     if (e == null) {
-                        Log.e(" userId 1", object.getObjectId());
                         ivIcon.setVisibility(View.VISIBLE);
                         getSupportFragmentManager().beginTransaction().replace(R.id.flContainer,
                                 new ProfileFragment(object)).commit();
 
                     } else {
-                        Log.e(" userId error", e.toString());
+                        Log.e(TAG, "An exception occurred: ", e);
                     }
                 }
             });
