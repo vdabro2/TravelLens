@@ -36,6 +36,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.airbnb.lottie.L;
+import com.example.travellens.Filter;
 import com.example.travellens.Post;
 import com.example.travellens.PostsAdapter;
 import com.example.travellens.R;
@@ -57,6 +59,8 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -75,6 +79,7 @@ public class PostsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private Dialog dialog;
+    private ChipGroup cgFilter;
     private List<Post> allPosts;
     private double currLatitude;
     private RecyclerView rvPosts;
@@ -91,6 +96,7 @@ public class PostsFragment extends Fragment {
     private static final String TAG = "POSTS_FRAGMENT";
     private final static String KEY_LOCATION = "location";
     private AutocompleteSupportFragment autocompleteFragment;
+    private List<String> typesToFilterBy = new ArrayList<>();
     private final static List<String> TYPE_LIST = new ArrayList<>(Arrays.asList("AIRPORT",
             "AMUSEMENT_PARK","AQUARIUM", "ART_GALLERY", "BAKERY","BOOK_STORE","CAFE","CAMPGROUND",
             "CAR_RENTAL" , "CITY_HALL", "CLOTHING_STORE", "CONVENIENCE_STORE", "FLORIST", "FOOD", "LIBRARY",
@@ -158,6 +164,7 @@ public class PostsFragment extends Fragment {
         // start shimmer before loading new data in to recyclerview
         shimmerFrameLayout = view.findViewById(R.id.shimmerLayout);
         ivFilterIcon = view.findViewById(R.id.ivFilterIcon);
+        cgFilter = view.findViewById(R.id.cgFilter);
         createFilter();
         shimmerFrameLayout.startShimmer();
         // choosing whether user wants current or typed location
@@ -177,28 +184,19 @@ public class PostsFragment extends Fragment {
         ivFilterIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog = new Dialog(getContext());
-                dialog.setContentView(R.layout.dialog_searchable_spinner);
-                dialog.getWindow().setLayout(650,800);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.show();
-
-                // Initialize and assign variable
+                setUpDialog();
                 EditText editText = dialog.findViewById(R.id.etSearch);
                 ListView listView = dialog.findViewById(R.id.listOfTypes);
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1,TYPE_LIST);
 
-                // Initialize array adapter
-                ArrayAdapter<String> adapter=new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1,TYPE_LIST);
-
-                // set adapter
-                listView.setAdapter(adapter);
+                listView.setAdapter(arrayAdapter);
                 editText.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        adapter.getFilter().filter(s);
+                        arrayAdapter.getFilter().filter(s);
                     }
 
                     @Override
@@ -208,12 +206,35 @@ public class PostsFragment extends Fragment {
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        setUpFilterChip(arrayAdapter, position);
 
                         dialog.dismiss();
                     }
                 });
             }
         });
+    }
+
+    private void setUpFilterChip(ArrayAdapter<String> arrayAdapter, int position) {
+        Chip chip = new Chip(getContext());
+        chip.setText(arrayAdapter.getItem(position));
+
+        chip.setCloseIconVisible(true);
+        cgFilter.addView(chip);
+        chip.setOnCloseIconClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cgFilter.removeView(v);
+            }
+        });
+    }
+
+    private void setUpDialog() {
+        dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.dialog_searchable_spinner);
+        dialog.getWindow().setLayout(650,800);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
     }
 
 

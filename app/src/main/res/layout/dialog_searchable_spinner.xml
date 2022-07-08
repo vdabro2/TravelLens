@@ -10,27 +10,23 @@
     android:background="@android:color/white"
     >
 
-    <!-- Text view to show the text Select course-->
 
-    <!-- Edit text to allow user to type name
-           of item he/she wants to search-->
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/etSearch"
-        android:hint="Search..."
-        android:padding="12dp"
-        android:singleLine="true"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@android:drawable/editbox_background"
-        />
+        <EditText
+            android:id="@+id/etSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@android:drawable/editbox_background"
+            android:hint="Search..."
+            android:padding="12dp"
+            android:singleLine="true" />
 
-    <!-- List view to insert list of items-->
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/listOfTypes"
-        />
+        <!-- List view to insert list of items-->
+        <ListView
+            android:id="@+id/listOfTypes"
+            android:layout_width="match_parent"
+            android:layout_height="694dp" />
+
 
 </LinearLayout>

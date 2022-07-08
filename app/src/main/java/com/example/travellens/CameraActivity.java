@@ -84,7 +84,7 @@ public class CameraActivity extends AppCompatActivity {
             } catch (FileNotFoundException e) {
                 Log.e(TAG , e.toString());
             } catch (IOException e) {
-                Log.e(TAG , e.toString());
+                Log.e(TAG ,e.getStackTrace().toString());
             }
         }
         Intent intentBack = new Intent();
