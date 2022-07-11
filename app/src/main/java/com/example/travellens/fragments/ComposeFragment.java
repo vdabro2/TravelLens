@@ -25,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.airbnb.lottie.L;
 import com.example.travellens.CameraHelper;
 import com.example.travellens.CameraActivity;
 import com.example.travellens.Post;
@@ -202,7 +203,7 @@ public class ComposeFragment extends Fragment {
                     Exception exception = task.getException();
                     if (exception instanceof ApiException) {
                         ApiException apiException = (ApiException) exception;
-                        Log.e(TAG, "Place not found: " + apiException);
+                        Log.e(TAG, "Place not found: ", apiException);
                     }
                 }
             });
@@ -224,9 +225,10 @@ public class ComposeFragment extends Fragment {
         autocompleteFragment.getView().setEnabled(true);
         autocompleteFragment.getView().setVisibility(View.VISIBLE);
         autocompleteFragment.setHint(getString(R.string.set_post_location));
+        autocompleteFragment.setText("");
 
         // asks for the info I need to store in database
-        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.TYPES));
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
@@ -250,6 +252,11 @@ public class ComposeFragment extends Fragment {
         post.put(Post.KEY_PLACE_NAME, placeInPost.getName());
         post.put(Post.KEY_LONGITUDE, placeInPost.getLatLng().longitude);
         post.put(Post.KEY_PLACE_ID, placeInPost.getId());
+        List<String> types = new ArrayList<>();
+        for (Place.Type place : placeInPost.getTypes()) {
+            types.add(place.name());
+        }
+        post.put(Post.KEY_TYPES, types);
         post.setUser(user);
         progressBar.setVisibility(View.VISIBLE);
         post.saveInBackground(new SaveCallback() {

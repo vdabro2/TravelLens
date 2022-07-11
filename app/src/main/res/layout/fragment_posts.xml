@@ -8,15 +8,15 @@
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmerLayout"
-        android:layout_width="406dp"
-        android:layout_height="669dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/swipeContainer">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="672dp">
+            android:layout_height="wrap_content">
 
             <include
                 layout="@layout/shimmer_layout"
@@ -28,8 +28,8 @@
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeContainer"
-        android:layout_width="412dp"
-        android:layout_height="687dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         app:layout_constraintEnd_toEndOf="parent"
@@ -52,5 +52,17 @@
         android:src="@drawable/ic_baseline_keyboard_arrow_down_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/cgFilter"
+        android:layout_width="340dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/shimmerLayout"
+        app:layout_constraintEnd_toStartOf="@+id/ivFilterIcon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </com.google.android.material.chip.ChipGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

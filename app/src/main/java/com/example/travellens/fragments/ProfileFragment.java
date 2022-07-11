@@ -63,6 +63,7 @@ public class ProfileFragment extends Fragment {
     private ShimmerFrameLayout shimmerFrameLayout;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = "PROFILE FRAGMENT";
     public ProfileFragment() {
         userProfile = ParseUser.getCurrentUser();
     }
@@ -243,7 +244,7 @@ public class ProfileFragment extends Fragment {
             public void done(List<Post> posts, ParseException e) {
                 // check for errors
                 if (e != null) {
-                    Log.e("FEED", "Issue with getting posts", e);
+                    Log.e(TAG, "Issue with getting posts", e);
                     return;
                 }
                 // save received posts to list and notify adapter of new data

@@ -36,6 +36,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.airbnb.lottie.L;
+import com.example.travellens.Filter;
 import com.example.travellens.Post;
 import com.example.travellens.PostsAdapter;
 import com.example.travellens.R;
@@ -57,6 +59,8 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -75,6 +79,7 @@ public class PostsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private Dialog dialog;
+    private ChipGroup cgFilter;
     private List<Post> allPosts;
     private double currLatitude;
     private RecyclerView rvPosts;
@@ -83,6 +88,7 @@ public class PostsFragment extends Fragment {
     private ImageView ivFilterIcon;
     protected PostsAdapter adapter;
     private Location mCurrentLocation;
+    private List<Post> originalAllPosts = new ArrayList<>();
     private LocationRequest locationRequest;
     private SwipeRefreshLayout swipeContainer;
     private ShimmerFrameLayout shimmerFrameLayout;
@@ -91,6 +97,7 @@ public class PostsFragment extends Fragment {
     private static final String TAG = "POSTS_FRAGMENT";
     private final static String KEY_LOCATION = "location";
     private AutocompleteSupportFragment autocompleteFragment;
+    private List<String> typesToFilterBy = new ArrayList<>();
     private final static List<String> TYPE_LIST = new ArrayList<>(Arrays.asList("AIRPORT",
             "AMUSEMENT_PARK","AQUARIUM", "ART_GALLERY", "BAKERY","BOOK_STORE","CAFE","CAMPGROUND",
             "CAR_RENTAL" , "CITY_HALL", "CLOTHING_STORE", "CONVENIENCE_STORE", "FLORIST", "FOOD", "LIBRARY",
@@ -145,7 +152,10 @@ public class PostsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         // recyclerview set up
         setUpAdapter(view);
-
+        // start shimmer before loading new data in to recyclerview
+        shimmerFrameLayout = view.findViewById(R.id.shimmerLayout);
+        ivFilterIcon = view.findViewById(R.id.ivFilterIcon);
+        cgFilter = view.findViewById(R.id.cgFilter);
         // asks for location
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -155,9 +165,6 @@ public class PostsFragment extends Fragment {
         createFragmentFromAPI();
 
         setUpRefresh();
-        // start shimmer before loading new data in to recyclerview
-        shimmerFrameLayout = view.findViewById(R.id.shimmerLayout);
-        ivFilterIcon = view.findViewById(R.id.ivFilterIcon);
         createFilter();
         shimmerFrameLayout.startShimmer();
         // choosing whether user wants current or typed location
@@ -168,8 +175,23 @@ public class PostsFragment extends Fragment {
             currLongitude = placeToQueryBy.getLatLng().longitude;
             queryPosts(currLatitude, currLongitude);
         }
+    }
 
-
+    private void reloadPostsUsingFilter() {
+        dialog.dismiss();
+        if (typesToFilterBy.isEmpty()) {
+            allPosts = originalAllPosts;
+            adapter.clear();
+            adapter.addAll(allPosts);
+            adapter.notifyDataSetChanged();
+            return;
+        }
+        /* TODO : problem: if shimmer is loading, no posts are in adapter, so if you try to
+         filter before adapter gets filled, it breaks */
+        allPosts = Filter.getPostsByType(typesToFilterBy, originalAllPosts);
+        adapter.clear();
+        adapter.addAll(allPosts);
+        adapter.notifyDataSetChanged();
     }
 
     private void createFilter() {
@@ -177,28 +199,20 @@ public class PostsFragment extends Fragment {
         ivFilterIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog = new Dialog(getContext());
-                dialog.setContentView(R.layout.dialog_searchable_spinner);
-                dialog.getWindow().setLayout(650,800);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.show();
-
-                // Initialize and assign variable
+                setUpDialog();
                 EditText editText = dialog.findViewById(R.id.etSearch);
                 ListView listView = dialog.findViewById(R.id.listOfTypes);
+                ImageView ivCloseDialog = dialog.findViewById(R.id.icCloseDialog);
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1,TYPE_LIST);
 
-                // Initialize array adapter
-                ArrayAdapter<String> adapter=new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1,TYPE_LIST);
-
-                // set adapter
-                listView.setAdapter(adapter);
+                listView.setAdapter(arrayAdapter);
                 editText.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        adapter.getFilter().filter(s);
+                        arrayAdapter.getFilter().filter(s);
                     }
 
                     @Override
@@ -208,12 +222,49 @@ public class PostsFragment extends Fragment {
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        setUpFilterChip(arrayAdapter, position);
+                    }
+                });
 
-                        dialog.dismiss();
+                ivCloseDialog.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        reloadPostsUsingFilter();
                     }
                 });
             }
         });
+    }
+
+    private void setUpFilterChip(ArrayAdapter<String> arrayAdapter, int position) {
+        Chip chip = new Chip(getContext());
+        chip.setText(arrayAdapter.getItem(position));
+
+        // adding to my list so i can use it to filter later
+        typesToFilterBy.add(arrayAdapter.getItem(position));
+
+        chip.setCloseIconVisible(true);
+        cgFilter.addView(chip);
+        chip.setOnCloseIconClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO if chip is removed when diolog is closed, refilter based on original queried posts
+                cgFilter.removeView(v);
+                typesToFilterBy.remove(chip.getText());
+                if (!dialog.isShowing()) {
+                    reloadPostsUsingFilter();
+                }
+
+            }
+        });
+    }
+
+    private void setUpDialog() {
+        dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.dialog_searchable_spinner);
+        dialog.getWindow().setLayout(650,800);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
     }
 
 
@@ -341,6 +392,7 @@ public class PostsFragment extends Fragment {
                     }
                 }
                 // save received posts to list and notify adapter of new data
+                originalAllPosts.addAll(postsFiltered);
                 allPosts.addAll(postsFiltered);
                 adapter.notifyDataSetChanged();
                 // stop shimmering when we have the new data

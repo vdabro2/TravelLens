@@ -27,6 +27,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class CameraHelper {
+    public static final String TAG = "CAMERA_HELPER";
 
     public CameraHelper() {
 
@@ -63,24 +64,19 @@ public class CameraHelper {
             File resizedFile = getPhotoFileUri(photoFileName + "_resized", context);
             try {
                 resizedFile.createNewFile();
-                FileOutputStream fos = null;
-                try {
-                    /*todo : You should use try-with-resources for resources like this so that they will be closed/cleaned up automatically.
-                            With the current logic, the fos won't be closed if there is an exception since there is no finally block that closes it.*/
-                    fos = new FileOutputStream(resizedFile);
+                try (FileOutputStream fos = new FileOutputStream(resizedFile);){
                     fos.write(bytes.toByteArray());
-                    fos.close();
                 } catch (FileNotFoundException e) {
-                    Log.e("Camera Helper", e.toString());//e.printStackTrace();
+                    Log.e(TAG, "An exception occurred: ", e);
                 }
             } catch (IOException e) {
-                Log.e("Camera Helper", e.toString());//e.printStackTrace();
+                Log.e(TAG, "An exception occurred: ", e);
             }
             return resizedFile;
         } catch (FileNotFoundException e) {
-            Log.e("Camera Helper", e.toString());//e.printStackTrace();
+            Log.e(TAG, "An exception occurred: ", e);
         } catch (IOException e) {
-            Log.e("Camera Helper", e.toString());//e.printStackTrace();
+            Log.e(TAG, "An exception occurred: ", e);
         }
         return null;
     }
