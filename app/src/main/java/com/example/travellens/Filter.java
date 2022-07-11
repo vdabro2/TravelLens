@@ -14,8 +14,12 @@ public class Filter {
         return filteredPosts;
     }
 
-    public static List<Post> getPostsByWords(List<String> types, List<Post> currentPosts) {
+    public static List<Post> getPostsByWords(List<String> words, List<Post> currentPosts) {
         List<Post> filteredPosts = new ArrayList<>();
+        for (Post post: currentPosts) {
+            // if the description contains any 1 word of the list, add it
+            // if the place name contains any 1 word of the list, add it
+        }
         return filteredPosts;
     }
 }

@@ -39,16 +39,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tilCaption" />
 
-    <ImageView
-        android:id="@+id/ivBackgroundOnCamera"
-        android:layout_width="394dp"
-        android:layout_height="261dp"
-        android:scaleType="centerCrop"
-        android:scaleY="2"
-        android:src="@drawable/paper_image"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivPic" />
-
     <Button
         android:id="@+id/bSubmit"
         android:layout_width="190dp"

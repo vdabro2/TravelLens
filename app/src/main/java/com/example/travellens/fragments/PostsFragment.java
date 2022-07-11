@@ -96,6 +96,7 @@ public class PostsFragment extends Fragment {
     private List<Post> originalAllPosts = new ArrayList<>();
     private AutocompleteSupportFragment autocompleteFragment;
     private List<String> typesToFilterBy = new ArrayList<>();
+    private List<String> wordsToFilterBy = new ArrayList<>();
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -191,7 +192,9 @@ public class PostsFragment extends Fragment {
         }
         /* TODO : problem: if shimmer is loading, no posts are in adapter, so if you try to
          filter before adapter gets filled, it breaks */
-        allPosts = Filter.getPostsByType(typesToFilterBy, originalAllPosts);
+        List<Post> filteredByTypes = Filter.getPostsByType(typesToFilterBy, originalAllPosts);
+        List<Post> filteredByWords = Filter.getPostsByWords(wordsToFilterBy, originalAllPosts);
+        // combine both arrays with out repetition posts in order to get allPosts
         adapter.clear();
         adapter.addAll(allPosts);
         adapter.notifyDataSetChanged();
@@ -206,6 +209,7 @@ public class PostsFragment extends Fragment {
                 EditText editText = dialog.findViewById(R.id.etSearch);
                 ListView listView = dialog.findViewById(R.id.listOfTypes);
                 ImageView ivCloseDialog = dialog.findViewById(R.id.icCloseDialog);
+                ImageView ivAddNewFilterWord = dialog.findViewById(R.id.ivAddNewFilterWord);
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1,TYPE_LIST);
 
                 listView.setAdapter(arrayAdapter);
@@ -216,10 +220,27 @@ public class PostsFragment extends Fragment {
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         arrayAdapter.getFilter().filter(s);
+                        if (arrayAdapter.getCount() == 0) {
+                            ivAddNewFilterWord.setVisibility(View.VISIBLE);
+                            ivAddNewFilterWord.setClickable(true);
+                            ivAddNewFilterWord.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    setUpCustomChip(editText.getText().toString());
+                                    editText.setText("");
+                                }
+                            });
+                        } else {
+                            ivAddNewFilterWord.setVisibility(View.INVISIBLE);
+                            ivAddNewFilterWord.setClickable(false);
+
+                        }
                     }
 
                     @Override
-                    public void afterTextChanged(Editable s) {}
+                    public void afterTextChanged(Editable s) {
+
+                    }
                 });
 
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -228,7 +249,6 @@ public class PostsFragment extends Fragment {
                         setUpFilterChip(arrayAdapter, position);
                     }
                 });
-
                 ivCloseDialog.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -237,12 +257,27 @@ public class PostsFragment extends Fragment {
                 });
             }
         });
-        ivFilterIcon.setOnHoverListener(new View.OnHoverListener() {
-            @Override
-            public boolean onHover(View v, MotionEvent event) {
-                ivFilterIcon.setVisibility(View.INVISIBLE)
+    }
 
-                ;return true;
+    private void setUpCustomChip(String text) {
+        if (text.trim().isEmpty()) return;
+        Chip chip = new Chip(getContext());
+        chip.setText(text);
+        /* TODO change UI on chips dynamically */
+        // adding to my list so i can use it to filter later
+        wordsToFilterBy.add(text);
+
+        chip.setCloseIconVisible(true);
+        cgFilter.addView(chip);
+        chip.setOnCloseIconClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cgFilter.removeView(v);
+                wordsToFilterBy.remove(chip.getText());
+                if (!dialog.isShowing()) {
+                    reloadPostsUsingFilter();
+                }
+
             }
         });
     }
