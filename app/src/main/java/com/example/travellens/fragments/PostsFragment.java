@@ -18,6 +18,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -60,6 +61,7 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.chip.ChipGroup;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -235,12 +237,20 @@ public class PostsFragment extends Fragment {
                 });
             }
         });
+        ivFilterIcon.setOnHoverListener(new View.OnHoverListener() {
+            @Override
+            public boolean onHover(View v, MotionEvent event) {
+                ivFilterIcon.setVisibility(View.INVISIBLE)
+
+                ;return true;
+            }
+        });
     }
 
     private void setUpFilterChip(ArrayAdapter<String> arrayAdapter, int position) {
         Chip chip = new Chip(getContext());
         chip.setText(arrayAdapter.getItem(position));
-
+        /* TODO change UI on chips dynamically */
         // adding to my list so i can use it to filter later
         typesToFilterBy.add(arrayAdapter.getItem(position));
 
@@ -249,7 +259,6 @@ public class PostsFragment extends Fragment {
         chip.setOnCloseIconClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO if chip is removed when diolog is closed, refilter based on original queried posts
                 cgFilter.removeView(v);
                 typesToFilterBy.remove(chip.getText());
                 if (!dialog.isShowing()) {

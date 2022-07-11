@@ -23,7 +23,7 @@
         <entry key="app/src/main/res/layout/fragment_compose.xml" value="0.3333333333333333" />
         <entry key="app/src/main/res/layout/fragment_detail.xml" value="0.39294130629387447" />
         <entry key="app/src/main/res/layout/fragment_edit_profile.xml" value="0.4302536231884058" />
-        <entry key="app/src/main/res/layout/fragment_posts.xml" value="0.5026223776223776" />
+        <entry key="app/src/main/res/layout/fragment_posts.xml" value="0.5178890876565295" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.34544219970703127" />
         <entry key="app/src/main/res/layout/item_post.xml" value="0.4302536231884058" />
         <entry key="app/src/main/res/layout/item_profile_post.xml" value="0.4302536231884058" />
@@ -33,6 +33,7 @@
         <entry key="app/src/main/res/layout/shimmer_layout_prof.xml" value="0.4015625" />
         <entry key="app/src/main/res/layout/simple_spinner_dropdown_item.xml" value="0.37228260869565216" />
         <entry key="app/src/main/res/layout/simple_spinner_item.xml" value="0.37228260869565216" />
+        <entry key="app/src/main/res/layout/single_chip_layout.xml" value="0.9346115996872169" />
         <entry key="app/src/main/res/menu/menu_bottom_navigation.xml" value="0.8026041666666667" />
         <entry key="app/src/main/res/menu/menu_tool.xml" value="0.5947916666666667" />
       </map>
