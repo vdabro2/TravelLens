@@ -30,9 +30,30 @@ public class Filter {
         List<Post> postsByCustom = getPostsByWords(customWords, currentPosts);
         // gets all the elements that match all in the types words
         List<Post> postsByType = getPostsByType(typesWords, currentPosts);
-        // find the ones that overlap
+        // find the ones that overlap so they match all types and words
         List<Post> similarPosts = getSimilarPosts(postsByCustom, postsByType);
-        return similarPosts;
+
+        // now go through each string in types since they're in order, if the post contains the first type,
+        // add to list. If its already in similar posts, do not add it again. This way we maintain order of types and posts
+        List<Post> inOrderFilteredPosts = getLeftoverPostsThatMatch(similarPosts, types, currentPosts);
+        return inOrderFilteredPosts;
+    }
+
+    private static List<Post> getLeftoverPostsThatMatch(List<Post> similarPosts, List<String> types, List<Post> allPosts) {
+        List<Post> filteredPosts = new ArrayList<>(similarPosts);
+        for (Post post : allPosts) {
+            for (String typeOrWord : types) {
+                if (TYPE_LIST.contains(typeOrWord) && post.getList(Post.KEY_TYPES).contains(typeOrWord) && !filteredPosts.contains(post)) {
+                    // treat it as a type
+                    filteredPosts.add(post);
+                }
+                if ((post.getDescription().contains(typeOrWord) || post.getString(Post.KEY_PLACE_NAME).contains(typeOrWord)) && !filteredPosts.contains(post)) {
+                    // treat it as a custom word
+                    filteredPosts.add(post);
+                }
+            }
+        }
+        return filteredPosts;
     }
 
     private static List<Post> getSimilarPosts(List<Post> postsByCustom, List<Post> postsByType) {
