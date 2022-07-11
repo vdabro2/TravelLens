@@ -95,18 +95,14 @@ public class PostsFragment extends Fragment {
     private ShimmerFrameLayout shimmerFrameLayout;
     private List<Post> originalAllPosts = new ArrayList<>();
     private AutocompleteSupportFragment autocompleteFragment;
-    private List<String> typesToFilterBy = new ArrayList<>();
     private List<String> wordsToFilterBy = new ArrayList<>();
+   // private List<String> wordsToFilterBy = new ArrayList<>();
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String TAG = "POSTS_FRAGMENT";
     private final static String KEY_LOCATION = "location";
-    private final static List<String> TYPE_LIST = new ArrayList<>(Arrays.asList("AIRPORT",
-            "AMUSEMENT_PARK","AQUARIUM", "ART_GALLERY", "BAKERY","BOOK_STORE","CAFE","CAMPGROUND",
-            "CAR_RENTAL" , "CITY_HALL", "CLOTHING_STORE", "CONVENIENCE_STORE", "FLORIST", "FOOD", "LIBRARY",
-            "LODGING", "MEAL_DELIVERY", "MEAL_TAKEAWAY","MUSEUM",  "PARK", "POINT_OF_INTEREST", "RESTAURANT", "SHOPPING_MALL",
-            "SPA", "STORE", "SUBWAY_STATION", "TOURIST_ATTRACTION", "TRAIN_STATION", "TRANSIT_STATION", "TRAVEL_AGENCY", "ZOO"));
+
 
 
     public PostsFragment() {
@@ -183,7 +179,7 @@ public class PostsFragment extends Fragment {
 
     private void reloadPostsUsingFilter() {
         dialog.dismiss();
-        if (typesToFilterBy.isEmpty()) {
+        if (wordsToFilterBy.isEmpty()) {
             allPosts = originalAllPosts;
             adapter.clear();
             adapter.addAll(allPosts);
@@ -192,8 +188,8 @@ public class PostsFragment extends Fragment {
         }
         /* TODO : problem: if shimmer is loading, no posts are in adapter, so if you try to
          filter before adapter gets filled, it breaks */
-        List<Post> filteredByTypes = Filter.getPostsByType(typesToFilterBy, originalAllPosts);
-        List<Post> filteredByWords = Filter.getPostsByWords(wordsToFilterBy, originalAllPosts);
+        allPosts = Filter.getPostsByFiltering(wordsToFilterBy, originalAllPosts);
+        //List<Post> filteredByWords = Filter.getPostsByWords(wordsToFilterBy, originalAllPosts);
         // combine both arrays with out repetition posts in order to get allPosts
         adapter.clear();
         adapter.addAll(allPosts);
@@ -210,7 +206,7 @@ public class PostsFragment extends Fragment {
                 ListView listView = dialog.findViewById(R.id.listOfTypes);
                 ImageView ivCloseDialog = dialog.findViewById(R.id.icCloseDialog);
                 ImageView ivAddNewFilterWord = dialog.findViewById(R.id.ivAddNewFilterWord);
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1,TYPE_LIST);
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1,Filter.TYPE_LIST);
 
                 listView.setAdapter(arrayAdapter);
                 editText.addTextChangedListener(new TextWatcher() {
@@ -287,7 +283,7 @@ public class PostsFragment extends Fragment {
         chip.setText(arrayAdapter.getItem(position));
         /* TODO change UI on chips dynamically */
         // adding to my list so i can use it to filter later
-        typesToFilterBy.add(arrayAdapter.getItem(position));
+        wordsToFilterBy.add(arrayAdapter.getItem(position));
 
         chip.setCloseIconVisible(true);
         cgFilter.addView(chip);
@@ -295,7 +291,7 @@ public class PostsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 cgFilter.removeView(v);
-                typesToFilterBy.remove(chip.getText());
+                wordsToFilterBy.remove(chip.getText());
                 if (!dialog.isShowing()) {
                     reloadPostsUsingFilter();
                 }
@@ -415,6 +411,7 @@ public class PostsFragment extends Fragment {
     private void queryPosts(double latitude, double longitude) {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_USER);
+        query.include(Post.KEY_PLACE_NAME);
         query.addDescendingOrder("createdAt");
 
         query.findInBackground(new FindCallback<Post>() {
