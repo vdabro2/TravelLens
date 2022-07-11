@@ -21,12 +21,13 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 
 public class LoginActivity extends AppCompatActivity {
-    private static final String TAG = "LOGIN_ACTIVITY";
     private Button bLogin;
     private TextView signup;
     private EditText etPass;
     private EditText etUsername;
     private ImageView ivBackLogin;
+    private static final String TAG = "LOGIN_ACTIVITY";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

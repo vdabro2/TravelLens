@@ -88,16 +88,17 @@ public class PostsFragment extends Fragment {
     private ImageView ivFilterIcon;
     protected PostsAdapter adapter;
     private Location mCurrentLocation;
-    private List<Post> originalAllPosts = new ArrayList<>();
     private LocationRequest locationRequest;
     private SwipeRefreshLayout swipeContainer;
     private ShimmerFrameLayout shimmerFrameLayout;
+    private List<Post> originalAllPosts = new ArrayList<>();
+    private AutocompleteSupportFragment autocompleteFragment;
+    private List<String> typesToFilterBy = new ArrayList<>();
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String TAG = "POSTS_FRAGMENT";
     private final static String KEY_LOCATION = "location";
-    private AutocompleteSupportFragment autocompleteFragment;
-    private List<String> typesToFilterBy = new ArrayList<>();
     private final static List<String> TYPE_LIST = new ArrayList<>(Arrays.asList("AIRPORT",
             "AMUSEMENT_PARK","AQUARIUM", "ART_GALLERY", "BAKERY","BOOK_STORE","CAFE","CAMPGROUND",
             "CAR_RENTAL" , "CITY_HALL", "CLOTHING_STORE", "CONVENIENCE_STORE", "FLORIST", "FOOD", "LIBRARY",

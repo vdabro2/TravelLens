@@ -67,7 +67,8 @@ public class ComposeFragment extends Fragment {
     private ChipGroup cgRecommended;
     private ProgressBar progressBar;
     private PlacesClient placesClient;
-    public String photoFileName = "photo.jpg";
+
+    private String photoFileName = "photo.jpg";
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String TAG = "COMPOSE_FRAGMENT";
