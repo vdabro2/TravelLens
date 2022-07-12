@@ -7,6 +7,7 @@ import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -50,6 +51,7 @@ public class DetailActivity extends AppCompatActivity {
     private BlurView blurView;
     private ImageView ivImage;
     private RatingBar rbRating;
+    private ImageView ivMessage;
     private TextView tvLocation;
     private boolean blurClicked;
     private TextView tvUserInDes;
@@ -69,6 +71,7 @@ public class DetailActivity extends AppCompatActivity {
         rbRating = findViewById(R.id.rbRating);
         hearts = findViewById(R.id.animHearts);
         blurView = findViewById(R.id.blurView);
+        ivMessage = findViewById(R.id.ivMessage);
         tvLocation = findViewById(R.id.tvLocation);
         tvUserInDes = findViewById(R.id.tvUsernameDetail);
         tvDescription = findViewById(R.id.tvDescription);
@@ -111,8 +114,19 @@ public class DetailActivity extends AppCompatActivity {
                 likeOrUnlike();
             }
         });
+        ivMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToMessaging();
+            }
+        });
 
+    }
 
+    private void goToMessaging() {
+        Intent intent = new Intent(this, MessageActivity.class);
+        intent.putExtra("post", (Parcelable) thePost);
+        startActivity(intent);
     }
 
     private void setAllDetails() {

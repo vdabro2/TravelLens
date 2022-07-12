@@ -1,10 +1,5 @@
 package com.example.travellens;
 
-import android.util.Log;
-
-import com.airbnb.lottie.L;
-import com.google.android.libraries.places.api.model.Place;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;

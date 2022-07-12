@@ -286,8 +286,10 @@ public class PostsFragment extends Fragment {
     private void setUpFilterChip(ArrayAdapter<String> arrayAdapter, int position) {
         Chip chip = new Chip(getContext());
         chip.setText(arrayAdapter.getItem(position));
+
         /* TODO change UI on chips dynamically */
         // adding to my list so i can use it to filter later
+        //chip = (Chip) getLayoutInflater().inflate(R.layout.single_chip_layout, cgFilter, false);
         wordsToFilterBy.add(arrayAdapter.getItem(position));
 
         chip.setCloseIconVisible(true);
