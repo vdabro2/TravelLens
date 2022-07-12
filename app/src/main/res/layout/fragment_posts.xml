@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/swipeContainer">
+        app:layout_constraintTop_toBottomOf="@+id/tvFilterBy">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,7 +34,7 @@
         android:layout_alignParentBottom="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivFilterIcon">
+        app:layout_constraintTop_toBottomOf="@+id/tvFilterBy">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvPosts"
@@ -47,22 +47,38 @@
 
     <ImageView
         android:id="@+id/ivFilterIcon"
-        android:layout_width="68dp"
-        android:layout_height="37dp"
-        android:src="@drawable/ic_baseline_keyboard_arrow_down_24"
+        android:layout_width="49dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/add_filter"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/cgFilter"
         android:layout_width="340dp"
-        android:layout_height="35dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
+        android:fontFamily="@font/copse"
+        android:minHeight="45dp"
         app:layout_constraintBottom_toTopOf="@+id/shimmerLayout"
         app:layout_constraintEnd_toStartOf="@+id/ivFilterIcon"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:singleLine="false">
 
     </com.google.android.material.chip.ChipGroup>
+
+    <TextView
+        android:id="@+id/tvFilterBy"
+        android:layout_width="50dp"
+        android:layout_height="15dp"
+        android:fontFamily="@font/copse"
+        android:gravity="center"
+        android:text="@string/filter_by"
+        android:textSize="13sp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivFilterIcon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

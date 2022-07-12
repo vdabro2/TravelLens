@@ -30,10 +30,10 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 public class FeedMainActivity extends AppCompatActivity {
-    private static final String TAG = "FEED_MAIN";
     private ImageView ivIcon;
     private ImageView ivMainIcon;
     private BottomNavigationView bottomNavigationView;
+    private static final String TAG = "FEED_MAIN";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

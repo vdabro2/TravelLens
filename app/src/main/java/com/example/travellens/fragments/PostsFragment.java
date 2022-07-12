@@ -18,6 +18,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -60,6 +61,7 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.chip.ChipGroup;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -88,21 +90,19 @@ public class PostsFragment extends Fragment {
     private ImageView ivFilterIcon;
     protected PostsAdapter adapter;
     private Location mCurrentLocation;
-    private List<Post> originalAllPosts = new ArrayList<>();
     private LocationRequest locationRequest;
     private SwipeRefreshLayout swipeContainer;
     private ShimmerFrameLayout shimmerFrameLayout;
+    private List<Post> originalAllPosts = new ArrayList<>();
+    private AutocompleteSupportFragment autocompleteFragment;
+    private List<String> wordsToFilterBy = new ArrayList<>();
+   // private List<String> wordsToFilterBy = new ArrayList<>();
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String TAG = "POSTS_FRAGMENT";
     private final static String KEY_LOCATION = "location";
-    private AutocompleteSupportFragment autocompleteFragment;
-    private List<String> typesToFilterBy = new ArrayList<>();
-    private final static List<String> TYPE_LIST = new ArrayList<>(Arrays.asList("AIRPORT",
-            "AMUSEMENT_PARK","AQUARIUM", "ART_GALLERY", "BAKERY","BOOK_STORE","CAFE","CAMPGROUND",
-            "CAR_RENTAL" , "CITY_HALL", "CLOTHING_STORE", "CONVENIENCE_STORE", "FLORIST", "FOOD", "LIBRARY",
-            "LODGING", "MEAL_DELIVERY", "MEAL_TAKEAWAY","MUSEUM",  "PARK", "POINT_OF_INTEREST", "RESTAURANT", "SHOPPING_MALL",
-            "SPA", "STORE", "SUBWAY_STATION", "TOURIST_ATTRACTION", "TRAIN_STATION", "TRANSIT_STATION", "TRAVEL_AGENCY", "ZOO"));
+
 
 
     public PostsFragment() {
@@ -179,7 +179,7 @@ public class PostsFragment extends Fragment {
 
     private void reloadPostsUsingFilter() {
         dialog.dismiss();
-        if (typesToFilterBy.isEmpty()) {
+        if (wordsToFilterBy.isEmpty()) {
             allPosts = originalAllPosts;
             adapter.clear();
             adapter.addAll(allPosts);
@@ -188,7 +188,9 @@ public class PostsFragment extends Fragment {
         }
         /* TODO : problem: if shimmer is loading, no posts are in adapter, so if you try to
          filter before adapter gets filled, it breaks */
-        allPosts = Filter.getPostsByType(typesToFilterBy, originalAllPosts);
+        allPosts = Filter.getPostsByFiltering(wordsToFilterBy, originalAllPosts);
+        //List<Post> filteredByWords = Filter.getPostsByWords(wordsToFilterBy, originalAllPosts);
+        // combine both arrays with out repetition posts in order to get allPosts
         adapter.clear();
         adapter.addAll(allPosts);
         adapter.notifyDataSetChanged();
@@ -203,7 +205,8 @@ public class PostsFragment extends Fragment {
                 EditText editText = dialog.findViewById(R.id.etSearch);
                 ListView listView = dialog.findViewById(R.id.listOfTypes);
                 ImageView ivCloseDialog = dialog.findViewById(R.id.icCloseDialog);
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1,TYPE_LIST);
+                ImageView ivAddNewFilterWord = dialog.findViewById(R.id.ivAddNewFilterWord);
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1,Filter.TYPE_LIST);
 
                 listView.setAdapter(arrayAdapter);
                 editText.addTextChangedListener(new TextWatcher() {
@@ -213,10 +216,27 @@ public class PostsFragment extends Fragment {
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         arrayAdapter.getFilter().filter(s);
+                        if (arrayAdapter.getCount() == 0) {
+                            ivAddNewFilterWord.setVisibility(View.VISIBLE);
+                            ivAddNewFilterWord.setClickable(true);
+                            ivAddNewFilterWord.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    setUpCustomChip(editText.getText().toString());
+                                    editText.setText("");
+                                }
+                            });
+                        } else {
+                            ivAddNewFilterWord.setVisibility(View.INVISIBLE);
+                            ivAddNewFilterWord.setClickable(false);
+
+                        }
                     }
 
                     @Override
-                    public void afterTextChanged(Editable s) {}
+                    public void afterTextChanged(Editable s) {
+
+                    }
                 });
 
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -225,7 +245,6 @@ public class PostsFragment extends Fragment {
                         setUpFilterChip(arrayAdapter, position);
                     }
                 });
-
                 ivCloseDialog.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -236,21 +255,43 @@ public class PostsFragment extends Fragment {
         });
     }
 
-    private void setUpFilterChip(ArrayAdapter<String> arrayAdapter, int position) {
+    private void setUpCustomChip(String text) {
+        if (text.trim().isEmpty()) return;
         Chip chip = new Chip(getContext());
-        chip.setText(arrayAdapter.getItem(position));
-
+        chip.setText(text);
+        /* TODO change UI on chips dynamically */
         // adding to my list so i can use it to filter later
-        typesToFilterBy.add(arrayAdapter.getItem(position));
+        wordsToFilterBy.add(text);
 
         chip.setCloseIconVisible(true);
         cgFilter.addView(chip);
         chip.setOnCloseIconClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO if chip is removed when diolog is closed, refilter based on original queried posts
                 cgFilter.removeView(v);
-                typesToFilterBy.remove(chip.getText());
+                wordsToFilterBy.remove(chip.getText());
+                if (!dialog.isShowing()) {
+                    reloadPostsUsingFilter();
+                }
+
+            }
+        });
+    }
+
+    private void setUpFilterChip(ArrayAdapter<String> arrayAdapter, int position) {
+        Chip chip = new Chip(getContext());
+        chip.setText(arrayAdapter.getItem(position));
+        /* TODO change UI on chips dynamically */
+        // adding to my list so i can use it to filter later
+        wordsToFilterBy.add(arrayAdapter.getItem(position));
+
+        chip.setCloseIconVisible(true);
+        cgFilter.addView(chip);
+        chip.setOnCloseIconClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cgFilter.removeView(v);
+                wordsToFilterBy.remove(chip.getText());
                 if (!dialog.isShowing()) {
                     reloadPostsUsingFilter();
                 }
@@ -370,6 +411,7 @@ public class PostsFragment extends Fragment {
     private void queryPosts(double latitude, double longitude) {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_USER);
+        query.include(Post.KEY_PLACE_NAME);
         query.addDescendingOrder("createdAt");
 
         query.findInBackground(new FindCallback<Post>() {

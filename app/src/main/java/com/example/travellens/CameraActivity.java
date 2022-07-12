@@ -28,6 +28,7 @@ public class CameraActivity extends AppCompatActivity {
     private Button bFromGallery;
     private Bitmap bitmap;
     private Button bFromCamera;
+
     public final static int REQUEST_CODE_GALLERY = 43;
     private final static String TAG = "CAMERA_ACTIVITY";
     private final static String PHOTO_FILE_NAME = "photo.jpg";

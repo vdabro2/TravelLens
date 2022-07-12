@@ -23,7 +23,6 @@ public class Post extends ParseObject implements Serializable {
     public static final String KEY_PLACE_ID = "placeId";
     public static final String KEY_TYPES = "types";
 
-
     public static final String KEY_PROFILE_PICTURE = "profilePicture";
     public static final String KEY_USERNAME = "username";
     public static final String KEY_NAME = "name";

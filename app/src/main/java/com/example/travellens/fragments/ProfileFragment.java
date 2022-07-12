@@ -59,11 +59,12 @@ public class ProfileFragment extends Fragment {
     protected List<Post> allPosts;
     protected ProfileAdapter adapter;
     private ImageView ivProfilePicture;
-    private static final int READY_TO_UPDATE = 12;
     private ShimmerFrameLayout shimmerFrameLayout;
+    private static final int READY_TO_UPDATE = 12;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String TAG = "PROFILE FRAGMENT";
+
     public ProfileFragment() {
         userProfile = ParseUser.getCurrentUser();
     }
