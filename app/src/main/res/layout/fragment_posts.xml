@@ -50,6 +50,7 @@
         android:layout_width="49dp"
         android:layout_height="25dp"
         android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
         android:src="@drawable/add_filter"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -78,7 +79,8 @@
         android:text="@string/filter_by"
         android:textSize="13sp"
         android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/ivFilterIcon"
+        app:layout_constraintStart_toStartOf="@+id/ivFilterIcon"
         app:layout_constraintTop_toBottomOf="@+id/ivFilterIcon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
