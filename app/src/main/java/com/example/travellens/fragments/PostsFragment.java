@@ -82,6 +82,7 @@ public class PostsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private Dialog dialog;
+    private Filter filter;
     private ChipGroup cgFilter;
     private List<Post> allPosts;
     private double currLatitude;
@@ -191,10 +192,9 @@ public class PostsFragment extends Fragment {
             adapter.notifyDataSetChanged();
             return;
         }
-        /* TODO : problem: if shimmer is loading, no posts are in adapter, so if you try to
-         filter before adapter gets filled, it breaks */
-        allPosts = Filter.getPostsByFiltering(wordsToFilterBy, originalAllPosts);
-        //List<Post> filteredByWords = Filter.getPostsByWords(wordsToFilterBy, originalAllPosts);
+        // set up filter
+        filter = Filter.getInstance();
+        allPosts = filter.getPostsByFiltering(wordsToFilterBy, originalAllPosts);
         // combine both arrays with out repetition posts in order to get allPosts
         adapter.clear();
         adapter.addAll(allPosts);
