@@ -262,6 +262,7 @@ public class PostsFragment extends Fragment {
 
     private void setUpCustomChip(String text) {
         if (text.trim().isEmpty()) return;
+        cgFilter.setLayoutParams(new ViewGroup.LayoutParams(cgFilter.getLayoutParams().width, ViewGroup.LayoutParams.WRAP_CONTENT));
         Chip chip = new Chip(getContext());
         chip.setText(text);
         /* TODO change UI on chips dynamically */
@@ -285,6 +286,7 @@ public class PostsFragment extends Fragment {
 
     private void setUpFilterChip(ArrayAdapter<String> arrayAdapter, int position) {
         Chip chip = new Chip(getContext());
+        cgFilter.setLayoutParams(new ViewGroup.LayoutParams(cgFilter.getLayoutParams().width, ViewGroup.LayoutParams.WRAP_CONTENT));
         chip.setText(arrayAdapter.getItem(position));
 
         /* TODO change UI on chips dynamically */
