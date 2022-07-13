@@ -26,6 +26,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -84,6 +85,7 @@ public class PostsFragment extends Fragment {
     private ChipGroup cgFilter;
     private List<Post> allPosts;
     private double currLatitude;
+    private TextView tvFilterBy;
     private RecyclerView rvPosts;
     private Place placeToQueryBy;
     private double currLongitude;
@@ -96,7 +98,6 @@ public class PostsFragment extends Fragment {
     private List<Post> originalAllPosts = new ArrayList<>();
     private AutocompleteSupportFragment autocompleteFragment;
     private List<String> wordsToFilterBy = new ArrayList<>();
-   // private List<String> wordsToFilterBy = new ArrayList<>();
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -167,6 +168,10 @@ public class PostsFragment extends Fragment {
         setUpRefresh();
         createFilter();
         shimmerFrameLayout.startShimmer();
+        // while shimmering make filter invisible
+        tvFilterBy = view.findViewById(R.id.tvFilterBy);
+        tvFilterBy.setVisibility(View.INVISIBLE);
+        ivFilterIcon.setVisibility(View.INVISIBLE);
         // choosing whether user wants current or typed location
         if (placeToQueryBy == null) {
             getCurrentLocation(savedInstanceState);
@@ -281,8 +286,10 @@ public class PostsFragment extends Fragment {
     private void setUpFilterChip(ArrayAdapter<String> arrayAdapter, int position) {
         Chip chip = new Chip(getContext());
         chip.setText(arrayAdapter.getItem(position));
+
         /* TODO change UI on chips dynamically */
         // adding to my list so i can use it to filter later
+        //chip = (Chip) getLayoutInflater().inflate(R.layout.single_chip_layout, cgFilter, false);
         wordsToFilterBy.add(arrayAdapter.getItem(position));
 
         chip.setCloseIconVisible(true);
@@ -439,6 +446,8 @@ public class PostsFragment extends Fragment {
                 adapter.notifyDataSetChanged();
                 // stop shimmering when we have the new data
                 shimmerFrameLayout.stopShimmer();
+                tvFilterBy.setVisibility(View.VISIBLE);
+                ivFilterIcon.setVisibility(View.VISIBLE);
                 shimmerFrameLayout.setVisibility(View.GONE);
             }
         });

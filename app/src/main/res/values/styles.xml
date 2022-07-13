@@ -8,5 +8,13 @@
         <item name="fontFamily">@font/copse</item>
     </style>
 
+    <style name="CustomChipChoice" parent="@style/Widget.Material3.Chip.Filter">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/silver</item>
+        <item name="android:textSize">20sp</item>
+        <item name="strokeColor">@color/silver</item>
+        <item name="fontFamily">@font/copse</item>
+    </style>
+
 
 </resources>

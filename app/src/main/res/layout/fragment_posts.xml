@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvFilterBy">
+        tools:layout_editor_absoluteY="45dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,7 +34,7 @@
         android:layout_alignParentBottom="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvFilterBy">
+        app:layout_constraintTop_toBottomOf="@+id/cgFilter">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvPosts"
@@ -50,6 +50,7 @@
         android:layout_width="49dp"
         android:layout_height="25dp"
         android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
         android:src="@drawable/add_filter"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -78,7 +79,8 @@
         android:text="@string/filter_by"
         android:textSize="13sp"
         android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/ivFilterIcon"
+        app:layout_constraintStart_toStartOf="@+id/ivFilterIcon"
         app:layout_constraintTop_toBottomOf="@+id/ivFilterIcon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

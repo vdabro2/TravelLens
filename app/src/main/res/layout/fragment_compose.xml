@@ -41,23 +41,26 @@
 
     <Button
         android:id="@+id/bSubmit"
+        style="@style/buttonAll"
         android:layout_width="190dp"
         android:layout_height="55dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="16dp"
         android:foregroundGravity="center_vertical"
         android:text="@string/share"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        style="@style/buttonAll"/>
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/bCamera"
+        style="@style/buttonAll"
         android:layout_width="190dp"
         android:layout_height="55dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="16dp"
         android:foregroundGravity="center_vertical"
         android:text="@string/attach_photo"
-        style="@style/buttonAll"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/bSubmit"
         app:layout_constraintStart_toStartOf="parent" />
@@ -82,7 +85,7 @@
         android:layout_width="match_parent"
         android:layout_height="74dp"
         android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
+        android:layout_marginEnd="9dp"
         android:transitionName="user"
         app:boxCornerRadiusBottomEnd="8dp"
         app:boxCornerRadiusBottomStart="8dp"

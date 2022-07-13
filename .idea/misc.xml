@@ -12,18 +12,19 @@
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/password_toggle.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_camera.xml" value="0.3778312351392663" />
-        <entry key="app/src/main/res/layout/activity_detail.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_detail.xml" value="0.5121951219512195" />
         <entry key="app/src/main/res/layout/activity_edit_profile.xml" value="0.24481274148692245" />
         <entry key="app/src/main/res/layout/activity_feed_main.xml" value="0.34579467773437494" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.3631983439127604" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.4302536231884058" />
+        <entry key="app/src/main/res/layout/activity_message.xml" value="0.6016205718551857" />
         <entry key="app/src/main/res/layout/activity_signup.xml" value="0.41598360655737704" />
         <entry key="app/src/main/res/layout/bottom_navigation_selector.xml" value="0.43439716312056736" />
         <entry key="app/src/main/res/layout/dialog_searchable_spinner.xml" value="0.5101871374881629" />
         <entry key="app/src/main/res/layout/fragment_compose.xml" value="0.3333333333333333" />
         <entry key="app/src/main/res/layout/fragment_detail.xml" value="0.39294130629387447" />
         <entry key="app/src/main/res/layout/fragment_edit_profile.xml" value="0.4302536231884058" />
-        <entry key="app/src/main/res/layout/fragment_posts.xml" value="0.5178890876565295" />
+        <entry key="app/src/main/res/layout/fragment_posts.xml" value="0.5130183220829315" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.34544219970703127" />
         <entry key="app/src/main/res/layout/item_post.xml" value="0.4302536231884058" />
         <entry key="app/src/main/res/layout/item_profile_post.xml" value="0.4302536231884058" />
@@ -33,7 +34,7 @@
         <entry key="app/src/main/res/layout/shimmer_layout_prof.xml" value="0.4015625" />
         <entry key="app/src/main/res/layout/simple_spinner_dropdown_item.xml" value="0.37228260869565216" />
         <entry key="app/src/main/res/layout/simple_spinner_item.xml" value="0.37228260869565216" />
-        <entry key="app/src/main/res/layout/single_chip_layout.xml" value="0.9346115996872169" />
+        <entry key="app/src/main/res/layout/single_chip_layout.xml" value="0.41346153846153844" />
         <entry key="app/src/main/res/menu/menu_bottom_navigation.xml" value="0.8026041666666667" />
         <entry key="app/src/main/res/menu/menu_tool.xml" value="0.5947916666666667" />
       </map>
