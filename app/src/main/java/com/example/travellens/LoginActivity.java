@@ -29,6 +29,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button bLogin;
     private TextView signup;
     private EditText etPass;
+    private EditText etEmail;
     private FirebaseAuth auth;
     private EditText etUsername;
     private ImageView ivBackLogin;
@@ -42,6 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         etPass = findViewById(R.id.etPass);
         bLogin = findViewById(R.id.bLogin);
         signup = findViewById(R.id.tvSignUp);
+        etEmail = findViewById(R.id.etEmail);
         etUsername = findViewById(R.id.etUsername);
         ivBackLogin = findViewById(R.id.ivBackLogin);
 
@@ -76,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginFirebase() {
-        auth.signInWithEmailAndPassword(etUsername.getText().toString(), etPass.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        auth.signInWithEmailAndPassword(etEmail.getText().toString(), etPass.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {

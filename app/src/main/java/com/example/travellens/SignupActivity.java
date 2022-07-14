@@ -35,10 +35,12 @@ import java.io.File;
 import java.util.HashMap;
 
 public class SignupActivity extends AppCompatActivity {
+    private String userId;
     private File photoFile;
     private EditText etPass;
     private EditText etName;
     private ImageView ivBack;
+    private EditText etEmail;
     private ImageView ivIcon;
     private FirebaseAuth auth;
     private TextView tvSignup;
@@ -60,6 +62,7 @@ public class SignupActivity extends AppCompatActivity {
         etName = findViewById(R.id.etName);
         ivBack = findViewById(R.id.ivBack);
         ivIcon = findViewById(R.id.ivIcon);
+        etEmail = findViewById(R.id.etEmail);
         tvSignup = findViewById(R.id.tvSignUp);
         etBiography = findViewById(R.id.etBiography);
         etUsername = findViewById(R.id.etUsername);
@@ -76,25 +79,25 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (etPass.getText().toString().isEmpty() || etBiography.getText().toString().isEmpty()
-                        || etName.getText().toString().isEmpty() || etUsername.getText().toString().isEmpty()) {
+                        || etName.getText().toString().isEmpty() || etUsername.getText().toString().isEmpty() ||
+                etEmail.getText().toString().isEmpty()) {
                     Toast.makeText(SignupActivity.this, String.valueOf(R.string.couldnt_save), Toast.LENGTH_SHORT).show();
                 } else {
                     registerFirebase();
-                    signUpUser();
-
                 }
             }
         });
     }
 
     private void registerFirebase() {
-        auth.createUserWithEmailAndPassword(etUsername.getText().toString(), etPass.getText().toString())
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+        auth.createUserWithEmailAndPassword(etEmail.getText().toString(), etPass.getText().toString())
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     FirebaseUser firebaseUser = auth.getCurrentUser();
-                    String userId = firebaseUser.getUid();
+                    userId = firebaseUser.getUid();
+
                     reference = FirebaseDatabase.getInstance().getReference("Users").child(userId);
 
                     HashMap<String, String> hashMap = new HashMap<>();
@@ -113,6 +116,7 @@ public class SignupActivity extends AppCompatActivity {
                 } else {
                     Log.e(TAG, "exception occurred:", task.getException());
                 }
+                signUpUser();
             }
         });
     }
@@ -130,6 +134,9 @@ public class SignupActivity extends AppCompatActivity {
         user.setPassword(password);
         user.put(Post.KEY_BIOGRAPHY, bio);
         user.put(Post.KEY_NAME, name);
+        user.put(Post.KEY_FIREBASE_USER_ID, userId);
+        user.put(Post.KEY_USER_EMAIL, etEmail.getText().toString());
+
 
         // call the database to add the user
         user.signUpInBackground(new SignUpCallback() {

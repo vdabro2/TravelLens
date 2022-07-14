@@ -28,6 +28,9 @@ public class Post extends ParseObject implements Serializable {
     public static final String KEY_NAME = "name";
     public static final String KEY_BIOGRAPHY = "biography";
     public static final String KEY_PASSWORD = "password";
+    public static final String KEY_FIREBASE_USER_ID = "firebaseUserId";
+    public static final String KEY_USER_EMAIL = "userEmail";
+
 
     public String getDescription() {
         return getString(KEY_DESCRIPTION);

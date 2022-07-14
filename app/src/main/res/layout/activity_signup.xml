@@ -145,6 +145,38 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilEmail"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="260dp"
+        android:layout_height="55dp"
+        android:transitionName="user"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        app:boxStrokeColor="@color/silver"
+        app:counterTextColor="@color/silver"
+        app:errorTextColor="@color/silver"
+        app:helperTextTextColor="@color/silver"
+        app:hintTextColor="@color/silver"
+        app:layout_constraintEnd_toEndOf="@+id/tilUsernameSignUp"
+        app:layout_constraintStart_toStartOf="@+id/tilUsernameSignUp"
+        app:layout_constraintTop_toBottomOf="@+id/tilUsernameSignUp">
+
+        <EditText
+            android:id="@+id/etEmail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="260dp"
+            android:ems="10"
+            android:hint="@string/email"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etBiography" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilPasswordSignUp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="260dp"
@@ -155,14 +187,14 @@
         app:boxCornerRadiusTopStart="8dp"
         app:boxStrokeColor="@color/silver"
         app:counterTextColor="@color/silver"
-        app:errorTextColor="@color/silver"
         app:endIconDrawable="@drawable/password_toggle"
         app:endIconMode="password_toggle"
+        app:errorTextColor="@color/silver"
         app:helperTextTextColor="@color/silver"
         app:hintTextColor="@color/silver"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tilUsernameSignUp">
+        app:layout_constraintEnd_toEndOf="@+id/tilEmail"
+        app:layout_constraintStart_toStartOf="@+id/tilEmail"
+        app:layout_constraintTop_toBottomOf="@+id/tilEmail">
 
         <EditText
             android:id="@+id/etPass"
