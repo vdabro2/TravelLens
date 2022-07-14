@@ -7,6 +7,16 @@
     android:orientation="vertical"
     tools:context=".fragments.ComposeFragment">
 
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scaleType="fitEnd"
+        android:src="@drawable/world_maybe"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <me.zhanghai.android.materialratingbar.MaterialRatingBar
         android:id="@+id/rbRatingCompose"
         style="@style/Widget.MaterialRatingBar.RatingBar"
@@ -25,8 +35,7 @@
         android:layout_height="200dp"
         app:layout_constraintEnd_toEndOf="@+id/rbRatingCompose"
         app:layout_constraintStart_toStartOf="@+id/rbRatingCompose"
-        app:layout_constraintTop_toBottomOf="@+id/rbRatingCompose"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:layout_constraintTop_toBottomOf="@+id/rbRatingCompose" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -49,7 +58,8 @@
         android:foregroundGravity="center_vertical"
         android:text="@string/share"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/bCamera" />
 
     <Button
         android:id="@+id/bCamera"
@@ -57,7 +67,6 @@
         android:layout_width="190dp"
         android:layout_height="55dp"
         android:layout_marginStart="10dp"
-        android:layout_marginEnd="15dp"
         android:layout_marginBottom="16dp"
         android:foregroundGravity="center_vertical"
         android:text="@string/attach_photo"

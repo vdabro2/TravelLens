@@ -315,6 +315,7 @@ public class PostsFragment extends Fragment {
         dialog.getWindow().setLayout(650,800);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
+
     }
 
 

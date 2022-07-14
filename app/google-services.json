@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "260567434847",
+    "project_id": "travellens-193f4",
+    "storage_bucket": "travellens-193f4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:260567434847:android:13834c88951e1cea3a7dea",
+        "android_client_info": {
+          "package_name": "com.example.travellens"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "260567434847-dnrmldpntgu87kri1bjt94jl23p2rt76.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGhRy0gGXj7YWDnFygH4JeNOX-WwN6154"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "260567434847-dnrmldpntgu87kri1bjt94jl23p2rt76.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.travellens.fragments.ComposeFragment;
+import com.google.firebase.auth.FirebaseAuth;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
@@ -64,6 +65,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 // log out parse user
                 ParseUser.logOutInBackground();
                 ParseUser currentUser = ParseUser.getCurrentUser();
+                FirebaseAuth.getInstance().signOut();
                 Intent i = new Intent(EditProfileActivity.this, LoginActivity.class);
                 startActivity(i);
             }

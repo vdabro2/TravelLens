@@ -12,10 +12,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.airbnb.lottie.L;
 import com.bumptech.glide.Glide;
 import com.example.travellens.fragments.ComposeFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -23,19 +32,23 @@ import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
 import java.io.File;
+import java.util.HashMap;
 
 public class SignupActivity extends AppCompatActivity {
-    private static final String TAG = "SIGNUP_ACTIVITY";
     private File photoFile;
-    private EditText etBio1;
     private EditText etPass;
     private EditText etName;
     private ImageView ivBack;
     private ImageView ivIcon;
+    private FirebaseAuth auth;
     private TextView tvSignup;
     private EditText etUsername;
     private CameraHelper camera;
+    private EditText etBiography;
+    private DatabaseReference reference;
     public String photoFileName = "photo.jpg";
+    private static final String TAG = "SIGNUP_ACTIVITY";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +61,9 @@ public class SignupActivity extends AppCompatActivity {
         ivBack = findViewById(R.id.ivBack);
         ivIcon = findViewById(R.id.ivIcon);
         tvSignup = findViewById(R.id.tvSignUp);
-        etBio1 = findViewById(R.id.etBiography);
+        etBiography = findViewById(R.id.etBiography);
         etUsername = findViewById(R.id.etUsername);
-
+        auth = FirebaseAuth.getInstance();
         ivIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,11 +75,47 @@ public class SignupActivity extends AppCompatActivity {
         tvSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (etPass.getText().toString().isEmpty() || etBio1.getText().toString().isEmpty()
+                if (etPass.getText().toString().isEmpty() || etBiography.getText().toString().isEmpty()
                         || etName.getText().toString().isEmpty() || etUsername.getText().toString().isEmpty()) {
                     Toast.makeText(SignupActivity.this, String.valueOf(R.string.couldnt_save), Toast.LENGTH_SHORT).show();
                 } else {
+                    registerFirebase();
                     signUpUser();
+
+                }
+            }
+        });
+    }
+
+    private void registerFirebase() {
+        auth.createUserWithEmailAndPassword(etUsername.getText().toString(), etPass.getText().toString())
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    FirebaseUser firebaseUser = auth.getCurrentUser();
+                    String userId = firebaseUser.getUid();
+                    reference = FirebaseDatabase.getInstance().getReference("Users").child(userId);
+
+                    HashMap<String, String> hashMap = new HashMap<>();
+                    hashMap.put("id", userId);
+                    hashMap.put("username", etUsername.getText().toString());
+                    hashMap.put("imageURL", "default");
+
+                    reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                //Intent intent = new Intent(SignupActivity.this, FeedMainActivity.class);
+                                //startActivity(intent);
+                                //finish();
+                            } else {
+                                Log.e(" tag ", " what ", task.getException());
+                            }
+                        }
+                    });
+                }else {
+                    Log.e(" tag ", " what ", task.getException());
                 }
             }
         });
@@ -74,7 +123,7 @@ public class SignupActivity extends AppCompatActivity {
 
     private void signUpUser() {
         String password = etPass.getText().toString();
-        String bio = etBio1.getText().toString();
+        String bio = etBiography.getText().toString();
         String name = etName.getText().toString();
         String username = etUsername.getText().toString();
 
@@ -98,6 +147,7 @@ public class SignupActivity extends AppCompatActivity {
 
             }
         });
+
     }
 
     private void loginNewUser(String username, String password) {

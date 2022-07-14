@@ -41,7 +41,7 @@ public class Filter {
         return inOrderFilteredPosts;
     }
 
-    private static List<Post> getLeftoverPostsThatMatch(List<Post> similarPosts, List<String> types, List<Post> allPosts) {
+    private List<Post> getLeftoverPostsThatMatch(List<Post> similarPosts, List<String> types, List<Post> allPosts) {
         List<Post> filteredPosts = new ArrayList<>(similarPosts);
         for (Post post : allPosts) {
             for (String typeOrWord : types) {
@@ -58,7 +58,7 @@ public class Filter {
         return filteredPosts;
     }
 
-    private static List<Post> getPostsByType(List<String> types, List<Post> currentPosts) {
+    private List<Post> getPostsByType(List<String> types, List<Post> currentPosts) {
         if (types.size() == 0) {
             return currentPosts;
         }
@@ -71,7 +71,7 @@ public class Filter {
         return filteredPosts;
     }
 
-    private static List<Post> getPostsByWords(List<String> words, List<Post> currentPosts) {
+    private List<Post> getPostsByWords(List<String> words, List<Post> currentPosts) {
         if (words.size() == 0) {
             return currentPosts;
         }
@@ -85,7 +85,7 @@ public class Filter {
         return filteredPosts;
     }
 
-    private static boolean containsAllTypes(List<String> typesInPost, List<String> typesToFilter) {
+    private boolean containsAllTypes(List<String> typesInPost, List<String> typesToFilter) {
         for (String k : typesToFilter)
             if (!typesInPost.contains(k)) return false;
         return true;
