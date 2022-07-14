@@ -105,17 +105,13 @@ public class SignupActivity extends AppCompatActivity {
                     reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                //Intent intent = new Intent(SignupActivity.this, FeedMainActivity.class);
-                                //startActivity(intent);
-                                //finish();
-                            } else {
-                                Log.e(" tag ", " what ", task.getException());
+                            if (!task.isSuccessful()) {
+                                Log.e(TAG, "exception occurred:", task.getException());
                             }
                         }
                     });
-                }else {
-                    Log.e(" tag ", " what ", task.getException());
+                } else {
+                    Log.e(TAG, "exception occurred:", task.getException());
                 }
             }
         });

@@ -31,6 +31,7 @@ import com.example.travellens.ProfileAdapter;
 import com.example.travellens.R;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.firebase.auth.FirebaseAuth;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
