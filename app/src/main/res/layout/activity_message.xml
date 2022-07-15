@@ -17,8 +17,9 @@
         android:paddingTop="5dp"
         android:paddingRight="0dp"
         android:paddingBottom="10dp"
-        tools:layout_editor_absoluteX="-63dp"
-        tools:layout_editor_absoluteY="549dp">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <EditText
             android:id="@+id/etMessage"
@@ -66,5 +67,16 @@
         app:layout_constraintBottom_toBottomOf="@+id/ivReceiverPicture"
         app:layout_constraintStart_toEndOf="@+id/ivReceiverPicture"
         app:layout_constraintTop_toTopOf="@+id/ivReceiverPicture" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvChat"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/rlSend"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivReceiverPicture" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

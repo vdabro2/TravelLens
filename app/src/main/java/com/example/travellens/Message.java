@@ -5,6 +5,7 @@ public class Message {
     private String receiver;
     private String message;
 
+    public Message(){}
     public Message(String sender, String receiver, String message) {
         this.sender = sender;
         this.receiver = receiver;
