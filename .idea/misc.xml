@@ -10,7 +10,9 @@
         <entry key="app/src/main/res/drawable/ic_eye_close.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_eye_open.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/left_chat.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/password_toggle.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/right_chat.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_camera.xml" value="0.3778312351392663" />
         <entry key="app/src/main/res/layout/activity_detail.xml" value="0.5121951219512195" />
         <entry key="app/src/main/res/layout/activity_edit_profile.xml" value="0.26650732791785037" />
@@ -26,8 +28,10 @@
         <entry key="app/src/main/res/layout/fragment_edit_profile.xml" value="0.4302536231884058" />
         <entry key="app/src/main/res/layout/fragment_posts.xml" value="0.5130183220829315" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.2757597117897013" />
+        <entry key="app/src/main/res/layout/item_left_chat.xml" value="1.1725099646526835" />
         <entry key="app/src/main/res/layout/item_post.xml" value="0.4302536231884058" />
         <entry key="app/src/main/res/layout/item_profile_post.xml" value="0.4302536231884058" />
+        <entry key="app/src/main/res/layout/item_right_chat.xml" value="0.18478260869565216" />
         <entry key="app/src/main/res/layout/item_staggered_post.xml" value="0.16822916666666668" />
         <entry key="app/src/main/res/layout/popout_window.xml" value="0.37228260869565216" />
         <entry key="app/src/main/res/layout/shimmer_layout.xml" value="0.2705327351888021" />
