@@ -78,20 +78,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public class IncomingMessageViewHolder extends MessageViewHolder {
         ImageView imageOther;
         TextView body;
-        TextView name;
 
         public IncomingMessageViewHolder(View itemView) {
             super(itemView);
             imageOther = (ImageView)itemView.findViewById(R.id.ivRecipientProfilePic);
             body = (TextView)itemView.findViewById(R.id.tvMessage);
-            name = (TextView)itemView.findViewById(R.id.tvRecipientName);
         }
 
         @Override
         public void bindMessage(Message message) {
             body.setText(message.getMessage());
-            name.setText(message.getSender());
-
         }
     }
 

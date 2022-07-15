@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,6 +22,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.parse.ParseUser;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +36,7 @@ public class MessageActivity extends AppCompatActivity {
     private ImageButton ibSend;
     private EditText etMessage;
     private MessageAdapter adapter;
+    private TextView tvReceiverName;
     private List<Message> allMessages;
     private RecyclerView recyclerView;
     private ImageView ivReceiverPicture;
@@ -46,6 +50,7 @@ public class MessageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_message);
         ibSend = findViewById(R.id.ibSend);
         etMessage = findViewById(R.id.etMessage);
+        tvReceiverName = findViewById(R.id.tvReceiverName);
         ivReceiverPicture = findViewById(R.id.ivReceiverPicture);
         tvReceiverUsername = findViewById(R.id.tvReceiverUsername);
         recyclerView = findViewById(R.id.rvChat);
@@ -61,6 +66,12 @@ public class MessageActivity extends AppCompatActivity {
         ibSend.setOnClickListener(this::sendMessage);
         adaptMessages(ParseUser.getCurrentUser().getString(Post.KEY_FIREBASE_USER_ID), post.getUser().getString(Post.KEY_FIREBASE_USER_ID));
 
+        Glide.with(getApplicationContext())
+                .load(post.getUser().getParseFile(Post.KEY_PROFILE_PICTURE))
+                .circleCrop()
+                .into(ivReceiverPicture);
+        tvReceiverUsername.setText(post.getUser().getUsername());
+        tvReceiverName.setText(post.getUser().getString(Post.KEY_NAME));
     }
 
     private void sendMessage(View view) {
