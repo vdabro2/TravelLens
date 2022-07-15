@@ -12,10 +12,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.util.Pair;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -24,6 +29,8 @@ public class LoginActivity extends AppCompatActivity {
     private Button bLogin;
     private TextView signup;
     private EditText etPass;
+    private EditText etEmail;
+    private FirebaseAuth auth;
     private EditText etUsername;
     private ImageView ivBackLogin;
     private static final String TAG = "LOGIN_ACTIVITY";
@@ -32,9 +39,11 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        auth = FirebaseAuth.getInstance();
         etPass = findViewById(R.id.etPass);
         bLogin = findViewById(R.id.bLogin);
         signup = findViewById(R.id.tvSignUp);
+        etEmail = findViewById(R.id.etEmail);
         etUsername = findViewById(R.id.etUsername);
         ivBackLogin = findViewById(R.id.ivBackLogin);
 
@@ -48,6 +57,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String pass = etPass.getText().toString();
                 String user = etUsername.getText().toString();
+                loginFirebase();
                 loginUser(user, pass);
             }
         });
@@ -63,6 +73,16 @@ public class LoginActivity extends AppCompatActivity {
                 ActivityOptionsCompat options = ActivityOptionsCompat.
                         makeSceneTransitionAnimation(LoginActivity.this, pairUsername, pairPassword, pairBackground);
                 startActivity(i, options.toBundle());
+            }
+        });
+    }
+
+    private void loginFirebase() {
+        auth.signInWithEmailAndPassword(etEmail.getText().toString(), etPass.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                }
             }
         });
     }

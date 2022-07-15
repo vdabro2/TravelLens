@@ -8,8 +8,9 @@
     <color name="black">#FF000000</color>
     <color name="blue">#0092ED</color>
     <color name="dark_tint">#12000000</color>
+    <color name="water">#C6EEFA</color>
 
-    <color name="salmon">#CEF6E0CC</color>
+    <color name="salmon">#CFF6E0CC</color>
     <color name="white">#FEFEFF</color>
     <color name="grey">#9C9C9C</color>
     <color name="columbia_blue">#D6EFFF</color>

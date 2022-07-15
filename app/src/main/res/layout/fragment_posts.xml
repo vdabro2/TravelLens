@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="45dp">
+        app:layout_constraintTop_toBottomOf="@+id/cgFilter">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -58,11 +58,10 @@
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/cgFilter"
         android:layout_width="340dp"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_marginStart="5dp"
         android:fontFamily="@font/copse"
         android:minHeight="45dp"
-        app:layout_constraintBottom_toTopOf="@+id/shimmerLayout"
         app:layout_constraintEnd_toStartOf="@+id/ivFilterIcon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

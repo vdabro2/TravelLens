@@ -82,6 +82,7 @@ public class PostsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private Dialog dialog;
+    private Filter filter;
     private ChipGroup cgFilter;
     private List<Post> allPosts;
     private double currLatitude;
@@ -191,10 +192,9 @@ public class PostsFragment extends Fragment {
             adapter.notifyDataSetChanged();
             return;
         }
-        /* TODO : problem: if shimmer is loading, no posts are in adapter, so if you try to
-         filter before adapter gets filled, it breaks */
-        allPosts = Filter.getPostsByFiltering(wordsToFilterBy, originalAllPosts);
-        //List<Post> filteredByWords = Filter.getPostsByWords(wordsToFilterBy, originalAllPosts);
+        // set up filter
+        filter = Filter.getInstance();
+        allPosts = filter.getPostsByFiltering(wordsToFilterBy, originalAllPosts);
         // combine both arrays with out repetition posts in order to get allPosts
         adapter.clear();
         adapter.addAll(allPosts);
@@ -262,6 +262,7 @@ public class PostsFragment extends Fragment {
 
     private void setUpCustomChip(String text) {
         if (text.trim().isEmpty()) return;
+        cgFilter.setLayoutParams(new ViewGroup.LayoutParams(cgFilter.getLayoutParams().width, ViewGroup.LayoutParams.WRAP_CONTENT));
         Chip chip = new Chip(getContext());
         chip.setText(text);
         /* TODO change UI on chips dynamically */
@@ -285,6 +286,7 @@ public class PostsFragment extends Fragment {
 
     private void setUpFilterChip(ArrayAdapter<String> arrayAdapter, int position) {
         Chip chip = new Chip(getContext());
+        cgFilter.setLayoutParams(new ViewGroup.LayoutParams(cgFilter.getLayoutParams().width, ViewGroup.LayoutParams.WRAP_CONTENT));
         chip.setText(arrayAdapter.getItem(position));
 
         /* TODO change UI on chips dynamically */
@@ -313,6 +315,7 @@ public class PostsFragment extends Fragment {
         dialog.getWindow().setLayout(650,800);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
+
     }
 
 

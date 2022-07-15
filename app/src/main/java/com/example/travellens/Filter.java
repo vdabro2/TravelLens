@@ -6,14 +6,20 @@ import java.util.Collections;
 import java.util.List;
 
 public class Filter {
-    // this type list is for reading from the API, I will create another list for the actual UI
-    // without the
+    private static Filter instance = new Filter();
     public final static List<String> TYPE_LIST = new ArrayList<>(Arrays.asList("AIRPORT",
             "AMUSEMENT_PARK","AQUARIUM", "ART_GALLERY", "BAKERY","BOOK_STORE","CAFE","CAMPGROUND",
             "CAR_RENTAL" , "CITY_HALL", "CLOTHING_STORE", "CONVENIENCE_STORE", "FLORIST", "FOOD", "LIBRARY",
             "LODGING", "MEAL_DELIVERY", "MEAL_TAKEAWAY","MUSEUM",  "PARK", "POINT_OF_INTEREST", "RESTAURANT", "SHOPPING_MALL",
             "SPA", "STORE", "SUBWAY_STATION", "TOURIST_ATTRACTION", "TRAIN_STATION", "TRANSIT_STATION", "TRAVEL_AGENCY", "ZOO"));
-    public static List<Post> getPostsByFiltering(List<String> types, List<Post> currentPosts) {
+
+    private Filter() {}
+
+    public static Filter getInstance() {
+        return instance;
+    }
+
+    public List<Post> getPostsByFiltering(List<String> types, List<Post> currentPosts) {
         List<String> customWords = new ArrayList<>();
         List<String> typesWords = new ArrayList<>();
         for (String wordOrType: types) {
@@ -35,7 +41,7 @@ public class Filter {
         return inOrderFilteredPosts;
     }
 
-    private static List<Post> getLeftoverPostsThatMatch(List<Post> similarPosts, List<String> types, List<Post> allPosts) {
+    private List<Post> getLeftoverPostsThatMatch(List<Post> similarPosts, List<String> types, List<Post> allPosts) {
         List<Post> filteredPosts = new ArrayList<>(similarPosts);
         for (Post post : allPosts) {
             for (String typeOrWord : types) {
@@ -52,17 +58,10 @@ public class Filter {
         return filteredPosts;
     }
 
-    private static List<Post> getSimilarPosts(List<Post> postsByCustom, List<Post> postsByType) {
-        List<Post> filteredPosts = new ArrayList<>();
-        for (Post post : postsByCustom) {
-            if (postsByType.contains(post)) {
-                filteredPosts.add(post);
-            }
+    private List<Post> getPostsByType(List<String> types, List<Post> currentPosts) {
+        if (types.size() == 0) {
+            return currentPosts;
         }
-        return filteredPosts;
-    }
-
-    private static List<Post> getPostsByType(List<String> types, List<Post> currentPosts) {
         List<Post> filteredPosts = new ArrayList<>();
         for (Post post: currentPosts) {
             if (containsAllTypes(post.getList(Post.KEY_TYPES), types)) {
@@ -72,7 +71,10 @@ public class Filter {
         return filteredPosts;
     }
 
-    private static List<Post> getPostsByWords(List<String> words, List<Post> currentPosts) {
+    private List<Post> getPostsByWords(List<String> words, List<Post> currentPosts) {
+        if (words.size() == 0) {
+            return currentPosts;
+        }
         List<Post> filteredPosts = new ArrayList<>();
         for (Post post: currentPosts) {
             if (containsAllTypes(Collections.singletonList(post.getDescription()), words)
@@ -83,7 +85,7 @@ public class Filter {
         return filteredPosts;
     }
 
-    private static boolean containsAllTypes(List<String> typesInPost, List<String> typesToFilter) {
+    private boolean containsAllTypes(List<String> typesInPost, List<String> typesToFilter) {
         for (String k : typesToFilter)
             if (!typesInPost.contains(k)) return false;
         return true;

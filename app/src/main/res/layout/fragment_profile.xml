@@ -112,13 +112,11 @@
 
         <Button
             android:id="@+id/bMySaves"
-            android:layout_width="183dp"
-            android:layout_height="48dp"
+            style="@style/buttonAll"
             android:text="@string/saved"
             app:layout_constraintEnd_toEndOf="@+id/tvBio"
             app:layout_constraintStart_toStartOf="@+id/tvBio"
-            app:layout_constraintTop_toBottomOf="@+id/tvBio"
-            style="@style/buttonAll"/>
+            app:layout_constraintTop_toBottomOf="@+id/tvBio" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

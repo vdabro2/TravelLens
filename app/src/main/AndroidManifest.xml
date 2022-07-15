@@ -40,6 +40,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TravelLens"
         tools:targetApi="31">
+        <service
+            android:name="com.parse.fcm.ParseFirebaseMessagingService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+        <receiver
+            android:name="com.parse.ParsePushBroadcastReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.parse.push.intent.RECEIVE" />
+                <action android:name="com.parse.push.intent.DELETE" />
+                <action android:name="com.parse.push.intent.OPEN" />
+            </intent-filter>
+        </receiver>
         <activity
             android:name=".MessageActivity"
             android:exported="false" />
