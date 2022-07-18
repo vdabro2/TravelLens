@@ -82,6 +82,8 @@ public class MessageActivity extends AppCompatActivity {
         hashMap.put("receiver", post.getUser().getString(Post.KEY_FIREBASE_USER_ID));
         hashMap.put("message", etMessage.getText().toString());
         reference.child("Chats").push().setValue(hashMap);
+
+        etMessage.setText("");
     }
 
     private void adaptMessages(String currentUserId, String otherUserId) {
@@ -94,7 +96,9 @@ public class MessageActivity extends AppCompatActivity {
                 allMessages.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Message message = dataSnapshot.getValue(Message.class);
-                    if ((message.getReceiver().equals(currentUserId) && message.getSender().equals(otherUserId))
+
+                    if ((message.getReceiver().equals(currentUserId)
+                            && message.getSender().equals(otherUserId))
                     || (message.getReceiver().equals(otherUserId) && message.getSender().equals(currentUserId))) {
                         allMessages.add(message);
                     }

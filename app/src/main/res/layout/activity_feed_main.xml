@@ -41,13 +41,10 @@
         android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
         android:layout_width="286dp"
         android:layout_height="53dp"
-        android:layout_marginTop="9dp"
-        android:layout_marginBottom="9dp"
-        app:layout_constraintBottom_toTopOf="@+id/flContainer"
+        app:layout_constraintBottom_toBottomOf="@+id/ivMainIcon"
         app:layout_constraintEnd_toEndOf="@+id/toolbar"
         app:layout_constraintStart_toEndOf="@+id/ivMainIcon"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="@+id/ivMainIcon" />
 
     <FrameLayout
 

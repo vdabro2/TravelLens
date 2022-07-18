@@ -21,26 +21,62 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <EditText
-            android:id="@+id/etMessage"
-            android:layout_width="385dp"
-            android:layout_height="50dp"
-            android:layout_alignBottom="@+id/ibSend"
-            android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@+id/ibSend"
-            android:gravity="top"
-            android:hint="@string/message_hint"
-            android:imeOptions="actionSend"
-            android:inputType="textShortMessage" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilMessage"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="357dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="7dp"
+            android:layout_marginEnd="-9dp"
+            android:layout_toStartOf="@+id/ibSend"
+            android:transitionName="pass"
+            app:boxCornerRadiusBottomEnd="8dp"
+            app:boxCornerRadiusBottomStart="8dp"
+            app:boxCornerRadiusTopEnd="8dp"
+            app:boxCornerRadiusTopStart="8dp"
+            app:boxStrokeColor="@color/silver"
+            app:counterTextColor="@color/silver"
+            app:errorTextColor="@color/silver"
+            app:helperTextTextColor="@color/silver"
+            app:hintTextColor="@color/silver"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.503"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etMessage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignBottom="@+id/ibSend"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="5dp"
+                android:layout_toLeftOf="@+id/ibSend"
+                android:ems="10"
+                android:fontFamily="@font/copse"
+                android:gravity="top"
+                android:hint="@string/message_hint"
+                android:imeOptions="actionSend"
+                android:inputType="textShortMessage"
+                app:layout_constraintEnd_toEndOf="@+id/etUsername"
+                app:layout_constraintTop_toBottomOf="@+id/etUsername" />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <ImageButton
             android:id="@+id/ibSend"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="49dp"
+            android:layout_height="46dp"
             android:layout_alignParentRight="true"
+            android:layout_marginRight="-2dp"
+            android:layout_marginBottom="14dp"
+            android:backgroundTint="@color/white"
             android:contentDescription="@string/send"
             android:gravity="center"
             android:paddingRight="10dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/grey_send_message"
             android:textSize="18sp" />
     </RelativeLayout>
 

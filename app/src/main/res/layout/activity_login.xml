@@ -61,6 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="260dp"
+            android:fontFamily="@font/copse"
             android:ems="10"
             android:hint="@string/email"
             android:inputType="textPersonName"
@@ -90,7 +91,8 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/etUsername"
+            android:id="@+id/etUsername"
+            android:fontFamily="@font/copse"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:ems="10"
@@ -131,6 +133,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
             android:ems="10"
+            android:fontFamily="@font/copse"
             android:hint="@string/password"
             android:inputType="textPassword"
             app:layout_constraintEnd_toEndOf="@+id/etUsername"
