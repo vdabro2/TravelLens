@@ -1,7 +1,6 @@
 package com.example.travellens;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,28 +10,31 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.parse.ParseUser;
 
 
 import java.util.List;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
-    public static final int MESSAGE_LEFT = 0; // incoming
-    public static final int MESSAGE_RIGHT = 1; // outcoming
+    public static final int INCOMING_MESSAGE_TYPE = 0; // incoming
+    public static final int OUTGOING_MESSAGE_TYPE = 1; // outcoming
     private Context context;
     private List<Message> messages;
+    private Post postClickedOn;
 
-    public MessageAdapter(Context context, List<Message> messages) {
+    public MessageAdapter(Context context, List<Message> messages, Post post) {
         this.context = context;
         this.messages = messages;
+        this.postClickedOn = post;
     }
 
     @Override
     public int getItemViewType(int position) {
         if (isMe(position)) {
-            return MESSAGE_RIGHT;
+            return OUTGOING_MESSAGE_TYPE;
         } else {
-            return MESSAGE_LEFT;
+            return INCOMING_MESSAGE_TYPE;
         }
     }
 
@@ -48,11 +50,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        if (viewType == MESSAGE_LEFT) {
-            View contactView = inflater.inflate(R.layout.item_left_chat, parent, false);
+        if (viewType == INCOMING_MESSAGE_TYPE) {
+            View contactView = inflater.inflate(R.layout.item_incoming_message, parent, false);
             return new IncomingMessageViewHolder(contactView);
         } else {
-            View contactView = inflater.inflate(R.layout.item_right_chat, parent, false);
+            View contactView = inflater.inflate(R.layout.item_outgoing_message, parent, false);
             return new OutgoingMessageViewHolder(contactView);
         }
     }
@@ -75,7 +77,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         abstract void bindMessage(Message message);
     }
 
-    public class IncomingMessageViewHolder extends MessageViewHolder {
+    private class IncomingMessageViewHolder extends MessageViewHolder {
         ImageView imageOther;
         TextView body;
 
@@ -88,10 +90,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         @Override
         public void bindMessage(Message message) {
             body.setText(message.getMessage());
+            Glide.with(context)
+                    .load(postClickedOn.getUser().getParseFile(Post.KEY_PROFILE_PICTURE).getUrl())
+                    .circleCrop()
+                    .into(imageOther);
+
         }
     }
 
-    public class OutgoingMessageViewHolder extends MessageViewHolder {
+    private class OutgoingMessageViewHolder extends MessageViewHolder {
         ImageView imageMe;
         TextView body;
 
@@ -104,6 +111,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         @Override
         public void bindMessage(Message message) {
             body.setText(message.getMessage());
+            Glide.with(context)
+                    .load(ParseUser.getCurrentUser().getParseFile(Post.KEY_PROFILE_PICTURE).getUrl())
+                    .circleCrop()
+                    .into(imageMe);
+
         }
     }
 

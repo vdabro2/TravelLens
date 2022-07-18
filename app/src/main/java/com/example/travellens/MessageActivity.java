@@ -67,7 +67,7 @@ public class MessageActivity extends AppCompatActivity {
         adaptMessages(ParseUser.getCurrentUser().getString(Post.KEY_FIREBASE_USER_ID), post.getUser().getString(Post.KEY_FIREBASE_USER_ID));
 
         Glide.with(getApplicationContext())
-                .load(post.getUser().getParseFile(Post.KEY_PROFILE_PICTURE))
+                .load(post.getUser().getParseFile(Post.KEY_PROFILE_PICTURE).getUrl())
                 .circleCrop()
                 .into(ivReceiverPicture);
         tvReceiverUsername.setText(post.getUser().getUsername());
@@ -99,7 +99,8 @@ public class MessageActivity extends AppCompatActivity {
                         allMessages.add(message);
                     }
 
-                    adapter = new MessageAdapter(MessageActivity.this, allMessages);
+                    // TODO if user is only looking at messages make post null
+                    adapter = new MessageAdapter(MessageActivity.this, allMessages, post);
                     recyclerView.setAdapter(adapter);
                 }
             }

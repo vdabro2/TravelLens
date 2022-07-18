@@ -17,14 +17,8 @@
 
     <TextView
         android:id="@+id/tvMessage2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/right_chat"
-        android:elevation="2dp"
-        android:fontFamily="@font/copse"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="12dp"
-        android:textSize="18dp"
+        android:background="@drawable/outgoing_message"
+        style="@style/message"
         app:layout_constraintBottom_toBottomOf="@+id/ivRecipientProfilePic2"
         app:layout_constraintEnd_toStartOf="@+id/ivRecipientProfilePic2"
         app:layout_constraintTop_toTopOf="@+id/ivRecipientProfilePic2" />
