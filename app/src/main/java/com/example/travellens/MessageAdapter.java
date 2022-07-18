@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.parse.ParseUser;
 
 
@@ -79,6 +80,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     private class IncomingMessageViewHolder extends MessageViewHolder {
         ImageView imageOther;
+        ImageView attachment;
         TextView body;
         TextView timeStamp;
 
@@ -87,6 +89,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             imageOther = (ImageView)itemView.findViewById(R.id.ivRecipientProfilePic);
             body = (TextView)itemView.findViewById(R.id.tvMessage);
             timeStamp = itemView.findViewById(R.id.tvTimeStamp);
+            attachment = itemView.findViewById(R.id.ivAttachment);
         }
 
         @Override
@@ -97,6 +100,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     .circleCrop()
                     .into(imageOther);
             timeStamp.setText(message.getDateAndTime());
+            if (message.getPhoto() != null) {
+                Glide.with(context).load(message.getPhoto()).centerCrop().transform(new RoundedCorners(16)).into(attachment);
+            } else {
+                attachment.setVisibility(View.GONE);
+            }
 
         }
     }
@@ -105,12 +113,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         ImageView imageMe;
         TextView body;
         TextView timeStamp;
+        ImageView attachment;
+
 
         public OutgoingMessageViewHolder(View itemView) {
             super(itemView);
             imageMe = (ImageView)itemView.findViewById(R.id.ivRecipientProfilePic2);
             body = (TextView)itemView.findViewById(R.id.tvMessage2);
             timeStamp = itemView.findViewById(R.id.tvTimeStamp2);
+            attachment = itemView.findViewById(R.id.ivAttachment);
+
         }
 
         @Override
@@ -121,6 +133,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     .circleCrop()
                     .into(imageMe);
             timeStamp.setText(message.getDateAndTime());
+            if (message.getPhoto() != null) {
+                Glide.with(context).load(message.getPhoto()).centerCrop().transform(new RoundedCorners(16)).into(attachment);
+            } else {
+                attachment.setVisibility(View.GONE);
+            }
 
         }
     }
