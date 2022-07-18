@@ -67,7 +67,7 @@
         <ImageButton
             android:id="@+id/ibSend"
             android:layout_width="49dp"
-            android:layout_height="46dp"
+            android:layout_height="48dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="-2dp"
             android:layout_marginBottom="14dp"
@@ -122,10 +122,33 @@
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/rlSend"
+        app:layout_constraintBottom_toTopOf="@+id/ivAttachedToMessage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivReceiverPicture" />
+        app:layout_constraintTop_toBottomOf="@+id/ivReceiverPicture">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <ImageView
+        android:id="@+id/ivAttachedToMessage"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/rlSend"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/bDeleteAttachment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:scaleType="centerInside"
+        android:scaleX=".4"
+        android:scaleY=".4"
+        app:layout_constraintEnd_toEndOf="@+id/ivAttachedToMessage"
+        app:layout_constraintTop_toTopOf="@+id/ivAttachedToMessage"
+        app:srcCompat="@drawable/cancel" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

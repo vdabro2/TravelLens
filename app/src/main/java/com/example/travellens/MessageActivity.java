@@ -9,12 +9,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -43,8 +46,11 @@ public class MessageActivity extends AppCompatActivity {
     private List<Message> allMessages;
     private RecyclerView recyclerView;
     private ImageView ivReceiverPicture;
+    private ImageView ivPictureFromPost;
     private TextView tvReceiverUsername;
     private DatabaseReference reference;
+    private FloatingActionButton bDeleteAttachment;
+    private boolean attachPhotoToMessage = false;
 
 
     @Override
@@ -55,6 +61,8 @@ public class MessageActivity extends AppCompatActivity {
         etMessage = findViewById(R.id.etMessage);
         tvReceiverName = findViewById(R.id.tvReceiverName);
         ivReceiverPicture = findViewById(R.id.ivReceiverPicture);
+        bDeleteAttachment = findViewById(R.id.bDeleteAttachment);
+        ivPictureFromPost = findViewById(R.id.ivAttachedToMessage);
         tvReceiverUsername = findViewById(R.id.tvReceiverUsername);
         recyclerView = findViewById(R.id.rvChat);
 
@@ -66,15 +74,34 @@ public class MessageActivity extends AppCompatActivity {
         // get intent with the user info of who you're sending to
         intent = getIntent();
         post = intent.getExtras().getParcelable("post");
-        ibSend.setOnClickListener(this::sendMessage);
-        adaptMessages(ParseUser.getCurrentUser().getString(Post.KEY_FIREBASE_USER_ID), post.getUser().getString(Post.KEY_FIREBASE_USER_ID));
 
+        ibSend.setOnClickListener(this::sendMessage);
+        bDeleteAttachment.setOnClickListener(this::deleteAttachmentFromPost);
+
+        adaptMessages(ParseUser.getCurrentUser().getString(Post.KEY_FIREBASE_USER_ID), post.getUser().getString(Post.KEY_FIREBASE_USER_ID));
+        attachWidgets();
+
+
+    }
+
+    private void attachWidgets() {
         Glide.with(getApplicationContext())
                 .load(post.getUser().getParseFile(Post.KEY_PROFILE_PICTURE).getUrl())
                 .circleCrop()
                 .into(ivReceiverPicture);
         tvReceiverUsername.setText(post.getUser().getUsername());
         tvReceiverName.setText(post.getUser().getString(Post.KEY_NAME));
+        if (post == null) {
+            ivPictureFromPost.setVisibility(View.GONE);
+        } else {
+            Glide.with(getApplicationContext()).load(post.getParseFile(Post.KEY_IMAGE).getUrl()).centerCrop().transform(new RoundedCorners(16)).into(ivPictureFromPost);
+            attachPhotoToMessage = true;
+        }
+    }
+
+    private void deleteAttachmentFromPost(View view) {
+        ivPictureFromPost.setVisibility(View.GONE);
+        attachPhotoToMessage = false;
     }
 
     private void sendMessage(View view) {
@@ -89,9 +116,16 @@ public class MessageActivity extends AppCompatActivity {
         hashMap.put("receiver", post.getUser().getString(Post.KEY_FIREBASE_USER_ID));
         hashMap.put("message", etMessage.getText().toString());
         hashMap.put("dateAndTime", dateAndTime);
+        if (post != null && attachPhotoToMessage == true) {
+            // attach image to message
+            hashMap.put("photo", post.getParseFile(Post.KEY_IMAGE).getUrl());
+        } else {
+            hashMap.put("photo", null);
+        }
         reference.child("Chats").push().setValue(hashMap);
 
         etMessage.setText("");
+        ivPictureFromPost.setVisibility(View.GONE);
     }
 
     private void adaptMessages(String currentUserId, String otherUserId) {
