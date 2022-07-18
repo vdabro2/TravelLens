@@ -4,12 +4,15 @@ public class Message {
     private String sender;
     private String receiver;
     private String message;
+    private String photoUrl;
+    private String dateAndTime;
 
     public Message(){}
-    public Message(String sender, String receiver, String message) {
+    public Message(String sender, String receiver, String message, String dateAndTime) {
         this.sender = sender;
         this.receiver = receiver;
         this.message = message;
+        this.dateAndTime = dateAndTime;
     }
 
     public String getSender() {
@@ -34,5 +37,13 @@ public class Message {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public void setDateAndTime(String dateAndTime) {
+        this.dateAndTime = dateAndTime;
+    }
+
+    public String getDateAndTime() {
+        return dateAndTime;
     }
 }

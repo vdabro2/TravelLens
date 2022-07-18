@@ -4,7 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp">
+    android:padding="2dp">
+
+    <TextView
+        android:id="@+id/tvTimeStamp2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:fontFamily="@font/copse"
+        android:maxWidth="200dp"
+        android:textColor="@color/silver"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tvMessage2"
+        app:layout_constraintEnd_toStartOf="@+id/tvMessage2"
+        app:layout_constraintTop_toTopOf="@+id/tvMessage2"
+        app:layout_constraintVertical_bias="0.424" />
 
     <ImageView
         android:id="@+id/ivRecipientProfilePic2"
@@ -21,6 +35,7 @@
         style="@style/message"
         android:layout_marginEnd="10dp"
         android:background="@drawable/outgoing_message"
+        android:maxWidth="200dp"
         android:minWidth="48dp"
         app:layout_constraintBottom_toBottomOf="@+id/ivRecipientProfilePic2"
         app:layout_constraintEnd_toStartOf="@+id/ivRecipientProfilePic2"

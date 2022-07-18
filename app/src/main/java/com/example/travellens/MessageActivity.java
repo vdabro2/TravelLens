@@ -20,12 +20,15 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.parse.ParseUser;
 
 import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -77,10 +80,15 @@ public class MessageActivity extends AppCompatActivity {
     private void sendMessage(View view) {
         reference = FirebaseDatabase.getInstance().getReference();
 
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("MMM dd hh:mm a");
+        String dateAndTime = formatter.format(date);
+
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("sender", ParseUser.getCurrentUser().getString(Post.KEY_FIREBASE_USER_ID));
         hashMap.put("receiver", post.getUser().getString(Post.KEY_FIREBASE_USER_ID));
         hashMap.put("message", etMessage.getText().toString());
+        hashMap.put("dateAndTime", dateAndTime);
         reference.child("Chats").push().setValue(hashMap);
 
         etMessage.setText("");
@@ -111,7 +119,6 @@ public class MessageActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
 

@@ -17,8 +17,8 @@ import com.parse.ParseUser;
 import java.util.List;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
-    public static final int INCOMING_MESSAGE_TYPE = 0; // incoming
-    public static final int OUTGOING_MESSAGE_TYPE = 1; // outcoming
+    public static final int INCOMING_MESSAGE_TYPE = 0;
+    public static final int OUTGOING_MESSAGE_TYPE = 1;
     private Context context;
     private List<Message> messages;
     private Post postClickedOn;
@@ -80,11 +80,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     private class IncomingMessageViewHolder extends MessageViewHolder {
         ImageView imageOther;
         TextView body;
+        TextView timeStamp;
 
         public IncomingMessageViewHolder(View itemView) {
             super(itemView);
             imageOther = (ImageView)itemView.findViewById(R.id.ivRecipientProfilePic);
             body = (TextView)itemView.findViewById(R.id.tvMessage);
+            timeStamp = itemView.findViewById(R.id.tvTimeStamp);
         }
 
         @Override
@@ -94,6 +96,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     .load(postClickedOn.getUser().getParseFile(Post.KEY_PROFILE_PICTURE).getUrl())
                     .circleCrop()
                     .into(imageOther);
+            timeStamp.setText(message.getDateAndTime());
 
         }
     }
@@ -101,11 +104,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     private class OutgoingMessageViewHolder extends MessageViewHolder {
         ImageView imageMe;
         TextView body;
+        TextView timeStamp;
 
         public OutgoingMessageViewHolder(View itemView) {
             super(itemView);
             imageMe = (ImageView)itemView.findViewById(R.id.ivRecipientProfilePic2);
             body = (TextView)itemView.findViewById(R.id.tvMessage2);
+            timeStamp = itemView.findViewById(R.id.tvTimeStamp2);
         }
 
         @Override
@@ -115,6 +120,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     .load(ParseUser.getCurrentUser().getParseFile(Post.KEY_PROFILE_PICTURE).getUrl())
                     .circleCrop()
                     .into(imageMe);
+            timeStamp.setText(message.getDateAndTime());
 
         }
     }
