@@ -1,11 +1,16 @@
 package com.example.travellens;
 
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -29,6 +34,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingService;
+import com.google.firebase.messaging.RemoteMessage;
 import com.parse.ParseUser;
 
 import org.w3c.dom.Text;
@@ -38,6 +45,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class MessageActivity extends AppCompatActivity {
     private Post post;
@@ -57,18 +70,24 @@ public class MessageActivity extends AppCompatActivity {
     private boolean attachPhotoToMessage = false;
 
 
+// todo move
+    public static String API_KEY;
+    public static final String DEVICE_GROUP_URL = "https://fcm.googleapis.com/fcm/notification";
+    public static final String SEND_NOTIF_URL = "https://fcm.googleapis.com/fcm/send";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
         ibSend = findViewById(R.id.ibSend);
+        recyclerView = findViewById(R.id.rvChat);
         etMessage = findViewById(R.id.etMessage);
+        API_KEY = getString(R.string.firebase_server_key);
         tvReceiverName = findViewById(R.id.tvReceiverName);
         ivReceiverPicture = findViewById(R.id.ivReceiverPicture);
         bDeleteAttachment = findViewById(R.id.bDeleteAttachment);
         ivPictureFromPost = findViewById(R.id.ivAttachedToMessage);
         tvReceiverUsername = findViewById(R.id.tvReceiverUsername);
-        recyclerView = findViewById(R.id.rvChat);
 
         // set up adapter
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -76,6 +95,7 @@ public class MessageActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
 
         // get intent with the user info of who you're sending to
+        // todo may be null if looking at list of messages
         intent = getIntent();
         post = intent.getExtras().getParcelable("post");
 
@@ -84,24 +104,6 @@ public class MessageActivity extends AppCompatActivity {
 
         adaptMessages(ParseUser.getCurrentUser().getString(Post.KEY_FIREBASE_USER_ID), post.getUser().getString(Post.KEY_FIREBASE_USER_ID));
         attachWidgets();
-
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w("TAG", "Fetching FCM registration token failed", task.getException());
-                            return;
-                        }
-
-                        // Get new FCM registration token
-                        String token = task.getResult();
-
-                        // Log and toast
-                        Log.d("TAG", token);
-                        Toast.makeText(MessageActivity.this, token, Toast.LENGTH_SHORT).show();
-                    }
-                });
     }
 
     private void attachWidgets() {
@@ -127,7 +129,6 @@ public class MessageActivity extends AppCompatActivity {
 
     private void sendMessage(View view) {
         reference = FirebaseDatabase.getInstance().getReference();
-
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("MMM dd hh:mm a");
         String dateAndTime = formatter.format(date);
@@ -140,17 +141,19 @@ public class MessageActivity extends AppCompatActivity {
         if (post != null && attachPhotoToMessage == true) {
             // attach image to message
             keyValueMessagePairs.put("photo", post.getParseFile(Post.KEY_IMAGE).getUrl());
-        } else {
-            // todo is this necessary
-            keyValueMessagePairs.put("photo", null);
         }
 
         reference.child("Chats").push().setValue(keyValueMessagePairs);
 
+        // send a notification
+        MyFirebaseMessagingService.sendNotification(post.getUser().getString("deviceToken"),
+                getString(R.string.you_have_a_message) + post.getUser().getUsername(), etMessage.getText().toString());
 
         etMessage.setText("");
         ivPictureFromPost.setVisibility(View.GONE);
     }
+
+
 
     private void adaptMessages(String currentUserId, String otherUserId) {
         allMessages = new ArrayList<>();
@@ -169,7 +172,7 @@ public class MessageActivity extends AppCompatActivity {
                         allMessages.add(message);
                     }
 
-                    // TODO if user is only looking at messages make post null
+                    // TODO if user is only looking at listed messages make post null
                     adapter = new MessageAdapter(MessageActivity.this, allMessages, post);
                     recyclerView.setAdapter(adapter);
                 }
