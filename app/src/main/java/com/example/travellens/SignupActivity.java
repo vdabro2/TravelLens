@@ -150,7 +150,6 @@ public class SignupActivity extends AppCompatActivity {
 
             }
         });
-
     }
 
     private void loginNewUser(String username, String password) {

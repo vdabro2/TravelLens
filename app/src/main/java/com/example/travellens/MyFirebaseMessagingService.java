@@ -46,9 +46,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     @Override
                     public void onComplete(@NonNull Task<String> task) {
                         String token = task.getResult();
-                        if(!token.equals(ParseUser.getCurrentUser().getString("deviceToken"))){
+                        if(!token.equals(ParseUser.getCurrentUser().getString(Post.KEY_DEVICE_TOKEN))){
                             ParseUser user = ParseUser.getCurrentUser();
-                            user.put("deviceToken", token);
+                            user.put(Post.KEY_DEVICE_TOKEN, token);
                             user.saveInBackground();
                         }
                     }

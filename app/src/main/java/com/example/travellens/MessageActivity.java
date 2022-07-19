@@ -146,7 +146,7 @@ public class MessageActivity extends AppCompatActivity {
         reference.child("Chats").push().setValue(keyValueMessagePairs);
 
         // send a notification
-        MyFirebaseMessagingService.sendNotification(post.getUser().getString("deviceToken"),
+        MyFirebaseMessagingService.sendNotification(post.getUser().getString(Post.KEY_DEVICE_TOKEN),
                 getString(R.string.you_have_a_message) + post.getUser().getUsername(), etMessage.getText().toString());
 
         etMessage.setText("");
