@@ -14,9 +14,12 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -25,6 +28,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.parse.ParseUser;
 
 import org.w3c.dom.Text;
@@ -81,7 +85,23 @@ public class MessageActivity extends AppCompatActivity {
         adaptMessages(ParseUser.getCurrentUser().getString(Post.KEY_FIREBASE_USER_ID), post.getUser().getString(Post.KEY_FIREBASE_USER_ID));
         attachWidgets();
 
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("TAG", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
 
+                        // Get new FCM registration token
+                        String token = task.getResult();
+
+                        // Log and toast
+                        Log.d("TAG", token);
+                        Toast.makeText(MessageActivity.this, token, Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void attachWidgets() {
@@ -94,7 +114,8 @@ public class MessageActivity extends AppCompatActivity {
         if (post == null) {
             ivPictureFromPost.setVisibility(View.GONE);
         } else {
-            Glide.with(getApplicationContext()).load(post.getParseFile(Post.KEY_IMAGE).getUrl()).centerCrop().transform(new RoundedCorners(16)).into(ivPictureFromPost);
+            Glide.with(getApplicationContext()).load(post.getParseFile(Post.KEY_IMAGE)
+                    .getUrl()).centerCrop().transform(new RoundedCorners(16)).into(ivPictureFromPost);
             attachPhotoToMessage = true;
         }
     }
@@ -111,18 +132,21 @@ public class MessageActivity extends AppCompatActivity {
         SimpleDateFormat formatter = new SimpleDateFormat("MMM dd hh:mm a");
         String dateAndTime = formatter.format(date);
 
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("sender", ParseUser.getCurrentUser().getString(Post.KEY_FIREBASE_USER_ID));
-        hashMap.put("receiver", post.getUser().getString(Post.KEY_FIREBASE_USER_ID));
-        hashMap.put("message", etMessage.getText().toString());
-        hashMap.put("dateAndTime", dateAndTime);
+        HashMap<String, Object> keyValueMessagePairs = new HashMap<>();
+        keyValueMessagePairs.put("sender", ParseUser.getCurrentUser().getString(Post.KEY_FIREBASE_USER_ID));
+        keyValueMessagePairs.put("receiver", post.getUser().getString(Post.KEY_FIREBASE_USER_ID));
+        keyValueMessagePairs.put("message", etMessage.getText().toString());
+        keyValueMessagePairs.put("dateAndTime", dateAndTime);
         if (post != null && attachPhotoToMessage == true) {
             // attach image to message
-            hashMap.put("photo", post.getParseFile(Post.KEY_IMAGE).getUrl());
+            keyValueMessagePairs.put("photo", post.getParseFile(Post.KEY_IMAGE).getUrl());
         } else {
-            hashMap.put("photo", null);
+            // todo is this necessary
+            keyValueMessagePairs.put("photo", null);
         }
-        reference.child("Chats").push().setValue(hashMap);
+
+        reference.child("Chats").push().setValue(keyValueMessagePairs);
+
 
         etMessage.setText("");
         ivPictureFromPost.setVisibility(View.GONE);

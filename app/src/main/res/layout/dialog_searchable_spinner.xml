@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!-- Linear layout as parent layout-->
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    app:cardCornerRadius="30dp"
+    app:contentPadding="10dp"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="@android:color/white"
+    android:backgroundTint="@color/salmon"
     >
-
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:cardCornerRadius="30dp"
+            app:contentPadding="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -29,6 +31,8 @@
                             android:id="@+id/icCloseDialog"
                             android:layout_width="25dp"
                             android:layout_height="24dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginEnd="5dp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             app:srcCompat="@drawable/cancel" />
@@ -77,4 +81,4 @@
         <!-- List view to insert list of items-->
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

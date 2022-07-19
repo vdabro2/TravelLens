@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.Toolbar;
 
 import com.example.travellens.fragments.ComposeFragment;
+import com.example.travellens.fragments.MessageFragment;
 import com.example.travellens.fragments.ProfileFragment;
 import com.google.android.libraries.places.api.Places;
 
@@ -65,6 +66,11 @@ public class FeedMainActivity extends AppCompatActivity {
                         ivIcon.setVisibility(View.VISIBLE);
                         ivMainIcon.setVisibility(View.INVISIBLE);
                         fragment = new ProfileFragment();
+                        break;
+                    case R.id.action_message:
+                        ivIcon.setVisibility(View.INVISIBLE);
+                        ivMainIcon.setVisibility(View.VISIBLE);
+                        fragment = new MessageFragment();
                         break;
                     default: break;
                 }
