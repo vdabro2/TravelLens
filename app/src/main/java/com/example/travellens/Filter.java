@@ -12,6 +12,11 @@ public class Filter {
             "CAR_RENTAL" , "CITY_HALL", "CLOTHING_STORE", "CONVENIENCE_STORE", "FLORIST", "FOOD", "LIBRARY",
             "LODGING", "MEAL_DELIVERY", "MEAL_TAKEAWAY","MUSEUM",  "PARK", "POINT_OF_INTEREST", "RESTAURANT", "SHOPPING_MALL",
             "SPA", "STORE", "SUBWAY_STATION", "TOURIST_ATTRACTION", "TRAIN_STATION", "TRANSIT_STATION", "TRAVEL_AGENCY", "ZOO"));
+    public final static List<String> TYPE_LIST_VIEW = new ArrayList<>(Arrays.asList("airport",
+            "amusement park","aquarium", "art gallery", "bakery","book store","cafe","campground",
+            "car rental" , "city hall", "clothing store", "convenience store", "florist", "food", "library",
+            "lodging", "meal delivery", "meal takeaway","museum",  "park", "point of interest", "restaurant", "shopping mall",
+            "spa", "store", "subway station", "tourist attraction", "train station", "transit station", "travel agency", "zoo"));
 
     private Filter() {}
 

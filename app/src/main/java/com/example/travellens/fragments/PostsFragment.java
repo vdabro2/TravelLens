@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationManager;
@@ -71,6 +72,7 @@ import com.parse.ParseQuery;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -211,7 +213,8 @@ public class PostsFragment extends Fragment {
                 ListView listView = dialog.findViewById(R.id.listOfTypes);
                 ImageView ivCloseDialog = dialog.findViewById(R.id.icCloseDialog);
                 ImageView ivAddNewFilterWord = dialog.findViewById(R.id.ivAddNewFilterWord);
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1,Filter.TYPE_LIST);
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(),
+                        android.R.layout.simple_list_item_1,Filter.TYPE_LIST_VIEW);
 
                 listView.setAdapter(arrayAdapter);
                 editText.addTextChangedListener(new TextWatcher() {
@@ -265,9 +268,9 @@ public class PostsFragment extends Fragment {
         cgFilter.setLayoutParams(new ViewGroup.LayoutParams(cgFilter.getLayoutParams().width, ViewGroup.LayoutParams.WRAP_CONTENT));
         Chip chip = new Chip(getContext());
         chip.setText(text);
-        /* TODO change UI on chips dynamically */
+
         // adding to my list so i can use it to filter later
-        wordsToFilterBy.add(text);
+        wordsToFilterBy.add(text.toUpperCase(Locale.ROOT).replace(' ', '_'));
 
         chip.setCloseIconVisible(true);
         cgFilter.addView(chip);
@@ -275,7 +278,8 @@ public class PostsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 cgFilter.removeView(v);
-                wordsToFilterBy.remove(chip.getText());
+                wordsToFilterBy.remove(chip.getText().toString().toUpperCase(Locale.ROOT)
+                        .replace(' ','_'));
                 if (!dialog.isShowing()) {
                     reloadPostsUsingFilter();
                 }
@@ -289,10 +293,8 @@ public class PostsFragment extends Fragment {
         cgFilter.setLayoutParams(new ViewGroup.LayoutParams(cgFilter.getLayoutParams().width, ViewGroup.LayoutParams.WRAP_CONTENT));
         chip.setText(arrayAdapter.getItem(position));
 
-        /* TODO change UI on chips dynamically */
         // adding to my list so i can use it to filter later
-        //chip = (Chip) getLayoutInflater().inflate(R.layout.single_chip_layout, cgFilter, false);
-        wordsToFilterBy.add(arrayAdapter.getItem(position));
+        wordsToFilterBy.add(arrayAdapter.getItem(position).toUpperCase(Locale.ROOT).replace(' ', '_'));
 
         chip.setCloseIconVisible(true);
         cgFilter.addView(chip);
@@ -300,7 +302,8 @@ public class PostsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 cgFilter.removeView(v);
-                wordsToFilterBy.remove(chip.getText());
+                wordsToFilterBy.remove(chip.getText().toString().toUpperCase(Locale.ROOT)
+                        .replace(' ','_'));
                 if (!dialog.isShowing()) {
                     reloadPostsUsingFilter();
                 }

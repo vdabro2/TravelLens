@@ -96,6 +96,7 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, getString(R.string.cant_login), Toast.LENGTH_SHORT);
                     return;
                 }
+                MyFirebaseMessagingService.checkUserTokenUpdate();
                 goMainActivity();
             }
         });

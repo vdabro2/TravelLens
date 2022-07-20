@@ -40,6 +40,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TravelLens"
         tools:targetApi="31">
+
+        <service android:name=".MyFirebaseMessagingService" android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
         <service
             android:name="com.parse.fcm.ParseFirebaseMessagingService"
             android:exported="true">
@@ -57,6 +64,7 @@
                 <action android:name="com.parse.push.intent.OPEN" />
             </intent-filter>
         </receiver>
+
         <activity
             android:name=".MessageActivity"
             android:exported="false" />
@@ -103,6 +111,8 @@
             </intent-filter>
         </activity>
 
+
+
         <uses-library
             android:name="com.google.android.maps"
             android:required="true" />
@@ -116,6 +126,7 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
 
     </application>
 

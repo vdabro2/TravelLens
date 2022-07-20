@@ -150,7 +150,6 @@ public class SignupActivity extends AppCompatActivity {
 
             }
         });
-
     }
 
     private void loginNewUser(String username, String password) {
@@ -162,6 +161,7 @@ public class SignupActivity extends AppCompatActivity {
                     Toast.makeText(SignupActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
                     return;
                 }
+                MyFirebaseMessagingService.checkUserTokenUpdate();
                 Intent i = new Intent(SignupActivity.this, FeedMainActivity.class);
                 startActivity(i);
                 finish();

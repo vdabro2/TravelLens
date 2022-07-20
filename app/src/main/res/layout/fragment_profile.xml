@@ -11,18 +11,6 @@
         android:layout_height="match_parent"
         android:background="@color/white">
 
-        <ImageView
-            android:id="@+id/ivSettings"
-            android:layout_width="27dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="4dp"
-            android:visibility="visible"
-            app:layout_constraintBottom_toTopOf="@+id/swipeContainer"
-            app:layout_constraintStart_toEndOf="@+id/bMySaves"
-            app:layout_constraintTop_toBottomOf="@+id/tvBio"
-            app:srcCompat="@drawable/settings"
-            tools:visibility="visible" />
-
         <TextView
             android:id="@+id/tvUserName"
             android:transitionName="username"
@@ -39,9 +27,8 @@
         <ImageView
             android:id="@+id/ivProfilePic2"
             android:layout_width="100dp"
-            android:transitionName="pic"
             android:layout_height="85dp"
-            android:layout_marginTop="5dp"
+            android:transitionName="pic"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvUserName"
@@ -100,7 +87,7 @@
             android:layout_marginEnd="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/bMySaves">
+            app:layout_constraintTop_toBottomOf="@+id/tabOptions">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvGrid"
@@ -110,13 +97,32 @@
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-        <Button
-            android:id="@+id/bMySaves"
-            style="@style/buttonAll"
-            android:text="@string/saved"
-            app:layout_constraintEnd_toEndOf="@+id/tvBio"
-            app:layout_constraintStart_toStartOf="@+id/tvBio"
-            app:layout_constraintTop_toBottomOf="@+id/tvBio" />
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabOptions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvBio">
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tabPosts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/my_posts" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tabSaved"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/saved1" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tabSettings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings" />
+        </com.google.android.material.tabs.TabLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

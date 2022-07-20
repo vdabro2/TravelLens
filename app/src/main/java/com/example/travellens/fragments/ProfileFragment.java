@@ -6,32 +6,25 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.example.travellens.EditProfileActivity;
 import com.example.travellens.Likes;
-import com.example.travellens.LoginActivity;
 import com.example.travellens.Post;
 import com.example.travellens.ProfileAdapter;
 import com.example.travellens.R;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.android.material.tabs.TabLayout;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -49,12 +42,10 @@ import java.util.List;
 public class ProfileFragment extends Fragment {
     private String mParam1;
     private String mParam2;
-    private Button bLogout;
     private TextView tvBio;
-    private ImageView bEdit;
-    private Button bSavedPosts;
     private TextView tvUserName;
     private TextView tvRealName;
+    private TabLayout tabLayout;
     private RecyclerView rvPosts;
     private ParseUser userProfile;
     protected List<Post> allPosts;
@@ -102,25 +93,17 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         tvBio = view.findViewById(R.id.tvBio);
+        //tabSettings = view.findViewById(R.id.tabSettings);
         rvPosts = view.findViewById(R.id.rvGrid);
-        bEdit = view.findViewById(R.id.ivSettings);
-        bSavedPosts = view.findViewById(R.id.bMySaves);
         tvRealName = view.findViewById(R.id.tvRealName);
         tvUserName = view.findViewById(R.id.tvUserName);
         ivProfilePicture = view.findViewById(R.id.ivProfilePic2);
+        tabLayout = view.findViewById(R.id.tabOptions);
 
         setUpAdapter();
         attachProfileElements();
         allowEditProfile();
 
-        bEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // changed to edit profile activity
-                Intent intent = new Intent(getContext(), EditProfileActivity.class);
-                startActivityForResult(intent, READY_TO_UPDATE);
-            }
-        });
         // set up invisible autocomplete fragment
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 getActivity().getSupportFragmentManager().findFragmentById(R.id.afSearchAPI);
@@ -133,17 +116,7 @@ public class ProfileFragment extends Fragment {
 
         queryPosts();
 
-        bSavedPosts.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                adapter.clear();
-                // start shimmer before loading new data in to recyclerview
-                shimmerFrameLayout.startShimmer();
-                shimmerFrameLayout.setVisibility(View.VISIBLE);
-                querySavedPosts();
 
-            }
-        });
     }
 
     private void setUpAdapter() {
@@ -175,8 +148,39 @@ public class ProfileFragment extends Fragment {
         if (profilepic != null) {
             Glide.with(getContext()).load(profilepic.getUrl()).circleCrop().into(ivProfilePicture);
         }
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                checkTabPosition(tab);
+            }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                checkTabPosition(tab);
+            }
+        });
 
+    }
 
+    private void checkTabPosition(TabLayout.Tab tab) {
+        if (tab.getPosition() == 0) {
+            setUpAdapter();
+            attachProfileElements();
+            queryPosts();
+        }
+        if (tab.getPosition() == 1) {
+            adapter.clear();
+            // start shimmer before loading new data in to recyclerview
+            shimmerFrameLayout.startShimmer();
+            shimmerFrameLayout.setVisibility(View.VISIBLE);
+            querySavedPosts();
+        }
+        if (tab.getPosition() == 2) {
+            Intent intent = new Intent(getContext(), EditProfileActivity.class);
+            startActivityForResult(intent, READY_TO_UPDATE);
+        }
     }
 
     private void querySavedPosts() {
@@ -208,24 +212,8 @@ public class ProfileFragment extends Fragment {
 
     private void allowEditProfile() {
         if (!userProfile.getUsername().equals(ParseUser.getCurrentUser().getUsername())) {
-            // no edit profile button should exist
-            bEdit.setEnabled(false);
-            bEdit.setVisibility(View.INVISIBLE);
-            bEdit.setLayoutParams(new ViewGroup.LayoutParams(0,0));
-        } else {
-            bEdit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i = new Intent(getContext(), EditProfileActivity.class);
-                    Pair<View, String> pairProfilePic = Pair.create((View)ivProfilePicture, "pic");
-                    Pair<View, String> pairBiography = Pair.create(tvBio, "bio");
-                    Pair<View, String> pairUsername = Pair.create((View)tvUserName, "username");
-                    Pair<View, String> pairName = Pair.create((View)tvRealName, "name");
-                    ActivityOptionsCompat options = ActivityOptionsCompat.
-                            makeSceneTransitionAnimation(getActivity(), pairProfilePic, pairBiography, pairUsername, pairName);
-                    startActivity(i, options.toBundle());
-                }
-            });
+            // remove tab for viewing settings
+            tabLayout.removeTabAt(2);
         }
     }
 
