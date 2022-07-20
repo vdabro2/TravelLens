@@ -109,7 +109,7 @@ public class MessageActivity extends AppCompatActivity {
                 .into(ivReceiverPicture);
         tvReceiverUsername.setText(post.getUser().getUsername());
         tvReceiverName.setText(post.getUser().getString(Post.KEY_NAME));
-        if (post == null) {
+        if (post == null || post.getParseFile(Post.KEY_IMAGE) == null) {
             ivPictureFromPost.setVisibility(View.GONE);
         } else {
             Glide.with(getApplicationContext()).load(post.getParseFile(Post.KEY_IMAGE)
@@ -147,8 +147,6 @@ public class MessageActivity extends AppCompatActivity {
 
         etMessage.setText("");
         ivPictureFromPost.setVisibility(View.GONE);
-        
-        //updateListOfMessagedUsers();
     }
 
 
