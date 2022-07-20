@@ -36,6 +36,7 @@
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.4902874902874903" />
         <entry key="app/src/main/res/layout/item_incoming_message.xml" value="0.395208740234375" />
         <entry key="app/src/main/res/layout/item_left_chat.xml" value="1.1725099646526835" />
+        <entry key="app/src/main/res/layout/item_message_preview.xml" value="0.28177083333333336" />
         <entry key="app/src/main/res/layout/item_outgoing_message.xml" value="0.6192948714546533" />
         <entry key="app/src/main/res/layout/item_post.xml" value="0.4302536231884058" />
         <entry key="app/src/main/res/layout/item_profile_post.xml" value="0.4302536231884058" />

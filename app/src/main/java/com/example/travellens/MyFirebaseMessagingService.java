@@ -64,6 +64,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 try  {
                     OkHttpClient client = new OkHttpClient().newBuilder()
                             .build();
+                    // todo make pojo and covert to json string for cleaner look
                     MediaType mediaType = MediaType.parse("application/json");
                     String content = "{\n  \"to\":\"" + deviceToken + "\"," +
                             "\n  \"content_available\": true,\n  \"priority\": \"high\",\n  \"notification\": {\n      " +

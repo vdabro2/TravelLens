@@ -9,54 +9,15 @@
 
     <Button
         android:id="@+id/bSaveChanges"
-        android:text="@string/save"
         style="@style/buttonAll"
+        android:text="@string/save"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tilPassword">
+        app:layout_constraintTop_toBottomOf="@+id/tilBiography">
 
     </Button>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilPassword"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="5dp"
-        android:transitionName="pass"
-        app:boxCornerRadiusBottomEnd="8dp"
-        app:boxCornerRadiusBottomStart="8dp"
-        app:boxCornerRadiusTopEnd="8dp"
-        app:boxCornerRadiusTopStart="8dp"
-        app:boxStrokeColor="@color/silver"
-        app:counterTextColor="@color/silver"
-        app:endIconDrawable="@drawable/password_toggle"
-        app:endIconMode="password_toggle"
-        app:errorTextColor="@color/silver"
-        app:helperTextTextColor="@color/silver"
-        app:hintTextColor="@color/silver"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/tilBiography"
-        app:layout_constraintTop_toBottomOf="@+id/tilBiography">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etPassEdit"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="16dp"
-            android:ems="10"
-            android:fontFamily="@font/copse"
-            android:hint="@string/password"
-            android:inputType="textPersonName"
-            android:password="true"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etUsernameOnEdit"
-            tools:layout_editor_absoluteX="69dp"
-            tools:layout_editor_absoluteY="32dp" />
-
-
-    </com.google.android.material.textfield.TextInputLayout>
 
 
     <com.google.android.material.textfield.TextInputLayout

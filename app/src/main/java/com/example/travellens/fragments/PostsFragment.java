@@ -270,7 +270,7 @@ public class PostsFragment extends Fragment {
         chip.setText(text);
 
         // adding to my list so i can use it to filter later
-        wordsToFilterBy.add(text.toUpperCase(Locale.ROOT).replace(' ', '_'));
+        wordsToFilterBy.add(text);
 
         chip.setCloseIconVisible(true);
         cgFilter.addView(chip);
@@ -278,8 +278,7 @@ public class PostsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 cgFilter.removeView(v);
-                wordsToFilterBy.remove(chip.getText().toString().toUpperCase(Locale.ROOT)
-                        .replace(' ','_'));
+                wordsToFilterBy.remove(chip.getText());
                 if (!dialog.isShowing()) {
                     reloadPostsUsingFilter();
                 }
@@ -318,7 +317,6 @@ public class PostsFragment extends Fragment {
         dialog.getWindow().setLayout(650,800);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
-
     }
 
 
