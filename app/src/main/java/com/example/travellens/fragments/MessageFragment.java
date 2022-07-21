@@ -54,7 +54,7 @@ public class MessageFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.rvUsers);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 getActivity().getSupportFragmentManager().findFragmentById(R.id.afSearchAPI);
         autocompleteFragment.getView().setEnabled(false);
@@ -70,14 +70,11 @@ public class MessageFragment extends Fragment {
                     Message message = dataSnapshot.getValue(Message.class);
                     if (message.getSender().equals(user.getUid())) {
                         userList.add(message.getReceiver());
-                        Log.e(" lmessage  ", message.getReceiver());
                     }
                     if (message.getReceiver().equals(user.getUid())) {
                         userList.add(message.getSender());
-                        Log.e(" mess ", message.getSender());
                     }
                 }
-
                 readMessages();
             }
 
@@ -91,24 +88,24 @@ public class MessageFragment extends Fragment {
 
     private void readMessages() {
         firebaseUsers = new ArrayList<>();
+        userAdapter = new UserAdapter(getContext(), firebaseUsers);
+        recyclerView.setAdapter(userAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         reference = FirebaseDatabase.getInstance().getReference("Users");
-
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                firebaseUsers.clear();
+                userAdapter.clear();
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     MyFirebaseUser myFirebaseUser = dataSnapshot.getValue(MyFirebaseUser.class);
                     if (userList.contains(myFirebaseUser.getId())) {
                         firebaseUsers.add(myFirebaseUser);
-                        Log.e(" la la ", myFirebaseUser.getUsername());
                     }
                 }
+                userAdapter.addAll(firebaseUsers);
 
-                userAdapter = new UserAdapter(getContext(), firebaseUsers);
-                recyclerView.setAdapter(userAdapter);
             }
 
             @Override
