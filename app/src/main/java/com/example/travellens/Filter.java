@@ -2,12 +2,32 @@ package com.example.travellens;
 
 import android.util.Log;
 
+import com.airbnb.lottie.L;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Set;
 
 public class Filter {
+
+    // Helper class for filtering by weights
+    private static class WeightedPost {
+        private Post post;
+        private Integer weight;
+        private WeightedPost(Post post, Integer weight) {
+            this.post = post;
+            this.weight = weight;
+        }
+    }
     private static Filter instance = new Filter();
 
     public final static List<String> TYPE_LIST = new ArrayList<>(Arrays.asList("AIRPORT",
@@ -27,6 +47,48 @@ public class Filter {
         return instance;
     }
 
+    // complex filtering algorithm
+    public List<Post> getPostsByFilteringMostRecommended(List<String> types, List<Post> currentPosts) {
+        PriorityQueue<WeightedPost> weightedPostPriorityQueue = new PriorityQueue<WeightedPost>(new Comparator<WeightedPost>() {
+            @Override
+            public int compare(WeightedPost thisPost, WeightedPost otherPost) {
+                // implement custom comparator for my weighted post
+                return Double.compare(otherPost.weight, thisPost.weight);
+            }
+        });
+
+        // iterate through each post and see how many filters it contains, calculate those weights
+        for (int post = 0; post < currentPosts.size(); post++) {
+            Post currentPost = currentPosts.get(post);
+            int weightsForPost = 0;
+            // Weights calculated by currentPosts.size() * (types.size() - type))
+            for (int type = 0; type < types.size(); type++) {
+                String filter = types.get(type);
+                if (TYPE_LIST.contains(filter) && currentPost.getList(Post.KEY_TYPES).contains(filter)) {
+                    // treat it as a generated type in types list
+                    weightsForPost += (currentPosts.size() * (types.size() - type));
+                } else if ((currentPost.getDescription().toLowerCase().contains(filter.toLowerCase(Locale.ROOT))
+                        || currentPost.getString(Post.KEY_PLACE_NAME).toLowerCase(Locale.ROOT)
+                        .contains(filter.toLowerCase(Locale.ROOT)))) {
+                    // treat it as a custom word
+                    weightsForPost += (currentPosts.size() * (types.size() - type));
+                }
+            }
+            weightedPostPriorityQueue.add(new WeightedPost(currentPost, weightsForPost));
+        }
+
+        List<Post> postsFiltered = new ArrayList<>();
+        // add to list of posts if the post has a relevant weight for the filters
+        while (!weightedPostPriorityQueue.isEmpty()) {
+            WeightedPost weightedPost = weightedPostPriorityQueue.poll();
+            if (weightedPost.weight > 0) postsFiltered.add(weightedPost.post);
+        }
+
+        return postsFiltered;
+
+    }
+
+    // regular filtering, non complex
     public List<Post> getPostsByFiltering(List<String> types, List<Post> currentPosts) {
         List<String> customWords = new ArrayList<>();
         List<String> typesWords = new ArrayList<>();
@@ -105,4 +167,6 @@ public class Filter {
             if (!description.contains(filter)) return false;
         return true;
     }
+
+
 }

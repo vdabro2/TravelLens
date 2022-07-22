@@ -56,7 +56,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         try {
             holder.bind(user);
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e("UserAdapter:", "exception occurred", e);
         }
     }
     // Clean all elements of the recycler
@@ -86,9 +86,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
         public void bind(MyFirebaseUser user) throws JSONException {
             tvUserMessage.setText(user.username);
-            // todo query for user with the userid in parse database
-            //query through users in parse that have the id of the firebase user, should be one
-            // then this is a ParseUser so you can post.setUser() below and set the image profile
+
             final ParseUser[] tempUser = new ParseUser[1];
             ParseQuery<ParseUser> query = ParseUser.getQuery();
             query.whereEqualTo(Post.KEY_FIREBASE_USER_ID, user.id);

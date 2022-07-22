@@ -31,10 +31,10 @@
         <entry key="app/src/main/res/layout/fragment_compose.xml" value="0.2028301886792453" />
         <entry key="app/src/main/res/layout/fragment_detail.xml" value="0.39294130629387447" />
         <entry key="app/src/main/res/layout/fragment_edit_profile.xml" value="0.4302536231884058" />
-        <entry key="app/src/main/res/layout/fragment_message.xml" value="0.14537037037037037" />
+        <entry key="app/src/main/res/layout/fragment_message.xml" value="0.2670807453416149" />
         <entry key="app/src/main/res/layout/fragment_posts.xml" value="0.5130183220829315" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/item_incoming_message.xml" value="0.395208740234375" />
+        <entry key="app/src/main/res/layout/item_incoming_message.xml" value="0.5369049072265626" />
         <entry key="app/src/main/res/layout/item_left_chat.xml" value="1.1725099646526835" />
         <entry key="app/src/main/res/layout/item_message_preview.xml" value="0.5290761311848959" />
         <entry key="app/src/main/res/layout/item_outgoing_message.xml" value="0.6192948714546533" />
@@ -58,5 +58,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.2670807453416149" />
+      </ProjectState>
+    </option>
   </component>
 </project>
