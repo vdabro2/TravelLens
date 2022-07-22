@@ -58,20 +58,20 @@ public class Filter {
         });
 
         // iterate through each post and see how many filters it contains, calculate those weights
-        for (int post = 0; post < currentPosts.size(); post++) {
-            Post currentPost = currentPosts.get(post);
+        for (int postIndex = 0; postIndex < currentPosts.size(); postIndex++) {
+            Post currentPost = currentPosts.get(postIndex);
             int weightsForPost = 0;
-            // Weights calculated by currentPosts.size() * (types.size() - type))
-            for (int type = 0; type < types.size(); type++) {
-                String filter = types.get(type);
-                if (TYPE_LIST.contains(filter) && currentPost.getList(Post.KEY_TYPES).contains(filter)) {
-                    // treat it as a generated type in types list
-                    weightsForPost += (currentPosts.size() * (types.size() - type));
-                } else if ((currentPost.getDescription().toLowerCase().contains(filter.toLowerCase(Locale.ROOT))
+            // Weights calculated by currentPosts.size() * (types.size() - typeIndex))
+            for (int typeIndex = 0; typeIndex < types.size(); typeIndex++) {
+                String filter = types.get(typeIndex);
+                    // check condition for generated type in types list
+                if (TYPE_LIST.contains(filter) && currentPost.getList(Post.KEY_TYPES).contains(filter)
+                        // otherwise check if it is custom filter and check description and location
+                        || ((currentPost.getDescription().toLowerCase().contains(filter.toLowerCase(Locale.ROOT))
                         || currentPost.getString(Post.KEY_PLACE_NAME).toLowerCase(Locale.ROOT)
-                        .contains(filter.toLowerCase(Locale.ROOT)))) {
-                    // treat it as a custom word
-                    weightsForPost += (currentPosts.size() * (types.size() - type));
+                        .contains(filter.toLowerCase(Locale.ROOT))))) {
+
+                    weightsForPost += (currentPosts.size() * (types.size() - typeIndex));
                 }
             }
             weightedPostPriorityQueue.add(new WeightedPost(currentPost, weightsForPost));
