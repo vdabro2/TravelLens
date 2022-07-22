@@ -101,7 +101,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     .into(imageOther);
             timeStamp.setText(message.getDateAndTime());
             if (message.getPhoto() != null) {
-                Glide.with(context).load(message.getPhoto()).centerCrop().transform(new RoundedCorners(16)).into(attachment);
+                Glide.with(context).load(message.getPhoto()).transform(new RoundedCorners(16)).into(attachment);
             } else {
                 attachment.setVisibility(View.GONE);
             }
@@ -118,8 +118,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
         public OutgoingMessageViewHolder(View itemView) {
             super(itemView);
-            imageMe = (ImageView)itemView.findViewById(R.id.ivRecipientProfilePic2);
-            body = (TextView)itemView.findViewById(R.id.tvMessage2);
+            imageMe = itemView.findViewById(R.id.ivRecipientProfilePic2);
+            body = itemView.findViewById(R.id.tvMessage2);
             timeStamp = itemView.findViewById(R.id.tvTimeStamp2);
             attachment = itemView.findViewById(R.id.ivAttachment);
 
@@ -134,7 +134,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     .into(imageMe);
             timeStamp.setText(message.getDateAndTime());
             if (message.getPhoto() != null) {
-                Glide.with(context).load(message.getPhoto()).centerCrop().transform(new RoundedCorners(16)).into(attachment);
+                Glide.with(context).load(message.getPhoto()).transform(new RoundedCorners(16)).into(attachment);
             } else {
                 attachment.setVisibility(View.GONE);
             }
