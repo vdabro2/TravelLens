@@ -1,5 +1,7 @@
 package com.example.travellens;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -7,6 +9,7 @@ import java.util.List;
 
 public class Filter {
     private static Filter instance = new Filter();
+
     public final static List<String> TYPE_LIST = new ArrayList<>(Arrays.asList("AIRPORT",
             "AMUSEMENT_PARK","AQUARIUM", "ART_GALLERY", "BAKERY","BOOK_STORE","CAFE","CAMPGROUND",
             "CAR_RENTAL" , "CITY_HALL", "CLOTHING_STORE", "CONVENIENCE_STORE", "FLORIST", "FOOD", "LIBRARY",
@@ -73,6 +76,7 @@ public class Filter {
                 filteredPosts.add(post);
             }
         }
+
         return filteredPosts;
     }
 
@@ -82,8 +86,8 @@ public class Filter {
         }
         List<Post> filteredPosts = new ArrayList<>();
         for (Post post: currentPosts) {
-            if (containsAllTypes(Collections.singletonList(post.getDescription()), words)
-                    || (containsAllTypes(Collections.singletonList(post.getString(Post.KEY_PLACE_NAME)), words))) {
+            if (containsAllWords(post.getDescription(), words)
+                    || (containsAllWords(post.getString(Post.KEY_PLACE_NAME), words))) {
                 filteredPosts.add(post);
             }
         }
@@ -91,8 +95,14 @@ public class Filter {
     }
 
     private boolean containsAllTypes(List<String> typesInPost, List<String> typesToFilter) {
-        for (String k : typesToFilter)
-            if (!typesInPost.contains(k)) return false;
+        for (String filter : typesToFilter)
+            if (!typesInPost.contains(filter)) return false;
+        return true;
+    }
+
+    private boolean containsAllWords(String description, List<String> typesToFilter) {
+        for (String filter : typesToFilter)
+            if (!description.contains(filter)) return false;
         return true;
     }
 }

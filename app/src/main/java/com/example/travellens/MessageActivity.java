@@ -69,11 +69,7 @@ public class MessageActivity extends AppCompatActivity {
     private FloatingActionButton bDeleteAttachment;
     private boolean attachPhotoToMessage = false;
 
-
-// todo move
     public static String API_KEY;
-    public static final String DEVICE_GROUP_URL = "https://fcm.googleapis.com/fcm/notification";
-    public static final String SEND_NOTIF_URL = "https://fcm.googleapis.com/fcm/send";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +109,7 @@ public class MessageActivity extends AppCompatActivity {
                 .into(ivReceiverPicture);
         tvReceiverUsername.setText(post.getUser().getUsername());
         tvReceiverName.setText(post.getUser().getString(Post.KEY_NAME));
-        if (post == null) {
+        if (post == null || post.getParseFile(Post.KEY_IMAGE) == null) {
             ivPictureFromPost.setVisibility(View.GONE);
         } else {
             Glide.with(getApplicationContext()).load(post.getParseFile(Post.KEY_IMAGE)

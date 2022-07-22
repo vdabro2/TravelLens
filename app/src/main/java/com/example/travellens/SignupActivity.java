@@ -131,6 +131,7 @@ public class SignupActivity extends AppCompatActivity {
         user.setUsername(username);
         if (photoFile != null)
             user.put(Post.KEY_PROFILE_PICTURE, new ParseFile(photoFile));
+
         user.setPassword(password);
         user.put(Post.KEY_BIOGRAPHY, bio);
         user.put(Post.KEY_NAME, name);

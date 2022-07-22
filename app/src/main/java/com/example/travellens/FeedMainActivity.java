@@ -68,8 +68,8 @@ public class FeedMainActivity extends AppCompatActivity {
                         fragment = new ProfileFragment();
                         break;
                     case R.id.action_message:
-                        ivIcon.setVisibility(View.INVISIBLE);
-                        ivMainIcon.setVisibility(View.VISIBLE);
+                        ivIcon.setVisibility(View.VISIBLE);
+                        ivMainIcon.setVisibility(View.INVISIBLE);
                         fragment = new MessageFragment();
                         break;
                     default: break;

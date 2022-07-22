@@ -9,8 +9,6 @@
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
         app:cardCornerRadius="30dp"
         app:cardUseCompatPadding="true"
         app:layout_constraintBottom_toTopOf="@+id/tvMessage"
@@ -44,8 +42,9 @@
         android:id="@+id/ivRecipientProfilePic"
         android:layout_width="32dp"
         android:layout_height="32dp"
+        android:layout_marginStart="4dp"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="153dp">
+        tools:layout_editor_absoluteY="194dp">
 
     </ImageView>
 
