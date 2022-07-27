@@ -131,12 +131,14 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private void updateUser() {
         ParseUser user = ParseUser.getCurrentUser();
-        if (photoFile == null) {
+        if (photoFile == null && user.getParseFile(Post.KEY_PROFILE_PICTURE) != null) {
             // no need to update
             user.put(Post.KEY_PROFILE_PICTURE, user.getParseFile(Post.KEY_PROFILE_PICTURE));
-        } else {
+        } else if (photoFile != null) {
             user.put(Post.KEY_PROFILE_PICTURE, new ParseFile(photoFile));
-        }
+        } // otherwise do nothing bc the user has no profile pic and has not added one, there is
+          // nothing to save
+
         // put name, username, bio, password
         user.put(Post.KEY_USERNAME, etUsernameOnEdit.getText().toString());
 

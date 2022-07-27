@@ -30,15 +30,17 @@ import com.parse.ParseUser;
 import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 public class MessageFragment extends Fragment {
-    private RecyclerView recyclerView;
-    private UserAdapter userAdapter;
-    private List<MyFirebaseUser> firebaseUsers;
-    FirebaseUser user;
+    private FirebaseUser user;
     private List<String> userList;
-    DatabaseReference reference;
+    private UserAdapter userAdapter;
+    private RecyclerView recyclerView;
+    private DatabaseReference reference;
+    private List<MyFirebaseUser> firebaseUsers;
+    private HashMap<String, MyFirebaseUser> idToUser = new HashMap<>();
 
     public MessageFragment() {
         // Required empty public constructor
@@ -69,6 +71,7 @@ public class MessageFragment extends Fragment {
                 userList.clear();
                 for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
                     Message message = dataSnapshot.getValue(Message.class);
+
                     if (message.getSender().equals(user.getUid())) {
                         userList.add(message.getReceiver());
                     }
@@ -76,7 +79,6 @@ public class MessageFragment extends Fragment {
                         userList.add(message.getSender());
                     }
                 }
-                Collections.reverse(userList);
                 readMessages();
             }
 
@@ -102,11 +104,23 @@ public class MessageFragment extends Fragment {
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     MyFirebaseUser myFirebaseUser = dataSnapshot.getValue(MyFirebaseUser.class);
-                    if (userList.contains(myFirebaseUser.getId())) {
-                        firebaseUsers.add(myFirebaseUser);
-                    }
+                    idToUser.put(myFirebaseUser.getId(), myFirebaseUser);
                 }
 
+                for (String userId : userList) {
+                    MyFirebaseUser myFirebaseUser = idToUser.getOrDefault(userId, null);
+                    // removes the user so we don't get repeats in the chat list
+                    idToUser.remove(idToUser.get(userId));
+                    if (myFirebaseUser != null && !firebaseUsers.contains(myFirebaseUser))
+                        firebaseUsers.add(myFirebaseUser);
+                    else if (myFirebaseUser != null && firebaseUsers.contains(myFirebaseUser)) {
+                        firebaseUsers.remove(myFirebaseUser);
+                        firebaseUsers.add(myFirebaseUser);
+                    }
+
+                }
+                // ensures the order of the chats is correct
+                Collections.reverse(firebaseUsers);
                 userAdapter.addAll(firebaseUsers);
 
             }
