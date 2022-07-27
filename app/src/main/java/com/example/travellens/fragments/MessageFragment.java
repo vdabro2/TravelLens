@@ -29,6 +29,7 @@ import com.parse.ParseUser;
 
 import java.sql.Struct;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MessageFragment extends Fragment {
@@ -75,6 +76,7 @@ public class MessageFragment extends Fragment {
                         userList.add(message.getSender());
                     }
                 }
+                Collections.reverse(userList);
                 readMessages();
             }
 
@@ -104,6 +106,7 @@ public class MessageFragment extends Fragment {
                         firebaseUsers.add(myFirebaseUser);
                     }
                 }
+
                 userAdapter.addAll(firebaseUsers);
 
             }

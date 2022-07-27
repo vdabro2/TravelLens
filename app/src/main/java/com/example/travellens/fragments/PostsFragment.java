@@ -196,7 +196,7 @@ public class PostsFragment extends Fragment {
         }
         // set up filter
         filter = Filter.getInstance();
-        // combine both arrays with out repetition posts in order to get allPosts
+        // using more recommended filter to sort and filter
         allPosts = filter.getPostsByFilteringMostRecommended(wordsToFilterBy, originalAllPosts);
         adapter.clear();
         adapter.addAll(allPosts);

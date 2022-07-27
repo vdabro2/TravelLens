@@ -95,10 +95,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         @Override
         public void bindMessage(Message message) {
             body.setText(message.getMessage());
-            Glide.with(context)
+            if (postClickedOn.getUser().getParseFile(Post.KEY_PROFILE_PICTURE) != null) {
+                Glide.with(context)
                     .load(postClickedOn.getUser().getParseFile(Post.KEY_PROFILE_PICTURE).getUrl())
                     .circleCrop()
                     .into(imageOther);
+            }
             timeStamp.setText(message.getDateAndTime());
             if (message.getPhoto() != null) {
                 Glide.with(context).load(message.getPhoto()).transform(new RoundedCorners(16)).into(attachment);
@@ -128,10 +130,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         @Override
         public void bindMessage(Message message) {
             body.setText(message.getMessage());
-            Glide.with(context)
-                    .load(ParseUser.getCurrentUser().getParseFile(Post.KEY_PROFILE_PICTURE).getUrl())
-                    .circleCrop()
-                    .into(imageMe);
+            if (ParseUser.getCurrentUser().getParseFile(Post.KEY_PROFILE_PICTURE) != null) {
+                Glide.with(context)
+                        .load(ParseUser.getCurrentUser().getParseFile(Post.KEY_PROFILE_PICTURE).getUrl())
+                        .circleCrop()
+                        .into(imageMe);
+            }
+
             timeStamp.setText(message.getDateAndTime());
             if (message.getPhoto() != null) {
                 Glide.with(context).load(message.getPhoto()).transform(new RoundedCorners(16)).into(attachment);
