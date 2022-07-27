@@ -1,11 +1,15 @@
 package com.example.travellens;
 
 
+import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.util.Log;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -38,6 +42,32 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage message) {
         super.onMessageReceived(message);
         Log.i(TAG, "Received message");
+
+        // create notification channel for custom notification after sending message
+        NotificationChannel channel = new NotificationChannel("1", getString(R.string.channel_name), NotificationManager.IMPORTANCE_HIGH);
+        channel.setDescription(getString(R.string.channel_description));
+        channel.enableLights(true);
+        channel.enableVibration(true);
+        channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+
+        // set managers channel
+        NotificationManager notificationManager = (android.app.NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.createNotificationChannel(channel);
+
+        // set content view of notification and details
+        RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.custom_push);
+        contentView.setImageViewResource(R.id.image, R.drawable.logo_no_background);
+        contentView.setTextViewText(R.id.title, message.getNotification().getTitle());
+        contentView.setTextViewText(R.id.text, message.getNotification().getBody());
+
+        // build notification and notify
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext())
+                .setContentTitle(message.getNotification().getTitle())
+                .setContentText(message.getNotification().getBody())
+                .setSmallIcon(R.drawable.logo_no_background)
+                .setContent(contentView).setChannelId("1");
+
+        notificationManager.notify(1, mBuilder.build());
     }
 
     public static void checkUserTokenUpdate(){
