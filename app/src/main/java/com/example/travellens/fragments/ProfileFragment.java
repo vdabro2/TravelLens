@@ -199,6 +199,7 @@ public class ProfileFragment extends Fragment {
                         posts.add((Post) like.getPost());
 
                     }
+                    adapter.clear();
                     allPosts.addAll(posts);
                     adapter.notifyDataSetChanged();
                     // stop shimmering when we have the new data
@@ -238,6 +239,7 @@ public class ProfileFragment extends Fragment {
                     return;
                 }
                 // save received posts to list and notify adapter of new data
+                adapter.clear();
                 allPosts.addAll(posts);
                 adapter.notifyDataSetChanged();
                 // stop shimmering when we have the new data

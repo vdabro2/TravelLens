@@ -91,7 +91,6 @@ public class MessageActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
 
         // get intent with the user info of who you're sending to
-        // todo may be null if looking at list of messages
         intent = getIntent();
         post = intent.getExtras().getParcelable("post");
 
@@ -103,10 +102,12 @@ public class MessageActivity extends AppCompatActivity {
     }
 
     private void attachWidgets() {
-        Glide.with(getApplicationContext())
-                .load(post.getUser().getParseFile(Post.KEY_PROFILE_PICTURE).getUrl())
-                .circleCrop()
-                .into(ivReceiverPicture);
+        if (post.getUser().getParseFile(Post.KEY_PROFILE_PICTURE) != null) {
+            Glide.with(getApplicationContext())
+                    .load(post.getUser().getParseFile(Post.KEY_PROFILE_PICTURE).getUrl())
+                    .circleCrop()
+                    .into(ivReceiverPicture);
+        }
         tvReceiverUsername.setText(post.getUser().getUsername());
         tvReceiverName.setText(post.getUser().getString(Post.KEY_NAME));
         if (post == null || post.getParseFile(Post.KEY_IMAGE) == null) {
